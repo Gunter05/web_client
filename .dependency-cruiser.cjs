@@ -55,7 +55,8 @@ module.exports = {
   ],
   options: {
     doNotFollow: { path: "node_modules" },
-    exclude: { path: "^\\.next/" },
+    // Les tests ont le droit d'importer Vitest et Testing Library.
+    exclude: { path: ["^\\.next/", "\\.test\\.tsx?$"] },
     tsPreCompilationDeps: true,
     tsConfig: { fileName: "tsconfig.json" },
   },
