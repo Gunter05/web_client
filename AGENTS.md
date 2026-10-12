@@ -7,3 +7,12 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+# Règles du projet Le Contineng
+
+- Lire le `README.md` (architecture, commandes) et les ADR de `docs/adr/` avant de modifier le code.
+- Le code métier vit dans `src/modules/<module>/` ; `app/` n'importe un module que par `index.ts` ou `server.ts`. `npm run arch` vérifie ces règles.
+- Les composants shadcn/ui restent intacts dans `src/shared/ui/` ; les composants métier les assemblent dans `src/modules/<module>/ui/`.
+- Jamais `process.env` directement : importer `env` ou `clientEnv` depuis `src/shared/config/`.
+- Toute Server Action valide ses entrées avec Zod et vérifie les droits.
+- Lancer `npm run check` avant de proposer un changement.
