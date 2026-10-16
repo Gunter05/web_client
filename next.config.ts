@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 import {
   clientSchema,
   serverSchema,
@@ -36,6 +37,12 @@ const enTetesDeSecurite = [
 const nextConfig: NextConfig = {
   cacheComponents: true,
   poweredByHeader: false,
+  // Le sélecteur de profil occupe le coin bas gauche (US-37).
+  devIndicators: { position: "bottom-right" },
+  experimental: {
+    // Photos d'événement jusqu'à 5 Mo (US-11), envoyées par Server Action.
+    serverActions: { bodySizeLimit: "6mb" },
+  },
   images: {
     // Aucun domaine externe autorisé tant qu'on n'en a pas besoin.
     remotePatterns: [],
@@ -45,4 +52,5 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Interface FR/EN sans préfixe d'URL (ADR 0009).
+export default createNextIntlPlugin("./src/shared/i18n/requete.ts")(nextConfig);

@@ -1,3 +1,29 @@
-export type { Evenement } from "./domain/evenement";
-export { trierParDate } from "./domain/evenement";
-export { CarteEvenement } from "./ui/carte-evenement";
+export type { EvenementAffiche, PageResumee } from "./domain/affichage";
+export {
+  CATEGORIES,
+  type Categorie,
+  type Evenement,
+  estModifiable,
+  FILTRES_PAR_DEFAUT,
+  type Filtres,
+  type FormulaireEvenement as ChampsEvenement,
+  PERIODES,
+  type Periode,
+  type Statut,
+  validerFormulaire,
+} from "./domain/evenement";
+export {
+  ecrireFiltresUrl,
+  estParDefaut,
+  type FiltresUrl,
+  lireFiltresUrl,
+} from "./domain/filtres-url";
+export { BarreFiltres } from "./ui/barre-filtres";
+export { BoutonPartager } from "./ui/bouton-partager";
+export { CarteEvenement, IMAGE_PAR_DEFAUT } from "./ui/carte-evenement";
+export { DateEvenement } from "./ui/date-evenement";
+export { DialogueAnnulation } from "./ui/dialogue-annulation";
+export { FicheEvenement } from "./ui/fiche-evenement";
+export { type ChargerEvenements, FilEvenements } from "./ui/fil-evenements";
+export { FormulaireEvenement } from "./ui/formulaire-evenement";
+export { GrilleEvenements } from "./ui/grille-evenements";

@@ -2,6 +2,13 @@ import { z } from "zod";
 
 export const serverSchema = z.object({
   API_URL: z.url().optional(),
+  /** Dossier des données simulées (ADR 0011). Par défaut : ./data. */
+  CONTINENG_DATA_DIR: z.string().optional(),
+  /**
+   * Fuseau de l'aperçu WhatsApp (US-36), calculé côté serveur sans connaître
+   * l'appareil du lecteur. L'interface affiche toujours l'heure de l'appareil (D7).
+   */
+  FUSEAU_APERCU: z.string().default("Africa/Douala"),
 });
 
 export const clientSchema = z.object({

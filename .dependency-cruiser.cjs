@@ -52,6 +52,24 @@ module.exports = {
       from: { path: "^src/shared/" },
       to: { path: "^src/(modules|app)/" },
     },
+    {
+      name: "administration-reservee-a-admin",
+      comment:
+        "Le module administration n'est utilisé que par l'espace src/app/admin.",
+      severity: "error",
+      from: {
+        path: "^src/",
+        pathNot: ["^src/app/admin/", "^src/modules/administration/"],
+      },
+      to: { path: "^src/modules/administration/" },
+    },
+    {
+      name: "public-sans-admin",
+      comment: "L'espace public n'importe rien de l'espace Administration.",
+      severity: "error",
+      from: { path: "^src/app/\\(public\\)/" },
+      to: { path: "^src/app/admin/" },
+    },
   ],
   options: {
     doNotFollow: { path: "node_modules" },

@@ -128,3 +128,40 @@
     @apply font-sans;
   }
 }
+
+/*
+ * Marque Le Contineng : dégradé « coucher de soleil » des anneaux d'avatar
+ * et couleurs d'état (succès, avertissement, danger) utilisées par les badges.
+ */
+:root {
+  --marque-1: oklch(0.8 0.17 75);
+  --marque-2: oklch(0.65 0.24 20);
+  --marque-3: oklch(0.55 0.25 330);
+  --lien: oklch(0.5 0.2 260);
+  --succes: oklch(0.55 0.15 150);
+  --succes-fond: oklch(0.96 0.04 150);
+  --avertissement: oklch(0.5 0.13 65);
+  --avertissement-fond: oklch(0.97 0.05 85);
+  --danger-fond: oklch(0.96 0.03 25);
+}
+
+@theme inline {
+  --color-marque-1: var(--marque-1);
+  --color-marque-2: var(--marque-2);
+  --color-marque-3: var(--marque-3);
+  --color-lien: var(--lien);
+  --color-succes: var(--succes);
+  --color-succes-fond: var(--succes-fond);
+  --color-avertissement: var(--avertissement);
+  --color-avertissement-fond: var(--avertissement-fond);
+  --color-danger-fond: var(--danger-fond);
+}
+
+@utility degrade-marque {
+  background-image: linear-gradient(
+    45deg,
+    var(--marque-1),
+    var(--marque-2) 50%,
+    var(--marque-3)
+  );
+}

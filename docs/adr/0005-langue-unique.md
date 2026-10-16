@@ -1,6 +1,6 @@
 # 0005 — Langue unique
 
-Statut : Acceptée
+Statut : Remplacée par 0009
 Date : 2026-10-10
 
 ## Contexte

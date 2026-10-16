@@ -47,6 +47,8 @@ Elles sont décrites et validées par Zod dans `src/shared/config/schema.ts`. Un
 | ---------------------- | ------- | ----------- | --------------------------------- |
 | `NEXT_PUBLIC_SITE_URL` | public  | oui         | Adresse publique du site          |
 | `API_URL`              | serveur | non         | URL de l'API, quand elle existera |
+| `CONTINENG_DATA_DIR`   | serveur | non         | Dossier des données simulées      |
+| `FUSEAU_APERCU`        | serveur | non         | Fuseau de l'aperçu WhatsApp       |
 
 - En local : `.env.local` (jamais commité).
 - En CI : bloc `env` de `.github/workflows/ci.yml`.
@@ -58,20 +60,45 @@ Les variables `NEXT_PUBLIC_*` sont recopiées dans le code au moment du build : 
 
 ```
 src/
-├── app/                 Routes Next.js : pages, layouts, pages d'erreur
-├── modules/             Code métier, un dossier par domaine
-│   └── evenements/
-│       ├── domain/          Types et règles métier, TypeScript pur
-│       ├── application/     Cas d'usage (ne connaît que domain/)
-│       ├── infrastructure/  D'où viennent les données (démo, puis API)
-│       ├── ui/              Composants React du module
-│       ├── index.ts         Porte d'entrée sûre partout (types, composants)
-│       └── server.ts        Porte d'entrée serveur (données), protégée par server-only
+├── app/                 Routes Next.js et composition des modules
+│   ├── (public)/            Espace public : fil, fiches, pages, compte, publication
+│   ├── admin/               Espace Administration (garde serveur, onglets US-07)
+│   ├── _actions/            Server Actions : valident (Zod), vérifient les droits, orchestrent
+│   └── _services/           Composition : profil actif, affichage des événements
+├── modules/             Code métier, un dossier par domaine, chacun avec ses couches
+│   ├── identite/            Compte, connexion, session, profil personnel
+│   ├── pages/               Demandes de page, pages, propriétaire, contributeurs (US-03, US-06)
+│   ├── profil-actif/        Au nom de qui j'agis (US-37)
+│   ├── evenements/          Événements, période, statut, filtres, partage (US-11/01/16/17/15/36)
+│   ├── audience/            Vues uniques par jour, « Mes événements » (US-39)
+│   ├── notifications/       Cloche et notifications dans l'application
+│   ├── mesure/              Métriques produit (analytics simulé)
+│   └── administration/      Supervision en lecture seule (US-07)
+│       ├── domain/              Types et règles métier, TypeScript pur
+│       ├── application/         Cas d'usage et ports (ne connaît que domain/)
+│       ├── infrastructure/      D'où viennent les données (simulées, puis API)
+│       ├── ui/                  Composants React du module
+│       ├── index.ts             Porte d'entrée sûre partout (types, composants)
+│       └── server.ts            Porte d'entrée serveur (données), protégée par server-only
 └── shared/              Ce qui sert partout
     ├── config/              Variables d'environnement validées
-    ├── lib/                 Utilitaires (cn)
+    ├── i18n/                Catalogues FR/EN, formats de date (US-16), langue (ADR 0009)
+    ├── stockage/            Persistance et images simulées (ADR 0011)
+    ├── composants/          Composants génériques (avatar, champ, langue…)
+    ├── hooks/, lib/         Utilitaires
     └── ui/                  Composants shadcn/ui, sans métier
 ```
+
+### Démonstration
+
+Les données de démo sont créées dans `data/` au premier lancement (supprimer le dossier les réinitialise). Mot de passe commun : `demo1234`.
+
+| E-mail                 | Rôle                                            |
+| ---------------------- | ----------------------------------------------- |
+| `awa@contineng.test`   | Propriétaire de BDE et Les Planches             |
+| `karim@contineng.test` | Propriétaire de Club Foot, contributeur BDE     |
+| `lina@contineng.test`  | Utilisatrice sans page (une demande en attente) |
+| `admin@contineng.test` | Admin (`/admin`)                                |
 
 Les règles sont vérifiées par `npm run arch` en CI (`.dependency-cruiser.cjs`) :
 
@@ -81,6 +108,7 @@ Les règles sont vérifiées par `npm run arch` en CI (`.dependency-cruiser.cjs`
 4. `domain/` ne dépend de rien d'autre que de lui-même (ni React, ni Next.js, ni bibliothèque).
 5. `application/` ne dépend ni de `ui/` ni de `infrastructure/`.
 6. `shared/` ne dépend ni des modules ni de `app/`.
+7. Le module `administration` n'est utilisé que par `app/admin/`, et l'espace public n'importe rien de `app/admin/`.
 
 En plus, importer un `server.ts` depuis un composant `"use client"` fait échouer `next build`, grâce à `import "server-only"`.
 

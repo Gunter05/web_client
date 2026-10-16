@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { Suspense } from "react";
 import { clientEnv } from "@/shared/config/env.client";
+import { Toaster } from "@/shared/ui/sonner";
+import { LangueDocument } from "./_components/langue-document";
 import { WebVitals } from "./_components/web-vitals";
 import "./globals.css";
 
@@ -23,6 +27,10 @@ export const metadata: Metadata = {
   description: "Le réseau social des événements.",
 };
 
+/**
+ * La langue (cookie) et la session sont lues à la requête : avec Cache
+ * Components, tout ce qui en dépend s'affiche derrière ce Suspense.
+ */
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -31,7 +39,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-full flex-col">
         <WebVitals />
-        {children}
+        <Suspense>
+          <NextIntlClientProvider>
+            <LangueDocument />
+            {children}
+            <Toaster position="top-center" />
+          </NextIntlClientProvider>
+        </Suspense>
       </body>
     </html>
   );
