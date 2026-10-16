@@ -1,6 +1,6 @@
 # 0007 — Authentification
 
-Statut : Reportée
+Statut : Remplacée par 0010
 Date : 2026-10-10
 
 ## Contexte

@@ -7,6 +7,13 @@ updates:
     groups:
       npm-minor:
         update-types: [minor, patch]
+    ignore:
+      # Les types de Node suivent la version de Node du projet (24, voir .nvmrc).
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # TypeScript 7 : à réévaluer quand Next.js le prendra officiellement en charge.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
