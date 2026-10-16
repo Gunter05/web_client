@@ -66,7 +66,7 @@ export function Cloche({
             variant="ghost"
             size={libelle ? "lg" : "icon-lg"}
             className={cn(
-              libelle && "h-12 w-full justify-start gap-4 px-3 font-normal",
+              libelle && "h-11 w-full justify-start gap-3 px-3 font-normal",
               className,
             )}
             aria-label={nonLues ? `${t("titre")} (${nonLues})` : t("titre")}

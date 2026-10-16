@@ -70,7 +70,10 @@
     "deconnexion": "Sign out",
     "administration": "Administration",
     "plus": "More",
-    "principale": "Main navigation"
+    "principale": "Main navigation",
+    "reduire": "Collapse menu",
+    "etendre": "Expand menu",
+    "pages": "Pages"
   },
   "identite": {
     "titreConnexion": "Sign in",

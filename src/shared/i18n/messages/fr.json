@@ -70,7 +70,10 @@
     "deconnexion": "Se déconnecter",
     "administration": "Administration",
     "plus": "Plus",
-    "principale": "Navigation principale"
+    "principale": "Navigation principale",
+    "reduire": "Réduire le menu",
+    "etendre": "Étendre le menu",
+    "pages": "Pages"
   },
   "identite": {
     "titreConnexion": "Connexion",

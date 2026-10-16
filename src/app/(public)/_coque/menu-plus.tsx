@@ -5,7 +5,7 @@ import {
   LanguagesIcon,
   LogInIcon,
   LogOutIcon,
-  MenuIcon,
+  EllipsisIcon,
   ShieldIcon,
   UserIcon,
   UserPlusIcon,
@@ -24,7 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
-import { LIBELLE_BARRE } from "./lien-nav";
+import { LIBELLE_BARRE } from "./classes-barre";
 
 /**
  * Menu « Plus » en bas de la barre latérale, comme le ☰ d'Instagram :
@@ -49,12 +49,14 @@ export function MenuPlus({
     <DropdownMenu>
       <DropdownMenuTrigger
         aria-label={t("nav.plus")}
-        className="flex h-12 w-full items-center gap-4 rounded-lg px-3 text-left outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 [&_svg]:size-6 [&_svg]:shrink-0"
+        className="flex h-11 w-full items-center gap-3 rounded-lg px-3 text-left outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 [&_svg]:size-6 [&_svg]:shrink-0"
       >
-        <MenuIcon />
-        <span className={cn("text-base", LIBELLE_BARRE)}>{t("nav.plus")}</span>
+        <EllipsisIcon />
+        <span className={cn("text-base font-semibold", LIBELLE_BARRE)}>
+          {t("nav.plus")}
+        </span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent side="top" align="start" className="w-64">
+      <DropdownMenuContent side="right" align="end" className="w-64">
         <DropdownMenuGroup>
           {connecte ? (
             <>

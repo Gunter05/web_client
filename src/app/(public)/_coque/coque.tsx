@@ -18,6 +18,7 @@ import {
   BandeauPageActive,
   SelecteurProfil,
 } from "@/modules/profil-actif";
+import { AvatarProfil } from "@/shared/composants/avatar-profil";
 import { SelecteurLangue } from "@/shared/composants/selecteur-langue";
 import { buttonVariants } from "@/shared/ui/button";
 import { DropdownMenuItem } from "@/shared/ui/dropdown-menu";
@@ -30,7 +31,10 @@ import {
 } from "../../_actions/notifications";
 import { actionChoisirProfil } from "../../_actions/profil";
 import { acteurCourant, pageActive } from "../../_services/acteur";
-import { LIBELLE_BARRE, LienNav } from "./lien-nav";
+import { pagesDuFiltre } from "../../_services/affichage";
+import { CadreCoque } from "./cadre-coque";
+import { BLOC_BARRE, LIBELLE_BARRE } from "./classes-barre";
+import { LienNav } from "./lien-nav";
 import { MenuPlus } from "./menu-plus";
 import { Logo } from "./logo";
 
@@ -123,9 +127,11 @@ const navigation = cache(async () => {
 
 async function NavLaterale() {
   const { t, etat, nonLues, liens } = await navigation();
+  const pages = pagesDuFiltre();
+  const libelleGras = `font-semibold ${LIBELLE_BARRE}`;
   return (
     <>
-      <nav aria-label={t("nav.principale")} className="my-auto grid gap-1">
+      <nav aria-label={t("nav.principale")} className="grid gap-0.5">
         {liens.map((l) => (
           <LienNav key={l.href} {...l} variante="laterale" />
         ))}
@@ -134,7 +140,7 @@ async function NavLaterale() {
             nonLuesInitiales={nonLues}
             actions={actionsNotifications}
             libelle
-            classeLibelle={LIBELLE_BARRE}
+            classeLibelle={libelleGras}
           />
         )}
         {etat && (
@@ -143,15 +149,52 @@ async function NavLaterale() {
             profils={etat.profils}
             choisir={actionChoisirProfil}
             libelle={t("nav.profil")}
-            classeLibelle={LIBELLE_BARRE}
+            classeLibelle={libelleGras}
           />
         )}
+        <MenuPlus
+          connecte={!!etat}
+          estAdmin={etat?.estAdmin ?? false}
+          deconnecter={actionDeconnexion}
+        />
       </nav>
-      <MenuPlus
-        connecte={!!etat}
-        estAdmin={etat?.estAdmin ?? false}
-        deconnecter={actionDeconnexion}
-      />
+
+      {pages.length > 0 && (
+        <section aria-labelledby="titre-pages" className={BLOC_BARRE}>
+          <hr className="mx-3 my-4 border-border" />
+          <h2
+            id="titre-pages"
+            className="px-3 pb-2 text-sm font-semibold text-muted-foreground"
+          >
+            {t("nav.pages")}
+          </h2>
+          <ul className="grid gap-0.5">
+            {pages.map((p) => (
+              <li key={p.id}>
+                <Link
+                  href={`/p/${p.slug}`}
+                  className="flex items-center gap-3 rounded-lg px-3 py-1.5 hover:bg-muted"
+                >
+                  <AvatarProfil
+                    nom={p.nom}
+                    photo={p.photo}
+                    taille="sm"
+                    anneau
+                  />
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm font-semibold">
+                      {p.nom}
+                    </span>
+                    <span className="block truncate text-xs text-muted-foreground">
+                      @{p.slug}
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </>
   );
 }
@@ -219,25 +262,15 @@ async function NavBasse() {
  */
 export function Coque({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-dvh md:pl-[72px]">
-      {/*
-        Barre latérale réduite (icônes), étendue au survol ou au focus
-        clavier, par-dessus le contenu, comme sur Instagram.
-      */}
-      <aside className="group/barre fixed inset-y-0 left-0 z-40 hidden w-[72px] flex-col overflow-hidden border-r bg-background px-3 py-6 transition-[width,box-shadow] duration-200 ease-out focus-within:w-60 focus-within:shadow-xl hover:w-60 hover:shadow-xl md:flex">
-        <div className="flex h-12 items-center px-1.5">
-          <span className="group-focus-within/barre:hidden group-hover/barre:hidden">
-            <Logo court />
-          </span>
-          <span className="hidden group-focus-within/barre:block group-hover/barre:block">
-            <Logo />
-          </span>
-        </div>
-        <Suspense fallback={<Skeleton className="my-auto h-64 w-full" />}>
+    <CadreCoque
+      logo={<Logo />}
+      logoCourt={<Logo court />}
+      barre={
+        <Suspense fallback={<Skeleton className="h-96 w-full" />}>
           <NavLaterale />
         </Suspense>
-      </aside>
-
+      }
+    >
       <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur md:hidden">
         <div className="flex h-14 items-center gap-2 px-4">
           <Logo />
@@ -258,6 +291,6 @@ export function Coque({ children }: { children: ReactNode }) {
       <Suspense>
         <NavBasse />
       </Suspense>
-    </div>
+    </CadreCoque>
   );
 }

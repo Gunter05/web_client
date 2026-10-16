@@ -4,13 +4,7 @@ import { cn } from "@/shared/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-
-/**
- * Libellé d'une entrée de la barre latérale : masqué quand la barre est
- * réduite, visible au survol ou au focus clavier (groupe `barre`).
- */
-export const LIBELLE_BARRE =
-  "hidden whitespace-nowrap group-hover/barre:inline group-focus-within/barre:inline";
+import { LIBELLE_BARRE } from "./classes-barre";
 
 /** Entrée de navigation : barre latérale (icône + libellé) ou barre basse (icône). */
 export function LienNav({
@@ -47,12 +41,12 @@ export function LienNav({
       aria-label={libelle}
       aria-current={actif ? "page" : undefined}
       className={cn(
-        "flex h-12 items-center gap-4 rounded-lg px-3 transition-colors hover:bg-muted [&_svg]:size-6 [&_svg]:shrink-0",
-        actif && "font-bold [&_svg]:stroke-[2.5]",
+        "flex h-11 items-center gap-3 rounded-lg px-3 text-base font-semibold transition-colors hover:bg-muted [&_svg]:size-6 [&_svg]:shrink-0",
+        actif && "text-danger [&_svg]:stroke-[2.5]",
       )}
     >
       {icone}
-      <span className={cn("text-base", LIBELLE_BARRE)}>{libelle}</span>
+      <span className={LIBELLE_BARRE}>{libelle}</span>
     </Link>
   );
 }
