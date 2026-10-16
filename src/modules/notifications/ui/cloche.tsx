@@ -73,7 +73,7 @@ export function Cloche({
         <span className="relative">
           <BellIcon className="size-6" />
           {nonLues > 0 && (
-            <span className="absolute -top-1.5 -right-1.5 grid min-w-4.5 place-items-center rounded-full bg-marque-2 px-1 text-[10px] font-bold text-white">
+            <span className="absolute -top-1.5 -right-1.5 grid min-w-4.5 place-items-center rounded-full bg-destructive px-1 text-[10px] font-bold text-white">
               {nonLues > 9 ? "9+" : nonLues}
             </span>
           )}

@@ -267,7 +267,7 @@ export function FormulaireEvenement({
       {etat.erreur && (
         <p
           role="alert"
-          className="rounded-lg bg-danger-fond p-3 text-sm text-destructive"
+          className="rounded-lg bg-danger-fond p-3 text-sm text-danger"
         >
           {erreurs(etat.erreur)}
         </p>

@@ -76,9 +76,9 @@ export function FicheEvenement({
               role="status"
               className="flex gap-3 rounded-lg border border-destructive/40 bg-danger-fond p-3 text-sm"
             >
-              <BanIcon className="mt-0.5 size-4 shrink-0 text-destructive" />
+              <BanIcon className="mt-0.5 size-4 shrink-0 text-danger" />
               <div className="grid gap-1">
-                <p className="font-semibold text-destructive">
+                <p className="font-semibold text-danger">
                   {t("statuts.annule")} ·{" "}
                   <DateEvenement iso={evenement.annulation.le} />
                 </p>

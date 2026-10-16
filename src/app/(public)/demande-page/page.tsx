@@ -34,7 +34,7 @@ async function DemandePage() {
               role="status"
               className="flex gap-3 rounded-xl border border-destructive/40 bg-danger-fond p-4 text-sm"
             >
-              <XCircleIcon className="size-5 shrink-0 text-destructive" />
+              <XCircleIcon className="size-5 shrink-0 text-danger" />
               <div className="grid gap-1">
                 <p>
                   {t("refusee", {

@@ -62,7 +62,7 @@ export function CarteEvenement({
             )}
           />
           {annule && (
-            <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 -rotate-6 bg-destructive/90 py-2 text-center text-lg font-bold tracking-widest text-white uppercase">
+            <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 -rotate-6 bg-destructive py-2 text-center text-lg font-bold tracking-widest text-white uppercase">
               {t("statuts.annule")}
             </span>
           )}

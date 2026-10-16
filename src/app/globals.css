@@ -143,6 +143,8 @@
   --avertissement: oklch(0.5 0.13 65);
   --avertissement-fond: oklch(0.97 0.05 85);
   --danger-fond: oklch(0.96 0.03 25);
+  /* Texte d'erreur sur fond clair : contraste ≥ 4,5:1 (WCAG 1.4.3). */
+  --danger: oklch(0.5 0.2 27);
 }
 
 @theme inline {
@@ -155,6 +157,7 @@
   --color-avertissement: var(--avertissement);
   --color-avertissement-fond: var(--avertissement-fond);
   --color-danger-fond: var(--danger-fond);
+  --color-danger: var(--danger);
 }
 
 @utility degrade-marque {

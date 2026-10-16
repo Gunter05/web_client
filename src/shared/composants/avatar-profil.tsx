@@ -36,7 +36,7 @@ export function AvatarProfil({
       )}
     >
       {photo && <AvatarImage src={photo} alt="" className="object-cover" />}
-      <AvatarFallback className="bg-muted font-semibold text-muted-foreground">
+      <AvatarFallback className="bg-muted font-semibold text-foreground">
         {initiales}
       </AvatarFallback>
     </Avatar>

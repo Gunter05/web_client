@@ -36,7 +36,7 @@ export function BadgesEvenement({
       {statut === "annule" && (
         <Badge
           variant="outline"
-          className="border-destructive bg-danger-fond text-destructive"
+          className="border-danger bg-danger-fond text-danger"
         >
           {t("statuts.annule")}
         </Badge>
