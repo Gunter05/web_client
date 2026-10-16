@@ -40,3 +40,21 @@ describe("supervision des pages (US-07)", () => {
     expect(listerPages(sources, "foot", 1).elements).toHaveLength(1);
   });
 });
+
+import { listerComptes, listerEvenements } from "./supervision";
+
+describe("supervision des comptes et événements (US-07)", () => {
+  it("recherche les comptes par nom ou e-mail", () => {
+    expect(listerComptes(sources, "", 1).total).toBe(1);
+    expect(listerComptes(sources, "awa@x", 1).total).toBe(1);
+    expect(listerComptes(sources, "inconnu", 1).total).toBe(0);
+  });
+
+  it("liste les événements avec leur page organisatrice", () => {
+    expect(listerEvenements(sources, "", 1).elements[0]).toMatchObject({
+      nom: "Gala",
+      page: "BDE",
+    });
+    expect(listerEvenements(sources, "zzz", 1).total).toBe(0);
+  });
+});

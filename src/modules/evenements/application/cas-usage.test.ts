@@ -165,3 +165,29 @@ describe("liste paginée (US-16)", () => {
     expect(suite.suivant).toBeNull();
   });
 });
+
+describe("lectures (US-01, US-39, US-17)", () => {
+  it("retrouve un événement, ceux d'une page et les pages qui publient", () => {
+    const e = creer();
+    expect(cas.parId(deps, e.id)?.nom).toBe("Soirée");
+    expect(cas.parId(deps, "inconnu")).toBeNull();
+    expect(cas.deLaPage(deps, "page-a")).toHaveLength(1);
+    expect(cas.pagesAvecEvenements(deps)).toEqual(["page-a"]);
+  });
+
+  it("refuse de modifier un événement inconnu ou d'une autre page", () => {
+    const r = cas.modifier(
+      deps,
+      awa,
+      autorise,
+      "inconnu",
+      formulaire,
+      undefined,
+    );
+    expect(!r.ok && r.code).toBe("evenementIntrouvable");
+    const e = creer();
+    const lina = { compteId: "lina", pageId: "page-b" };
+    const autre = cas.annuler(deps, lina, autorise, e.id, "Motif suffisant");
+    expect(!autre.ok && autre.code).toBe("pasAutorisePublier");
+  });
+});

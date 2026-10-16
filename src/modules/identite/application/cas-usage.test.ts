@@ -66,3 +66,26 @@ describe("comptes", () => {
     expect(cas.rechercherProfils(deps, "karim@")).toHaveLength(0);
   });
 });
+
+describe("profil personnel", () => {
+  it("modifie le nom et la photo, refuse un nom invalide", () => {
+    const r = cas.inscrire(deps, {
+      nom: "Awa",
+      email: "awa@ecole.cm",
+      motDePasse: "secret123",
+    });
+    if (!r.ok) throw new Error();
+    const id = deps.comptes.tous()[0]!.id;
+    expect(cas.modifierProfil(deps, id, { nom: "A" }).ok).toBe(false);
+    expect(cas.modifierProfil(deps, "inconnu", { nom: "Awa" }).ok).toBe(false);
+    expect(
+      cas.modifierProfil(deps, id, { nom: "Awa N.", photo: "/media/a.png" }).ok,
+    ).toBe(true);
+    expect(deps.comptes.parId(id)).toMatchObject({
+      nom: "Awa N.",
+      photo: "/media/a.png",
+    });
+    expect(cas.lireSession(deps, undefined)).toBeNull();
+    expect(cas.lireSession(deps, "jeton-inconnu")).toBeNull();
+  });
+});

@@ -123,3 +123,30 @@ describe("accès à une page (US-06)", () => {
     expect(cas.roleDe(deps, id, "contrib")).toBeNull();
   });
 });
+
+describe("lectures (US-03, US-06)", () => {
+  it("liste les membres, la dernière demande et les demandes en attente", () => {
+    const { id } = pageAcceptee("proprio");
+    cas.donnerAcces(deps, "proprio", id, "contrib");
+    expect(cas.membresDe(deps, id).map((m) => m.role)).toEqual([
+      "proprietaire",
+      "contributeur",
+    ]);
+    expect(cas.derniereDemandeDe(deps, "proprio")?.statut).toBe("acceptee");
+    expect(cas.derniereDemandeDe(deps, "personne")).toBeNull();
+    cas.deposerDemande(deps, "u9", { ...formulaire, nom: "Autre club" }, null);
+    expect(cas.demandesEnAttente(deps).map((d) => d.nom)).toEqual([
+      "Autre club",
+    ]);
+  });
+
+  it("refuse une décision sur une demande inconnue ou déjà traitée", () => {
+    expect(cas.accepterDemande(deps, admin, "inconnue").ok).toBe(false);
+    const d = cas.deposerDemande(deps, "u1", formulaire, null);
+    if (!d.ok) throw new Error();
+    cas.accepterDemande(deps, admin, d.valeur.id);
+    const r = cas.refuserDemande(deps, admin, d.valeur.id, "Motif suffisant");
+    expect(!r.ok && r.code).toBe("demandeDejaTraitee");
+    expect(cas.retirerDemande(deps, "u1", d.valeur.id).ok).toBe(false);
+  });
+});
