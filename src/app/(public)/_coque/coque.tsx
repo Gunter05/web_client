@@ -19,7 +19,6 @@ import {
   SelecteurProfil,
 } from "@/modules/profil-actif";
 import { SelecteurLangue } from "@/shared/composants/selecteur-langue";
-import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
 import { DropdownMenuItem } from "@/shared/ui/dropdown-menu";
 import { Skeleton } from "@/shared/ui/skeleton";
@@ -31,7 +30,8 @@ import {
 } from "../../_actions/notifications";
 import { actionChoisirProfil } from "../../_actions/profil";
 import { acteurCourant, pageActive } from "../../_services/acteur";
-import { LienNav } from "./lien-nav";
+import { LIBELLE_BARRE, LienNav } from "./lien-nav";
+import { MenuPlus } from "./menu-plus";
 import { Logo } from "./logo";
 
 const actionsNotifications = {
@@ -122,65 +122,36 @@ const navigation = cache(async () => {
 });
 
 async function NavLaterale() {
-  const { t, etat, nonLues, liens, selecteur } = await navigation();
+  const { t, etat, nonLues, liens } = await navigation();
   return (
     <>
-      <nav aria-label={t("nav.principale")} className="grid gap-1">
+      <nav aria-label={t("nav.principale")} className="my-auto grid gap-1">
         {liens.map((l) => (
           <LienNav key={l.href} {...l} variante="laterale" />
         ))}
         {etat && (
-          <>
-            <Cloche
-              nonLuesInitiales={nonLues}
-              actions={actionsNotifications}
-              libelle
-              className="hidden lg:flex"
-            />
-            <Cloche
-              nonLuesInitiales={nonLues}
-              actions={actionsNotifications}
-              className="lg:hidden"
-            />
-          </>
+          <Cloche
+            nonLuesInitiales={nonLues}
+            actions={actionsNotifications}
+            libelle
+            classeLibelle={LIBELLE_BARRE}
+          />
+        )}
+        {etat && (
+          <SelecteurProfil
+            actif={etat.actif}
+            profils={etat.profils}
+            choisir={actionChoisirProfil}
+            libelle={t("nav.profil")}
+            classeLibelle={LIBELLE_BARRE}
+          />
         )}
       </nav>
-      <div className="mt-auto grid gap-2">
-        <SelecteurLangue className="justify-start" />
-        {etat ? (
-          <>
-            <span className="hidden lg:block">{selecteur(false)}</span>
-            <span className="lg:hidden">{selecteur(true)}</span>
-          </>
-        ) : (
-          <>
-            <div className="hidden gap-2 lg:grid">
-              <Link
-                href="/connexion"
-                className={buttonVariants({ size: "lg" })}
-              >
-                {t("nav.connexion")}
-              </Link>
-              <Link
-                href="/inscription"
-                className={buttonVariants({ variant: "outline", size: "lg" })}
-              >
-                {t("nav.inscription")}
-              </Link>
-            </div>
-            <Link
-              href="/connexion"
-              aria-label={t("nav.connexion")}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "icon-lg" }),
-                "lg:hidden",
-              )}
-            >
-              <UserIcon />
-            </Link>
-          </>
-        )}
-      </div>
+      <MenuPlus
+        connecte={!!etat}
+        estAdmin={etat?.estAdmin ?? false}
+        deconnecter={actionDeconnexion}
+      />
     </>
   );
 }
@@ -248,17 +219,21 @@ async function NavBasse() {
  */
 export function Coque({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-dvh md:pl-[72px] lg:pl-60">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-[72px] flex-col border-r bg-background px-3 py-6 md:flex lg:w-60">
-        <div className="mb-8 px-1.5">
-          <span className="lg:hidden">
+    <div className="min-h-dvh md:pl-[72px]">
+      {/*
+        Barre latérale réduite (icônes), étendue au survol ou au focus
+        clavier, par-dessus le contenu, comme sur Instagram.
+      */}
+      <aside className="group/barre fixed inset-y-0 left-0 z-40 hidden w-[72px] flex-col overflow-hidden border-r bg-background px-3 py-6 transition-[width,box-shadow] duration-200 ease-out focus-within:w-60 focus-within:shadow-xl hover:w-60 hover:shadow-xl md:flex">
+        <div className="flex h-12 items-center px-1.5">
+          <span className="group-focus-within/barre:hidden group-hover/barre:hidden">
             <Logo court />
           </span>
-          <span className="hidden lg:block">
+          <span className="hidden group-focus-within/barre:block group-hover/barre:block">
             <Logo />
           </span>
         </div>
-        <Suspense fallback={<Skeleton className="h-40 w-full" />}>
+        <Suspense fallback={<Skeleton className="my-auto h-64 w-full" />}>
           <NavLaterale />
         </Suspense>
       </aside>

@@ -28,12 +28,17 @@ export function SelecteurProfil({
   profils,
   choisir,
   compact = false,
+  libelle,
+  classeLibelle,
   pied,
 }: {
   actif: Profil;
   profils: Profil[];
   choisir: ChoisirProfil;
   compact?: boolean;
+  /** Entrée de barre de navigation : avatar puis ce libellé (ex. « Profil »). */
+  libelle?: string;
+  classeLibelle?: string;
   pied?: ReactNode;
 }) {
   const t = useTranslations("profilActif");
@@ -49,37 +54,58 @@ export function SelecteurProfil({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        aria-label={t("changerDeProfil")}
-        className={cn(
-          "flex min-w-0 items-center gap-2 rounded-full p-1 text-left outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50",
-          !compact && "w-full rounded-xl p-2",
-          enCours && "opacity-60",
-        )}
-      >
-        <AvatarProfil
-          nom={actif.nom}
-          photo={actif.photo}
-          taille={compact ? "sm" : "md"}
-          anneau={actif.type === "page"}
-        />
-        {!compact && (
-          <>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-semibold">
-                {actif.nom}
+      {libelle ? (
+        <DropdownMenuTrigger
+          aria-label={t("changerDeProfil")}
+          className={cn(
+            "flex h-12 w-full items-center gap-4 rounded-lg px-3 text-left outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50",
+            enCours && "opacity-60",
+          )}
+        >
+          <AvatarProfil
+            nom={actif.nom}
+            photo={actif.photo}
+            taille="xs"
+            anneau={actif.type === "page"}
+            className="shrink-0"
+          />
+          <span className={cn("truncate text-base", classeLibelle)}>
+            {libelle}
+          </span>
+        </DropdownMenuTrigger>
+      ) : (
+        <DropdownMenuTrigger
+          aria-label={t("changerDeProfil")}
+          className={cn(
+            "flex min-w-0 items-center gap-2 rounded-full p-1 text-left outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50",
+            !compact && "w-full rounded-xl p-2",
+            enCours && "opacity-60",
+          )}
+        >
+          <AvatarProfil
+            nom={actif.nom}
+            photo={actif.photo}
+            taille={compact ? "sm" : "md"}
+            anneau={actif.type === "page"}
+          />
+          {!compact && (
+            <>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-sm font-semibold">
+                  {actif.nom}
+                </span>
+                <span className="block truncate text-xs text-muted-foreground">
+                  {sousTitre(actif)}
+                </span>
               </span>
-              <span className="block truncate text-xs text-muted-foreground">
-                {sousTitre(actif)}
-              </span>
-            </span>
-            <ChevronDownIcon className="size-4 text-muted-foreground" />
-          </>
-        )}
-      </DropdownMenuTrigger>
+              <ChevronDownIcon className="size-4 text-muted-foreground" />
+            </>
+          )}
+        </DropdownMenuTrigger>
+      )}
       <DropdownMenuContent
-        align={compact ? "end" : "start"}
-        side={compact ? "bottom" : "top"}
+        align={compact || libelle ? "end" : "start"}
+        side={libelle ? "right" : compact ? "bottom" : "top"}
         className="w-72"
       >
         <DropdownMenuGroup>

@@ -25,11 +25,14 @@ export function Cloche({
   nonLuesInitiales,
   actions,
   libelle = false,
+  classeLibelle,
   className,
 }: {
   nonLuesInitiales: number;
   actions: ActionsNotifications;
   libelle?: boolean;
+  /** Classes du libellé, pour qu'une barre réduite puisse le masquer. */
+  classeLibelle?: string;
   className?: string;
 }) {
   const t = useTranslations("notifications");
@@ -63,7 +66,7 @@ export function Cloche({
             variant="ghost"
             size={libelle ? "lg" : "icon-lg"}
             className={cn(
-              libelle && "h-12 w-full justify-start gap-4 px-3",
+              libelle && "h-12 w-full justify-start gap-4 px-3 font-normal",
               className,
             )}
             aria-label={nonLues ? `${t("titre")} (${nonLues})` : t("titre")}
@@ -78,7 +81,9 @@ export function Cloche({
             </span>
           )}
         </span>
-        {libelle && <span className="text-base font-normal">{t("titre")}</span>}
+        {libelle && (
+          <span className={cn("text-base", classeLibelle)}>{t("titre")}</span>
+        )}
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80 gap-0 p-0">
         <p className="border-b px-4 py-3 font-semibold">{t("titre")}</p>
