@@ -23,8 +23,8 @@ export function CarteEvenement({
   const t = useTranslations();
   const annule = evenement.statut === "annule";
   return (
-    <article className="overflow-hidden border-b bg-card pb-4 sm:rounded-xl sm:border">
-      <header className="flex items-center gap-3 px-3 py-2.5">
+    <article className="overflow-hidden border-b bg-card pb-4 sm:rounded-xl sm:border-none">
+      <header className="flex items-center gap-3 py-2.5">
         <Link
           href={`/p/${evenement.page.slug}`}
           className="flex min-w-0 items-center gap-2.5"
@@ -32,8 +32,7 @@ export function CarteEvenement({
           <AvatarProfil
             nom={evenement.page.nom}
             photo={evenement.page.photo}
-            taille="sm"
-            anneau
+            taille="md"
           />
           <span className="truncate text-sm font-semibold">
             {evenement.page.nom}
@@ -57,7 +56,7 @@ export function CarteEvenement({
             alt=""
             loading={priorite ? "eager" : "lazy"}
             className={cn(
-              "size-full object-cover transition-transform duration-500 group-hover:scale-[1.02]",
+              "size-full rounded-sm object-cover transition-transform duration-500 group-hover:scale-[1.02]",
               annule && "grayscale",
             )}
           />
@@ -70,7 +69,7 @@ export function CarteEvenement({
         <div className="grid gap-1.5 px-3 pt-3">
           <h2
             className={cn(
-              "text-base leading-snug font-semibold",
+              "text-xl leading-snug font-semibold",
               annule && "text-muted-foreground line-through",
             )}
           >
