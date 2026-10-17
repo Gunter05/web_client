@@ -70,7 +70,11 @@
     "deconnexion": "Sign out",
     "administration": "Administration",
     "plus": "More",
-    "principale": "Main navigation"
+    "principale": "Main navigation",
+    "reduire": "Collapse menu",
+    "etendre": "Expand menu",
+    "pages": "Pages",
+    "rechercher": "Search"
   },
   "identite": {
     "titreConnexion": "Sign in",
@@ -298,5 +302,13 @@
   },
   "metadata": {
     "description": "All your school's events: matches, parties, talks. No account needed."
+  },
+  "recherche": {
+    "titre": "Search",
+    "placeholder": "Search an event, a place, a page",
+    "effacer": "Clear search",
+    "tous": "All",
+    "aucunResultat": "No events match your search",
+    "resultats": "{n, plural, =0 {No results} one {# event} other {# events}}"
   }
 }

@@ -7,12 +7,14 @@ import { IMAGE_PAR_DEFAUT } from "./carte-evenement";
 /** Grille de vignettes carrées, comme la grille d'un profil Instagram. */
 export function GrilleEvenements({
   evenements,
+  className,
 }: {
   evenements: EvenementAffiche[];
+  className?: string;
 }) {
   const t = useTranslations();
   return (
-    <ul className="grid grid-cols-3 gap-0.5 sm:gap-1">
+    <ul className={cn("grid grid-cols-3 gap-0.5 sm:gap-1", className)}>
       {evenements.map((e) => (
         <li key={e.id}>
           <Link

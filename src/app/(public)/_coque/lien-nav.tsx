@@ -4,8 +4,9 @@ import { cn } from "@/shared/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { LIBELLE_BARRE } from "./classes-barre";
 
-/** Entrée de navigation : icône seule sur mobile et tablette, avec libellé sur grand écran. */
+/** Entrée de navigation : barre latérale (icône + libellé) ou barre basse (icône). */
 export function LienNav({
   href,
   icone,
@@ -37,14 +38,15 @@ export function LienNav({
   return (
     <Link
       href={href}
+      aria-label={libelle}
       aria-current={actif ? "page" : undefined}
       className={cn(
-        "flex items-center gap-4 rounded-lg p-3 transition-colors hover:bg-accent [&_svg]:size-6",
-        actif && "font-bold [&_svg]:stroke-[2.5]",
+        "flex h-11 items-center gap-3 rounded-lg px-3 text-base font-semibold transition-colors hover:bg-muted [&_svg]:size-6 [&_svg]:shrink-0",
+        actif && "text-danger [&_svg]:stroke-[2.5]",
       )}
     >
       {icone}
-      <span className="hidden text-base lg:inline">{libelle}</span>
+      <span className={LIBELLE_BARRE}>{libelle}</span>
     </Link>
   );
 }
