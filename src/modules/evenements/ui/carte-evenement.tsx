@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import type { EvenementAffiche } from "../domain/affichage";
 import { BadgesEvenement } from "./badges";
+import { IconePartager } from "./bouton-partager";
 import { DateEvenement } from "./date-evenement";
 import { DatePublication } from "./date-publication";
 import { TuileDate } from "./tuile-date";
@@ -19,15 +20,18 @@ export const IMAGE_PAR_DEFAUT = "/demo/defaut.svg";
 export function CarteEvenement({
   evenement,
   priorite = false,
+  surPartage,
 }: {
   evenement: EvenementAffiche;
   priorite?: boolean;
+  /** Mesure du clic sur « Partager », fournie par la route (métrique Viralité). */
+  surPartage?: (evenementId: string) => Promise<void>;
 }) {
   const t = useTranslations();
   const annule = evenement.statut === "annule";
   return (
     <article className="overflow-hidden border-b bg-card pb-4 sm:rounded-xl sm:border-none">
-      <header className="flex items-center gap-3 py-2.5">
+      <header className="flex items-center gap-3 px-3 py-2.5 sm:px-0">
         <Link
           href={`/p/${evenement.page.slug}`}
           className="flex min-w-0 items-center gap-2.5"
@@ -75,36 +79,45 @@ export function CarteEvenement({
             </span>
           )}
         </div>
-        <div className="flex gap-3 px-3">
-          <TuileDate
-            iso={evenement.debut}
-            className="relative -mt-7 shrink-0 self-start"
-          />
-          <div className="grid min-w-0 gap-1 pt-2">
-            <h2
-              className={cn(
-                "text-xl leading-snug font-semibold",
-                annule && "text-muted-foreground line-through",
-              )}
-            >
-              {evenement.nom}
-            </h2>
-            <DateEvenement
-              iso={evenement.debut}
-              className="text-sm first-letter:uppercase"
-            />
-            <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <MapPinIcon className="size-4 shrink-0" />
-              <span className="truncate">{evenement.lieu}</span>
-            </p>
-            <p className="flex flex-wrap gap-x-2 text-sm text-lien">
-              {evenement.categories.map((c) => (
-                <span key={c}>#{t(`categories.${c}`).replaceAll(" ", "")}</span>
-              ))}
-            </p>
-          </div>
-        </div>
       </Link>
+
+      {/* Tuile de date posée sur l'image, actions à droite (comme Instagram). */}
+      <div className="flex items-start justify-between px-3 sm:px-0">
+        <TuileDate iso={evenement.debut} className="relative -mt-7 shrink-0" />
+        <IconePartager
+          chemin={`/e/${evenement.id}`}
+          titre={evenement.nom}
+          texte={evenement.nom}
+          onPartage={surPartage ? () => surPartage(evenement.id) : undefined}
+          className="mt-1 -mr-2"
+        />
+      </div>
+
+      <div className="grid gap-1 px-3 pt-2 sm:px-0">
+        <h2
+          className={cn(
+            "text-xl leading-snug font-semibold",
+            annule && "text-muted-foreground line-through",
+          )}
+        >
+          <Link href={`/e/${evenement.id}`} className="hover:underline">
+            {evenement.nom}
+          </Link>
+        </h2>
+        <DateEvenement
+          iso={evenement.debut}
+          className="text-sm first-letter:uppercase"
+        />
+        <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <MapPinIcon className="size-4 shrink-0" />
+          <span className="truncate">{evenement.lieu}</span>
+        </p>
+        <p className="flex flex-wrap gap-x-2 text-sm text-lien">
+          {evenement.categories.map((c) => (
+            <span key={c}>#{t(`categories.${c}`).replaceAll(" ", "")}</span>
+          ))}
+        </p>
+      </div>
     </article>
   );
 }

@@ -7,6 +7,7 @@ import {
   lireFiltresUrl,
 } from "@/modules/evenements";
 import { CarrouselPages } from "@/modules/pages";
+import { actionClicPartager } from "../_actions/audience";
 import { actionChargerEvenements } from "../_actions/evenements";
 import { listerDepuisUrl, pagesDuFiltre } from "../_services/affichage";
 import { Suspense } from "react";
@@ -39,6 +40,7 @@ async function Accueil({ searchParams }: PageProps<"/">) {
           suivantInitial={suivant}
           filtres={filtres}
           charger={actionChargerEvenements}
+          surPartage={actionClicPartager}
         />
       )}
     </div>

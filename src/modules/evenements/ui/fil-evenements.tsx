@@ -19,11 +19,13 @@ export function FilEvenements({
   suivantInitial,
   filtres,
   charger,
+  surPartage,
 }: {
   initiaux: EvenementAffiche[];
   suivantInitial: number | null;
   filtres: FiltresUrl;
   charger: ChargerEvenements;
+  surPartage?: (evenementId: string) => Promise<void>;
 }) {
   const t = useTranslations("evenements");
   const [evenements, setEvenements] = useState(initiaux);
@@ -52,7 +54,12 @@ export function FilEvenements({
   return (
     <div className="grid gap-0 sm:gap-6">
       {evenements.map((e, i) => (
-        <CarteEvenement key={e.id} evenement={e} priorite={i < 2} />
+        <CarteEvenement
+          key={e.id}
+          evenement={e}
+          priorite={i < 2}
+          surPartage={surPartage}
+        />
       ))}
       <div ref={sentinelle} aria-hidden />
       {enCours && <Skeleton className="aspect-square w-full sm:rounded-xl" />}

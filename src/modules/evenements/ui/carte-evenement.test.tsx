@@ -41,9 +41,14 @@ describe("CarteEvenement (US-01)", () => {
     expect(screen.getByText("Salle des fêtes")).toBeInTheDocument();
     expect(screen.getByText("BDE")).toBeInTheDocument();
     expect(screen.getByText("#Soirée/fête")).toBeInTheDocument();
+    for (const lien of screen.getAllByRole("link", {
+      name: "Soirée de gala",
+    })) {
+      expect(lien).toHaveAttribute("href", "/e/gala26xx");
+    }
     expect(
-      screen.getByRole("link", { name: "Soirée de gala" }),
-    ).toHaveAttribute("href", "/e/gala26xx");
+      screen.getByRole("button", { name: "Partager" }),
+    ).toBeInTheDocument();
   });
 
   it("signale l'annulation par un texte, pas seulement une couleur (US-15)", () => {
