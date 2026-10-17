@@ -27,12 +27,18 @@ export type Auteur = { compteId: string; pageId: string | null };
 
 // ——— Lectures ———
 
-export function lister(deps: DepsEvenements, filtres: Filtres, depuis = 0) {
+/** Tous les événements correspondant aux filtres, triés (US-16, US-17). */
+export function listerTous(deps: DepsEvenements, filtres: Filtres) {
   const maintenant = deps.horloge.maintenant();
-  const tries = trier(
+  return trier(
     deps.evenements.tous().filter((e) => correspond(e, filtres, maintenant)),
     maintenant,
   );
+}
+
+/** Liste paginée par 20 (US-16). */
+export function lister(deps: DepsEvenements, filtres: Filtres, depuis = 0) {
+  const tries = listerTous(deps, filtres);
   const fin = depuis + TAILLE_PAGE;
   return {
     evenements: tries.slice(depuis, fin),

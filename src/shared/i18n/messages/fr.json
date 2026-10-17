@@ -73,7 +73,8 @@
     "principale": "Navigation principale",
     "reduire": "Réduire le menu",
     "etendre": "Étendre le menu",
-    "pages": "Pages"
+    "pages": "Pages",
+    "rechercher": "Rechercher"
   },
   "identite": {
     "titreConnexion": "Connexion",
@@ -301,5 +302,13 @@
   },
   "metadata": {
     "description": "Tous les événements de l'école : matchs, soirées, conférences. Sans compte."
+  },
+  "recherche": {
+    "titre": "Rechercher",
+    "placeholder": "Rechercher un événement, un lieu, une page",
+    "effacer": "Effacer la recherche",
+    "tous": "Tous",
+    "aucunResultat": "Aucun événement ne correspond à votre recherche",
+    "resultats": "{n, plural, =0 {Aucun résultat} one {# événement} other {# événements}}"
   }
 }

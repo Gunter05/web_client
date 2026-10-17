@@ -4,6 +4,7 @@ import {
   HomeIcon,
   LogOutIcon,
   PlusSquareIcon,
+  SearchIcon,
   ShieldIcon,
   UserIcon,
   UsersIcon,
@@ -54,6 +55,7 @@ const navigation = cache(async () => {
 
   const liens = [
     { href: "/", icone: <HomeIcon />, libelle: t("nav.accueil") },
+    { href: "/recherche", icone: <SearchIcon />, libelle: t("nav.rechercher") },
     ...(page
       ? [
           {

@@ -21,6 +21,8 @@ const deps: DepsEvenements = {
 
 export const listerEvenements = (filtres: Filtres, depuis = 0) =>
   cas.lister(deps, filtres, depuis);
+export const listerTousLesEvenements = (filtres: Filtres) =>
+  cas.listerTous(deps, filtres);
 export const evenementParId = (id: string) => cas.parId(deps, id);
 export const evenementsDeLaPage = (pageId: string) =>
   cas.deLaPage(deps, pageId);
