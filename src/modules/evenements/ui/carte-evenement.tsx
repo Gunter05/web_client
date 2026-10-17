@@ -1,17 +1,20 @@
 import { AvatarProfil } from "@/shared/composants/avatar-profil";
 import { cn } from "@/shared/lib/utils";
-import { CalendarIcon, MapPinIcon } from "lucide-react";
+import { MapPinIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import type { EvenementAffiche } from "../domain/affichage";
 import { BadgesEvenement } from "./badges";
 import { DateEvenement } from "./date-evenement";
+import { DatePublication } from "./date-publication";
+import { TuileDate } from "./tuile-date";
 
 export const IMAGE_PAR_DEFAUT = "/demo/defaut.svg";
 
 /**
- * Carte d'événement façon publication Instagram (US-01) : en-tête avec la page,
- * grande image, puis nom, date, lieu, catégories et badges de statut.
+ * Carte d'événement façon publication Instagram (US-01) : en-tête avec la
+ * page et la date de publication, grande image, tuile de date posée sur son
+ * coin, puis nom, date et heure, lieu, catégories et badges de statut.
  */
 export function CarteEvenement({
   evenement,
@@ -35,8 +38,14 @@ export function CarteEvenement({
             taille="sm"
             anneau
           />
-          <span className="truncate text-sm font-semibold">
-            {evenement.page.nom}
+          <span className="grid min-w-0">
+            <span className="truncate text-sm font-semibold">
+              {evenement.page.nom}
+            </span>
+            <DatePublication
+              iso={evenement.creeLe}
+              className="text-xs text-muted-foreground"
+            />
           </span>
         </Link>
         <BadgesEvenement
@@ -50,7 +59,7 @@ export function CarteEvenement({
         className="group block"
         aria-label={evenement.nom}
       >
-        <div className="relative aspect-square overflow-hidden bg-muted">
+        <div className="relative aspect-[4/5] overflow-hidden bg-muted">
           {/* eslint-disable-next-line @next/next/no-img-element -- images simulées (SVG) */}
           <img
             src={evenement.photo ?? IMAGE_PAR_DEFAUT}
@@ -67,31 +76,34 @@ export function CarteEvenement({
             </span>
           )}
         </div>
-        <div className="grid gap-1.5 px-3 pt-3">
-          <h2
-            className={cn(
-              "text-base leading-snug font-semibold",
-              annule && "text-muted-foreground line-through",
-            )}
-          >
-            {evenement.nom}
-          </h2>
-          <p className="flex items-center gap-1.5 text-sm">
-            <CalendarIcon className="size-4 shrink-0 text-muted-foreground" />
+        <div className="flex gap-3 px-3">
+          <TuileDate
+            iso={evenement.debut}
+            className="relative -mt-7 shrink-0 self-start"
+          />
+          <div className="grid min-w-0 gap-1 pt-2">
+            <h2
+              className={cn(
+                "text-base leading-snug font-semibold",
+                annule && "text-muted-foreground line-through",
+              )}
+            >
+              {evenement.nom}
+            </h2>
             <DateEvenement
               iso={evenement.debut}
-              className="first-letter:uppercase"
+              className="text-sm first-letter:uppercase"
             />
-          </p>
-          <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-            <MapPinIcon className="size-4 shrink-0" />
-            <span className="truncate">{evenement.lieu}</span>
-          </p>
-          <p className="flex flex-wrap gap-x-2 text-sm text-lien">
-            {evenement.categories.map((c) => (
-              <span key={c}>#{t(`categories.${c}`).replaceAll(" ", "")}</span>
-            ))}
-          </p>
+            <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <MapPinIcon className="size-4 shrink-0" />
+              <span className="truncate">{evenement.lieu}</span>
+            </p>
+            <p className="flex flex-wrap gap-x-2 text-sm text-lien">
+              {evenement.categories.map((c) => (
+                <span key={c}>#{t(`categories.${c}`).replaceAll(" ", "")}</span>
+              ))}
+            </p>
+          </div>
         </div>
       </Link>
     </article>
