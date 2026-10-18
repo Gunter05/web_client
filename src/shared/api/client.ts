@@ -94,3 +94,29 @@ export async function televerserImage(fichier: File): Promise<string> {
   const { url } = await api<{ url: string }>("/api/v1/medias", { formulaire });
   return url;
 }
+
+/**
+ * Traduit une erreur d'un module de l'API au contrat anglais dans les codes
+ * (`erreurs.*`) et noms de champs du front. Les autres erreurs passent telles
+ * quelles.
+ */
+export function traduireErreurApi(
+  erreur: unknown,
+  codes: Record<string, string>,
+  champs: Record<string, string>,
+): unknown {
+  if (!(erreur instanceof ErreurApi)) return erreur;
+  const traduits = erreur.champs
+    ? Object.fromEntries(
+        Object.entries(erreur.champs).map(([champ, code]) => [
+          champs[champ] ?? champ,
+          codes[code] ?? code,
+        ]),
+      )
+    : undefined;
+  return new ErreurApi(
+    erreur.statut,
+    codes[erreur.code] ?? erreur.code,
+    traduits,
+  );
+}

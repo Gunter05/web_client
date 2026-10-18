@@ -1,4 +1,4 @@
-import { ErreurApi } from "@/shared/api/client";
+import { traduireErreurApi } from "@/shared/api/client";
 import type { EvenementAffiche } from "../domain/affichage";
 import type { Changement } from "../domain/evenement";
 import {
@@ -101,22 +101,8 @@ export function versEvenementAffiche(e: EventResponse): EvenementAffiche {
 }
 
 /** Traduit une erreur de l'API dans les codes et noms de champs du front. */
-export function traduireErreur(erreur: unknown): unknown {
-  if (!(erreur instanceof ErreurApi)) return erreur;
-  const champs = erreur.champs
-    ? Object.fromEntries(
-        Object.entries(erreur.champs).map(([champ, code]) => [
-          CHAMPS_FORMULAIRE[champ] ?? champ,
-          ERREURS[code] ?? code,
-        ]),
-      )
-    : undefined;
-  return new ErreurApi(
-    erreur.statut,
-    ERREURS[erreur.code] ?? erreur.code,
-    champs,
-  );
-}
+export const traduireErreur = (erreur: unknown) =>
+  traduireErreurApi(erreur, ERREURS, CHAMPS_FORMULAIRE);
 
 /** Exécute un appel à l'API en traduisant ses erreurs. */
 export async function traduit<T>(appel: () => Promise<T>): Promise<T> {

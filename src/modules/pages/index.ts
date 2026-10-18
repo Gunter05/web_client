@@ -16,3 +16,4 @@ export {
   type LigneMembre,
   type ResultatRecherche,
 } from "./ui/gestion-acces";
+export { roleDepuisApi, typeDepuisApi } from "./infrastructure/codes-api";
