@@ -6,6 +6,10 @@ import {
   apiEvenements,
   type DonneesEnvoyees,
 } from "./infrastructure/api-evenements";
+import {
+  categorieVersApi,
+  periodeVersApi,
+} from "./infrastructure/traduction-api";
 
 export type {
   DonneesEnvoyees,
@@ -23,12 +27,13 @@ export function listerEvenements(
 ) {
   const p = new URLSearchParams();
   if (filtres.categories.length)
-    p.set("categorie", filtres.categories.join(","));
-  if (filtres.periodes.length) p.set("periode", filtres.periodes.join(","));
+    p.set("category", filtres.categories.map(categorieVersApi).join(","));
+  if (filtres.periodes.length)
+    p.set("period", filtres.periodes.map(periodeVersApi).join(","));
   if (filtres.pages.length) p.set("page", filtres.pages.join(","));
   if (filtres.recherche) p.set("q", filtres.recherche);
-  p.set("depuis", String(depuis));
-  p.set("limite", String(limite));
+  p.set("offset", String(depuis));
+  p.set("limit", String(limite));
   return apiEvenements.lister(p);
 }
 

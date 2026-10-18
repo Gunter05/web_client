@@ -62,11 +62,13 @@ export async function api<T>(
     const probleme = (donnees ?? {}) as {
       code?: string;
       champs?: Record<string, string>;
+      /** Nom des erreurs par champ dans les modules au contrat anglais. */
+      fieldErrors?: Record<string, string>;
     };
     throw new ErreurApi(
       reponse.status,
       probleme.code ?? codeParDefaut(reponse.status),
-      probleme.champs,
+      probleme.champs ?? probleme.fieldErrors,
     );
   }
   return donnees as T;

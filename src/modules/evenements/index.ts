@@ -18,6 +18,7 @@ export {
   type FiltresUrl,
   lireFiltresUrl,
 } from "./domain/filtres-url";
+export { statutDepuisApi } from "./infrastructure/codes-api";
 export { correspondRecherche, RECHERCHE_MAX } from "./domain/recherche";
 export { BarreFiltres } from "./ui/barre-filtres";
 export { BarreRecherche } from "./ui/barre-recherche";
