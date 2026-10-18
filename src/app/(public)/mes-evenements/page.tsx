@@ -4,7 +4,6 @@ import { MesEvenements } from "@/modules/audience";
 import { compterVues } from "@/modules/audience/server";
 import { evenementsDeLaPage } from "@/modules/evenements/server";
 import { pageActive, profilActif } from "../../_services/acteur";
-import { afficherEvenements } from "../../_services/affichage";
 import { EnTetePage } from "../_coque/en-tete-page";
 import { Suspense } from "react";
 import { SqueletteContenu } from "@/app/(public)/_coque/squelette";
@@ -25,13 +24,16 @@ async function PageMesEvenements() {
       </div>
     );
   }
-  const evenements = afficherEvenements(evenementsDeLaPage(page.id));
+  const evenements = await evenementsDeLaPage(page.slug);
   return (
     <div className="mx-auto max-w-3xl px-4 pt-6 md:pt-10">
       <EnTetePage titre={t("mesEvenements")} sousTitre={page.nom} />
       <MesEvenements
         evenements={evenements}
-        vues={compterVues(evenements.map((e) => e.id))}
+        vues={await compterVues(
+          page.id,
+          evenements.map((e) => e.id),
+        )}
       />
     </div>
   );

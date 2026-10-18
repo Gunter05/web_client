@@ -107,7 +107,7 @@ export function Cloche({
                       aria-hidden
                     />
                     <span className="grid gap-0.5">
-                      <span className="text-sm">{t(n.type, n.params)}</span>
+                      <span className="text-sm">{t(n.type, n.parametres)}</span>
                       <span className="text-xs text-muted-foreground">
                         {format.relativeTime(new Date(n.creeLe))}
                       </span>

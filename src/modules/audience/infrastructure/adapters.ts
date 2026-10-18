@@ -1,14 +1,23 @@
 import "server-only";
 import { cookies, headers } from "next/headers";
-import { collection } from "@/shared/stockage/collection-json";
-import type { DepotVues } from "../application/cas-usage";
-import type { Vue } from "../domain/vue";
+import { api } from "@/shared/api/client";
 
-const vues = collection<Vue>("vues", () => []);
-
-export const depotVuesJson: DepotVues = {
-  toutes: () => vues.tous(),
-  ajouter: (vue) => vues.muter((l) => [...l, vue]),
+/** Adaptateur HTTP du module audience de l'API (US-39). */
+export const apiAudience = {
+  ouverture: (
+    evenementId: string,
+    o: { visiteurId: string; agent: string | null; viaLienPartage: boolean },
+  ) =>
+    api<void>(
+      `/api/v1/evenements/${encodeURIComponent(evenementId)}/ouvertures`,
+      {
+        corps: o,
+      },
+    ),
+  vues: (pageId: string, evenementIds: readonly string[]) =>
+    api<Record<string, number>>(
+      `/api/v1/pages/${pageId}/vues?evenements=${evenementIds.map(encodeURIComponent).join(",")}`,
+    ),
 };
 
 const COOKIE_VISITEUR = "contineng_visiteur";

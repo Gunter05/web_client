@@ -12,7 +12,7 @@ import { SqueletteContenu } from "@/app/(public)/_coque/squelette";
 async function ModifierEvenement({ params }: PageProps<"/e/[id]/modifier">) {
   const { id } = await params;
   const t = await getTranslations("evenements");
-  const evenement = evenementParId(id);
+  const evenement = await evenementParId(id);
   if (!evenement) notFound();
   const etat = await profilActif();
   if (!etat) redirect(`/connexion?retour=/e/${id}/modifier`);

@@ -1,6 +1,4 @@
-import { evenementsDeLaPage } from "@/modules/evenements/server";
-import { profilsParIds } from "@/modules/identite/server";
-import { membresDe, pageParId } from "@/modules/pages/server";
+import { detailPage } from "@/modules/administration/server";
 import { AvatarProfil } from "@/shared/composants/avatar-profil";
 import { Badge } from "@/shared/ui/badge";
 import { buttonVariants } from "@/shared/ui/button";
@@ -17,11 +15,9 @@ import { SqueletteAdmin } from "@/app/admin/_coque/squelette";
 async function DetailPage({ params }: PageProps<"/admin/pages/[id]">) {
   const t = await getTranslations();
   if (!(await adminCourant())) return null;
-  const page = pageParId((await params).id);
-  if (!page) notFound();
-  const membres = membresDe(page.id);
-  const profils = profilsParIds(membres.map((m) => m.compteId));
-  const evenements = evenementsDeLaPage(page.id);
+  const detail = await detailPage((await params).id);
+  if (!detail) notFound();
+  const { page, membres, evenements } = detail;
   return (
     <section className="grid gap-6">
       <Link
@@ -59,12 +55,8 @@ async function DetailPage({ params }: PageProps<"/admin/pages/[id]">) {
           <ul className="grid gap-3">
             {membres.map((m) => (
               <li key={m.compteId} className="flex items-center gap-3 text-sm">
-                <AvatarProfil
-                  nom={profils.get(m.compteId)?.nom ?? "?"}
-                  photo={profils.get(m.compteId)?.photo ?? null}
-                  taille="sm"
-                />
-                <span className="flex-1">{profils.get(m.compteId)?.nom}</span>
+                <AvatarProfil nom={m.nom} photo={m.photo} taille="sm" />
+                <span className="flex-1">{m.nom}</span>
                 <Badge
                   variant={m.role === "proprietaire" ? "default" : "secondary"}
                 >

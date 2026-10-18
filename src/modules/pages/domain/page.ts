@@ -7,6 +7,7 @@ export const TYPES_ORGANISATION = [
 ] as const;
 export type TypeOrganisation = (typeof TYPES_ORGANISATION)[number];
 
+/** Organisation qui publie. Créée seulement après validation d'un admin (US-03). */
 export type Page = {
   id: string;
   /** Fixé à la création : la page n'est pas modifiable en V1. */
@@ -20,9 +21,11 @@ export type Page = {
 
 export type Role = "proprietaire" | "contributeur";
 
+/** Membre d'une page, avec son profil public (US-06). */
 export type Membre = {
-  pageId: string;
   compteId: string;
+  nom: string;
+  photo: string | null;
   role: Role;
   ajouteLe: string;
 };
@@ -31,7 +34,6 @@ export type StatutDemande = "en_attente" | "acceptee" | "refusee" | "retiree";
 
 export type DemandePage = {
   id: string;
-  demandeurId: string;
   nom: string;
   description: string;
   type: TypeOrganisation;
@@ -40,9 +42,8 @@ export type DemandePage = {
   statut: StatutDemande;
   motifRefus: string | null;
   envoyeeLe: string;
-  traiteeLe: string | null;
-  traiteePar: string | null;
-  pageId: string | null;
+  /** Renseigné dans l'espace Administration. */
+  demandeur: { id: string; nom: string; photo: string | null } | null;
 };
 
 export type FormulaireDemande = {
@@ -50,46 +51,5 @@ export type FormulaireDemande = {
   description: string;
   type: string;
   justification: string;
+  photo: string | null;
 };
-
-export type ErreursChamps = Record<string, string>;
-
-/** US-03 : règles du formulaire « Créer une page ». */
-export function erreursDemande(f: FormulaireDemande): ErreursChamps {
-  const champs: ErreursChamps = {};
-  const nom = f.nom.trim();
-  const description = f.description.trim();
-  const justification = f.justification.trim();
-  if (!nom) champs.nom = "obligatoire";
-  else if (nom.length < 3 || nom.length > 60) champs.nom = "longueurNomPage";
-  if (!description) champs.description = "obligatoire";
-  else if (description.length > 500) champs.description = "max500";
-  if (!estTypeOrganisation(f.type)) champs.type = "obligatoire";
-  if (!justification) champs.justification = "obligatoire";
-  else if (justification.length > 500) champs.justification = "max500";
-  return champs;
-}
-
-export function estTypeOrganisation(type: string): type is TypeOrganisation {
-  return (TYPES_ORGANISATION as readonly string[]).includes(type);
-}
-
-/** Deux noms de page sont identiques sans tenir compte de la casse ni des accents. */
-export function cleDeNom(nom: string): string {
-  return nom
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-export const MOTIF_MIN = 10;
-
-/** Propriétaire d'abord, puis contributeurs du plus récent au plus ancien (US-06). */
-export function trierMembres(membres: readonly Membre[]): Membre[] {
-  return [...membres].sort((a, b) => {
-    if (a.role !== b.role) return a.role === "proprietaire" ? -1 : 1;
-    return b.ajouteLe.localeCompare(a.ajouteLe);
-  });
-}

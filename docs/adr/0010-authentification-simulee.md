@@ -1,6 +1,6 @@
 # 0010 — Authentification simulée derrière un port
 
-Statut : Acceptée
+Statut : Remplacée par 0012
 Date : 2026-10-16
 Remplace : 0007
 

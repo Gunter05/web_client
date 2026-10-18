@@ -17,8 +17,10 @@ import { SqueletteContenu } from "@/app/(public)/_coque/squelette";
 async function Accueil({ searchParams }: PageProps<"/">) {
   const t = await getTranslations("evenements");
   const filtres = lireFiltresUrl(await searchParams);
-  const { evenements, suivant } = listerDepuisUrl(filtres);
-  const pages = pagesDuFiltre();
+  const [{ evenements, suivant }, pages] = await Promise.all([
+    listerDepuisUrl(filtres),
+    pagesDuFiltre(),
+  ]);
 
   return (
     <div className="mx-auto grid max-w-[470px] gap-4 pt-4 sm:px-4 md:pt-8">

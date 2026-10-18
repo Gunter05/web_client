@@ -1,73 +1,49 @@
 import "server-only";
-import { horlogeSysteme } from "@/shared/lib/horloge";
-import * as cas from "./application/cas-usage";
-import type { Auteur, DepsEvenements } from "./application/cas-usage";
-import type { Autorisation } from "./application/ports";
-import type { EvenementAffiche, PageResumee } from "./domain/affichage";
+import { cache } from "react";
+import { TAILLE_PAGE } from "./domain/evenement";
+import type { FiltresUrl } from "./domain/filtres-url";
 import {
-  type Evenement,
-  type Filtres,
-  type FormulaireEvenement,
-  periodeDe,
-} from "./domain/evenement";
-import { depotEvenementsJson } from "./infrastructure/depot-json";
+  apiEvenements,
+  type DonneesEnvoyees,
+} from "./infrastructure/api-evenements";
 
-export type { Auteur, Autorisation };
-
-const deps: DepsEvenements = {
-  evenements: depotEvenementsJson,
-  horloge: horlogeSysteme,
-};
-
-export const listerEvenements = (filtres: Filtres, depuis = 0) =>
-  cas.lister(deps, filtres, depuis);
-export const listerTousLesEvenements = (filtres: Filtres) =>
-  cas.listerTous(deps, filtres);
-export const evenementParId = (id: string) => cas.parId(deps, id);
-export const evenementsDeLaPage = (pageId: string) =>
-  cas.deLaPage(deps, pageId);
-export const idsPagesAvecEvenements = () => cas.pagesAvecEvenements(deps);
-export const tousLesEvenements = () => deps.evenements.tous();
-
-export const creerEvenement = (
-  auteur: Auteur,
-  autorise: Autorisation,
-  formulaire: FormulaireEvenement,
-  photo: string | null,
-) => cas.creer(deps, auteur, autorise, formulaire, photo);
-
-export const modifierEvenement = (
-  auteur: Auteur,
-  autorise: Autorisation,
-  id: string,
-  formulaire: FormulaireEvenement,
-  photo: string | null | undefined,
-) => cas.modifier(deps, auteur, autorise, id, formulaire, photo);
-
-export const annulerEvenement = (
-  auteur: Auteur,
-  autorise: Autorisation,
-  id: string,
-  motif: string,
-) => cas.annuler(deps, auteur, autorise, id, motif);
+export type {
+  DonneesEnvoyees,
+  ListeEvenements,
+} from "./infrastructure/api-evenements";
 
 /**
- * Joint la période calculée (UTC) et la page organisatrice, fournie par
- * l'appelant à partir du module pages.
+ * Liste publique (US-01, US-16, US-17) : filtres repris de l'adresse (pages
+ * désignées par leur slug), recherche texte, tranche de 20 à partir de `depuis`.
  */
-export function afficher(
-  evenements: readonly Evenement[],
-  pages: ReadonlyMap<string, PageResumee>,
-): EvenementAffiche[] {
-  const maintenant = deps.horloge.maintenant();
-  return evenements.map((e) => ({
-    ...e,
-    periode: periodeDe(e, maintenant),
-    page: pages.get(e.pageId) ?? {
-      id: e.pageId,
-      nom: "—",
-      slug: "",
-      photo: null,
-    },
-  }));
+export function listerEvenements(
+  filtres: FiltresUrl & { recherche?: string },
+  depuis = 0,
+  limite = TAILLE_PAGE,
+) {
+  const p = new URLSearchParams();
+  if (filtres.categories.length)
+    p.set("categorie", filtres.categories.join(","));
+  if (filtres.periodes.length) p.set("periode", filtres.periodes.join(","));
+  if (filtres.pages.length) p.set("page", filtres.pages.join(","));
+  if (filtres.recherche) p.set("q", filtres.recherche);
+  p.set("depuis", String(depuis));
+  p.set("limite", String(limite));
+  return apiEvenements.lister(p);
 }
+
+export const evenementParId = cache((id: string) => apiEvenements.fiche(id));
+export const evenementsDeLaPage = cache((slug: string) =>
+  apiEvenements.deLaPage(slug),
+);
+
+// ——— Écriture au nom de la page active (US-11, US-15) ———
+export const creerEvenement = (pageId: string, d: DonneesEnvoyees) =>
+  apiEvenements.creer(pageId, d);
+export const modifierEvenement = (
+  pageId: string,
+  id: string,
+  d: DonneesEnvoyees,
+) => apiEvenements.modifier(pageId, id, d);
+export const annulerEvenement = (pageId: string, id: string, motif: string) =>
+  apiEvenements.annuler(pageId, id, motif);

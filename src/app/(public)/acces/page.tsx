@@ -1,6 +1,5 @@
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
-import { profilsParIds } from "@/modules/identite/server";
 import { GestionAcces } from "@/modules/pages";
 import { membresDe } from "@/modules/pages/server";
 import {
@@ -29,8 +28,7 @@ async function Acces() {
       </div>
     );
   }
-  const membres = membresDe(page.id);
-  const profils = profilsParIds(membres.map((m) => m.compteId));
+  const membres = await membresDe(page.id);
   return (
     <div className="mx-auto max-w-2xl px-4 pt-6 md:pt-10">
       <EnTetePage
@@ -38,13 +36,7 @@ async function Acces() {
         sousTitre={t("pages.acces.intro")}
       />
       <GestionAcces
-        membres={membres.map((m) => ({
-          compteId: m.compteId,
-          role: m.role,
-          ajouteLe: m.ajouteLe,
-          nom: profils.get(m.compteId)?.nom ?? "—",
-          photo: profils.get(m.compteId)?.photo ?? null,
-        }))}
+        membres={membres}
         rechercher={actionRechercherUtilisateurs.bind(null, page.id)}
         donner={actionDonnerAcces.bind(null, page.id)}
         retirer={actionRetirerAcces.bind(null, page.id)}

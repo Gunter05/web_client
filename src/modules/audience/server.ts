@@ -1,30 +1,33 @@
 import "server-only";
-import { horlogeSysteme } from "@/shared/lib/horloge";
-import * as cas from "./application/cas-usage";
 import {
-  depotVuesJson,
+  apiAudience,
   userAgentCourant,
   visiteurCourant,
 } from "./infrastructure/adapters";
 
-const deps: cas.DepsAudience = { vues: depotVuesJson, horloge: horlogeSysteme };
-
 export { visiteurCourant };
 
-/** Enregistre l'ouverture d'une fiche par le visiteur courant. */
-export async function enregistrerOuverture(
+/**
+ * Ouverture d'une fiche : l'API compte une vue unique par jour (sans robots ni
+ * membres de la page) et mesure la consultation. Le User-Agent du navigateur
+ * est relayé, car l'appel part du serveur Next.js.
+ */
+export async function signalerOuverture(
   evenementId: string,
-  estMembreOrganisateur: boolean,
-) {
-  const visiteurId = await visiteurCourant();
-  cas.enregistrerOuverture(deps, {
-    evenementId,
-    visiteurId,
-    userAgent: await userAgentCourant(),
-    estMembreOrganisateur,
+  viaLienPartage: boolean,
+): Promise<void> {
+  await apiAudience.ouverture(evenementId, {
+    visiteurId: await visiteurCourant(),
+    agent: await userAgentCourant(),
+    viaLienPartage,
   });
-  return visiteurId;
 }
 
-export const compterVues = (evenementIds: readonly string[]) =>
-  cas.compterVues(deps, evenementIds);
+/** Vues des événements d'une page, réservées à ses membres. */
+export async function compterVues(
+  pageId: string,
+  evenementIds: readonly string[],
+): Promise<Map<string, number>> {
+  if (!evenementIds.length) return new Map();
+  return new Map(Object.entries(await apiAudience.vues(pageId, evenementIds)));
+}

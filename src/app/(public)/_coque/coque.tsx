@@ -30,7 +30,10 @@ import {
   actionListerNotifications,
   actionMarquerNotificationsLues,
 } from "../../_actions/notifications";
-import { actionChoisirProfil } from "../../_actions/profil";
+import {
+  actionChoisirProfil,
+  actionOublierPageActive,
+} from "../../_actions/profil";
 import { acteurCourant, pageActive } from "../../_services/acteur";
 import { pagesDuFiltre } from "../../_services/affichage";
 import { CadreCoque } from "./cadre-coque";
@@ -51,7 +54,7 @@ const navigation = cache(async () => {
   const acteur = await acteurCourant();
   const etat = acteur?.etat ?? null;
   const page = pageActive(etat);
-  const nonLues = etat ? nombreNonLues(etat.compteId) : 0;
+  const nonLues = etat ? await nombreNonLues() : 0;
 
   const liens = [
     { href: "/", icone: <HomeIcon />, libelle: t("nav.accueil") },
@@ -129,7 +132,7 @@ const navigation = cache(async () => {
 
 async function NavLaterale() {
   const { t, etat, nonLues, liens } = await navigation();
-  const pages = pagesDuFiltre();
+  const pages = await pagesDuFiltre();
   const libelleGras = `font-semibold ${LIBELLE_BARRE}`;
   return (
     <>
@@ -231,7 +234,10 @@ async function Bandeau() {
           />
         </div>
       )}
-      <AlerteAccesPerdu nom={etat?.accesPerdu ?? null} />
+      <AlerteAccesPerdu
+        nom={etat?.accesPerdu ?? null}
+        oublier={actionOublierPageActive}
+      />
     </>
   );
 }

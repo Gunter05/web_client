@@ -43,12 +43,11 @@ Les hooks Git (Husky) tournent tout seuls : avant chaque commit, `lint-staged` f
 
 Elles sont décrites et validées par Zod dans `src/shared/config/schema.ts`. Une variable manquante fait échouer le build en la nommant.
 
-| Variable               | Côté    | Obligatoire | Rôle                              |
-| ---------------------- | ------- | ----------- | --------------------------------- |
-| `NEXT_PUBLIC_SITE_URL` | public  | oui         | Adresse publique du site          |
-| `API_URL`              | serveur | non         | URL de l'API, quand elle existera |
-| `CONTINENG_DATA_DIR`   | serveur | non         | Dossier des données simulées      |
-| `FUSEAU_APERCU`        | serveur | non         | Fuseau de l'aperçu WhatsApp       |
+| Variable               | Côté    | Obligatoire | Rôle                        |
+| ---------------------- | ------- | ----------- | --------------------------- |
+| `NEXT_PUBLIC_SITE_URL` | public  | oui         | Adresse publique du site    |
+| `API_URL`              | serveur | non         | URL de l'API (défaut :8080) |
+| `FUSEAU_APERCU`        | serveur | non         | Fuseau de l'aperçu WhatsApp |
 
 - En local : `.env.local` (jamais commité).
 - En CI : bloc `env` de `.github/workflows/ci.yml`.
@@ -72,18 +71,18 @@ src/
 │   ├── evenements/          Événements, période, statut, filtres, partage (US-11/01/16/17/15/36)
 │   ├── audience/            Vues uniques par jour, « Mes événements » (US-39)
 │   ├── notifications/       Cloche et notifications dans l'application
-│   ├── mesure/              Métriques produit (analytics simulé)
+│   ├── mesure/              Métriques produit (partages)
 │   └── administration/      Supervision en lecture seule (US-07)
 │       ├── domain/              Types et règles métier, TypeScript pur
-│       ├── application/         Cas d'usage et ports (ne connaît que domain/)
-│       ├── infrastructure/      D'où viennent les données (simulées, puis API)
+│       ├── infrastructure/      Adaptateurs HTTP vers l'API (ADR 0012)
 │       ├── ui/                  Composants React du module
 │       ├── index.ts             Porte d'entrée sûre partout (types, composants)
 │       └── server.ts            Porte d'entrée serveur (données), protégée par server-only
 └── shared/              Ce qui sert partout
     ├── config/              Variables d'environnement validées
     ├── i18n/                Catalogues FR/EN, formats de date (US-16), langue (ADR 0009)
-    ├── stockage/            Persistance et images simulées (ADR 0011)
+    ├── api/                 Client HTTP de l'API et jeton de session (ADR 0012)
+    ├── stockage/            Images de démo par défaut
     ├── composants/          Composants génériques (avatar, champ, langue…)
     ├── hooks/, lib/         Utilitaires
     └── ui/                  Composants shadcn/ui, sans métier
@@ -91,7 +90,7 @@ src/
 
 ### Démonstration
 
-Les données de démo sont créées dans `data/` au premier lancement (supprimer le dossier les réinitialise). Mot de passe commun : `demo1234`.
+Les données de démo sont chargées par l'API lancée avec le profil `local` (`./mvnw spring-boot:run -Dspring-boot.run.profiles=local`). Mot de passe commun : `demo1234`.
 
 | E-mail                 | Rôle                                            |
 | ---------------------- | ----------------------------------------------- |

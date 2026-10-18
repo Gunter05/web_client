@@ -9,14 +9,16 @@ import {
   inscrire,
   modifierProfil,
 } from "@/modules/identite/server";
+import { televerserImage } from "@/shared/api/client";
 import {
   champFichier,
   champTexte,
   type EtatFormulaire,
-  etatDepuisEchec,
   lireFormulaire,
 } from "@/shared/lib/formulaire";
-import { enregistrerImage, verifierImage } from "@/shared/stockage/fichiers";
+import { verifierImage } from "@/shared/lib/images";
+import { ecrirePageActive } from "../_services/acteur";
+import { sansErreurApi } from "./_erreurs";
 
 /** N'accepte qu'un chemin interne, pour éviter les redirections ouvertes. */
 function cheminInterne(retour: string): string {
@@ -36,8 +38,10 @@ export async function actionConnexion(
     donnees,
   );
   if (!f) return { erreur: "formulaireInvalide" };
-  const resultat = await connecter(f.email, f.motDePasse);
-  if (!resultat.ok) return etatDepuisEchec(resultat);
+  const resultat = await sansErreurApi(() => connecter(f.email, f.motDePasse));
+  if (!resultat.ok) return resultat.etat;
+  // US-37 : après chaque connexion, le profil actif est le profil personnel.
+  await ecrirePageActive(null);
   redirect(cheminInterne(f.retour));
 }
 
@@ -55,13 +59,17 @@ export async function actionInscription(
     donnees,
   );
   if (!f) return { erreur: "formulaireInvalide" };
-  const resultat = await inscrire(f);
-  if (!resultat.ok) return etatDepuisEchec(resultat);
+  const resultat = await sansErreurApi(() =>
+    inscrire({ nom: f.nom, email: f.email, motDePasse: f.motDePasse }),
+  );
+  if (!resultat.ok) return resultat.etat;
+  await ecrirePageActive(null);
   redirect(cheminInterne(f.retour));
 }
 
 export async function actionDeconnexion(): Promise<void> {
   await deconnecter();
+  await ecrirePageActive(null);
   redirect("/");
 }
 
@@ -80,11 +88,13 @@ export async function actionProfil(
     const erreur = verifierImage(f.photo);
     if (erreur) return { champs: { photo: erreur } };
   }
-  const resultat = modifierProfil(compte.id, {
-    nom: f.nom,
-    photo: f.photo ? await enregistrerImage(f.photo) : undefined,
-  });
-  if (!resultat.ok) return etatDepuisEchec(resultat);
+  const resultat = await sansErreurApi(async () =>
+    modifierProfil(
+      f.nom,
+      f.photo ? await televerserImage(f.photo) : compte.photo,
+    ),
+  );
+  if (!resultat.ok) return resultat.etat;
   revalidatePath("/", "layout");
   redirect("/profil?msg=profilEnregistre");
 }

@@ -19,7 +19,6 @@ const evenement: EvenementAffiche = {
   derniereModification: null,
   annulation: { motif: "Salle indisponible", le: "2026-11-01T10:00:00Z" },
   creeLe: "2026-10-01T10:00:00Z",
-  journal: [],
   periode: "a_venir",
   page: { id: "bde", nom: "BDE", slug: "bde", photo: null },
 };
