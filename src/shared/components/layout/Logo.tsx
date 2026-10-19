@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export function Logo({ court = false }: { court?: boolean }) {
+export function Logo({ compact = false }: { compact?: boolean }) {
   return (
     <Link
       href="/"
@@ -10,7 +10,7 @@ export function Logo({ court = false }: { court?: boolean }) {
       <span className="grid size-8 place-items-center rounded-lg degrade-marque text-sm font-black text-white">
         C
       </span>
-      {!court && <span className="text-lg italic">Le Contineng</span>}
+      {!compact && <span className="text-lg italic">Le Contineng</span>}
     </Link>
   );
 }

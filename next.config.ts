@@ -3,11 +3,11 @@ import createNextIntlPlugin from "next-intl/plugin";
 import {
   clientSchema,
   serverSchema,
-  valider,
+  validate,
 } from "./src/shared/config/schema";
 
-valider(serverSchema, process.env);
-valider(clientSchema, process.env);
+validate(serverSchema, process.env);
+validate(clientSchema, process.env);
 
 // Mode « observation » : le navigateur signale les violations sans rien bloquer.
 // Une CSP stricte à nonce rendrait toutes les pages dynamiques (voir ADR 0008).
@@ -89,4 +89,4 @@ const nextConfig: NextConfig = {
 };
 
 // Interface FR/EN sans préfixe d'URL (ADR 0009).
-export default createNextIntlPlugin("./src/shared/i18n/requete.ts")(nextConfig);
+export default createNextIntlPlugin("./src/shared/i18n/request.ts")(nextConfig);

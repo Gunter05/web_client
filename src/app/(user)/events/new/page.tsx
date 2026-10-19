@@ -1,0 +1,84 @@
+import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { EventForm } from "@/modules/events";
+import { MemberPageList } from "@/modules/pages";
+import { buttonVariants } from "@/shared/ui/button";
+import { createEventAction } from "@/modules/events/application/events.actions";
+import { getCurrentUser } from "@/modules/pages/server";
+import { PageTitle } from "@/shared/components/layout/PageTitle";
+import { ContentSkeleton } from "@/shared/components/layout/ContentSkeleton";
+
+/**
+ * Créer un événement (US-11), en deux étapes : choisir la page au nom de
+ * laquelle publier, puis remplir le formulaire (`?page={slug}`). Ouvert à
+ * tous : sans compte, on passe d'abord par la connexion ; sans page, on
+ * propose d'en demander une.
+ */
+async function NewEvent({ searchParams }: PageProps<"/events/new">) {
+  const { page: slug } = await searchParams;
+  const chosen = typeof slug === "string" ? slug : null;
+  const returnTo = `/events/new${chosen ? `?page=${encodeURIComponent(chosen)}` : ""}`;
+  const user = await getCurrentUser();
+  if (!user) redirect(`/login?returnTo=${encodeURIComponent(returnTo)}`);
+  const t = await getTranslations();
+  const page = chosen
+    ? (user.pages.find((p) => p.slug === chosen) ?? null)
+    : null;
+
+  if (page) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 pt-6 md:pt-10">
+        <PageTitle title={t("events.create")} returnTo="/events/new" />
+        <EventForm page={page} action={createEventAction.bind(null, page.id)} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto grid max-w-2xl gap-4 px-4 pt-6 md:pt-10">
+      <PageTitle
+        title={t("events.create")}
+        subtitle={t("events.choosePageHelp")}
+        returnTo="/"
+      />
+      {user.pages.length === 0 ? (
+        <div className="grid gap-3 rounded-xl border bg-muted/40 p-5">
+          <p className="font-semibold">{t("events.noPage")}</p>
+          <p className="text-sm text-muted-foreground">
+            {t("events.noPageHelp")}
+          </p>
+          <Link
+            href="/page-request"
+            className={buttonVariants({ className: "justify-self-start" })}
+          >
+            {t("nav.requestPage")}
+          </Link>
+        </div>
+      ) : (
+        <>
+          {chosen && (
+            <p className="rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-sm">
+              {t("events.notMember")}
+            </p>
+          )}
+          <h2 className="font-semibold">{t("events.choosePage")}</h2>
+          <MemberPageList
+            pages={user.pages}
+            link={(p) => `/events/new?page=${encodeURIComponent(p.slug)}`}
+          />
+        </>
+      )}
+    </div>
+  );
+}
+
+/** La session et l'adresse sont lues dans NouvelEvenement, derrière ce Suspense (Cache Components). */
+export default function Page(props: PageProps<"/events/new">) {
+  return (
+    <Suspense fallback={<ContentSkeleton />}>
+      <NewEvent {...props} />
+    </Suspense>
+  );
+}

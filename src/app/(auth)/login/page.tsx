@@ -1,36 +1,37 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
-import { ComptesDemo, FormulaireConnexion } from "@/features/auth";
-import { compteCourant } from "@/features/auth/server";
-import { actionConnexion } from "@/features/auth/actions/auth.actions";
-import { CarteAuth } from "@/features/auth";
+import { DemoAccounts, LoginForm } from "@/modules/auth";
+import { getCurrentAccount } from "@/modules/auth/server";
+import { loginAction } from "@/modules/auth/application/auth.actions";
+import { AuthCard } from "@/modules/auth";
 import { Suspense } from "react";
-import { SqueletteContenu } from "@/shared/components/layout/SqueletteContenu";
+import { ContentSkeleton } from "@/shared/components/layout/ContentSkeleton";
 
-async function Connexion({ searchParams }: PageProps<"/login">) {
-  const { retour } = await searchParams;
-  const cible = typeof retour === "string" ? retour : "/";
-  if (await compteCourant()) redirect(cible.startsWith("/") ? cible : "/");
+async function Login({ searchParams }: PageProps<"/login">) {
+  const { returnTo } = await searchParams;
+  const target = typeof returnTo === "string" ? returnTo : "/";
+  if (await getCurrentAccount())
+    redirect(target.startsWith("/") ? target : "/");
   const t = await getTranslations();
   return (
-    <CarteAuth
-      titre={t("identite.titreConnexion")}
-      pied={
+    <AuthCard
+      title={t("auth.loginTitle")}
+      footer={
         <>
-          {t("identite.pasDeCompte")}{" "}
+          {t("auth.noAccount")}{" "}
           <Link
-            href={`/register?retour=${encodeURIComponent(cible)}`}
+            href={`/register?returnTo=${encodeURIComponent(target)}`}
             className="font-semibold text-lien"
           >
-            {t("nav.inscription")}
+            {t("nav.register")}
           </Link>
         </>
       }
     >
-      <FormulaireConnexion action={actionConnexion} retour={cible} />
-      <ComptesDemo />
-    </CarteAuth>
+      <LoginForm action={loginAction} returnTo={target} />
+      <DemoAccounts />
+    </AuthCard>
   );
 }
 
@@ -40,8 +41,8 @@ async function Connexion({ searchParams }: PageProps<"/login">) {
  */
 export default function Page(props: PageProps<"/login">) {
   return (
-    <Suspense fallback={<SqueletteContenu />}>
-      <Connexion {...props} />
+    <Suspense fallback={<ContentSkeleton />}>
+      <Login {...props} />
     </Suspense>
   );
 }

@@ -21,7 +21,7 @@ test("un visiteur voit les événements à venir sans compte (US-01, US-16)", as
 test("le filtre Période = Passé est repris dans l'adresse (US-17)", async ({
   page,
 }) => {
-  await page.goto("/?periode=passe");
+  await page.goto("/?period=past");
 
   await expect(
     page.getByRole("heading", { level: 2, name: "Soirée de rentrée" }),
@@ -51,7 +51,7 @@ test("l'espace Administration demande une connexion (US-07)", async ({
   page,
 }) => {
   await page.goto("/admin");
-  await expect(page).toHaveURL(/\/login\?retour=\/admin/);
+  await expect(page).toHaveURL(/\/login\?returnTo=\/admin/);
 });
 
 test("la page d'accueil n'a aucune violation d'accessibilité A/AA", async ({

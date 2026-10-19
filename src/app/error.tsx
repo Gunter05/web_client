@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
+import { Button } from "@/shared/ui/button";
 
-export default function Erreur({
+export default function ErrorPage({
   error,
   retry,
 }: {

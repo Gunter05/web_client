@@ -1,0 +1,186 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { z } from "zod";
+import {
+  CATEGORIES,
+  type EventFormFields,
+  type UrlFilters,
+  PERIODS,
+  validateEventForm,
+} from "@/modules/events";
+import {
+  cancelEvent,
+  createEvent,
+  type EventPayload,
+  getEventById,
+  updateEvent,
+} from "@/modules/events/server";
+import { uploadImage } from "@/shared/api/client";
+import {
+  fileField,
+  idField,
+  textField,
+  type FormState,
+  parseForm,
+} from "@/shared/lib/form";
+import { checkImage } from "@/shared/lib/images";
+import { getCurrentUser, getMyPageById } from "@/modules/pages/server";
+import { listEventsFromUrl } from "@/modules/events/infrastructure/event-queries";
+import { catchApiError } from "@/shared/api/errors";
+
+/**
+ * Vérifie que la personne connectée est membre de la page au nom de laquelle
+ * elle agit (US-06, US-37). La page est choisie à chaque action : celle qui
+ * organise l'événement, ou celle choisie avant de créer. L'API revérifie.
+ */
+async function memberPage(
+  pageId: string,
+): Promise<{ pageId: string } | { state: FormState }> {
+  const user = await getCurrentUser();
+  if (!user) return { state: { error: "loginRequired" } };
+  const page = await getMyPageById(pageId);
+  if (!page) return { state: { error: "notAnOrganizerMember" } };
+  return { pageId: page.id };
+}
+
+const eventShape = {
+  name: textField(500),
+  startsAt: textField(50),
+  endsAt: textField(50),
+  location: textField(500),
+  categories: z.array(z.string().max(50)).max(CATEGORIES.length),
+  description: textField(5000),
+  photo: fileField,
+  removePhoto: textField(1),
+};
+
+/**
+ * Vérifie le formulaire et la photo avant tout envoi (pas d'image orpheline
+ * sur l'API pour un formulaire invalide), puis prépare le corps de la requête.
+ */
+async function prepareEvent(
+  form: EventFormFields,
+  photo: File | null,
+  currentPhoto: string | null,
+  remove: boolean,
+  currentStartsAt: string | null,
+): Promise<{ ok: true; body: EventPayload } | { ok: false; state: FormState }> {
+  const imageError = photo ? checkImage(photo) : null;
+  const valid = validateEventForm(form, new Date(), currentStartsAt);
+  if (!valid.ok || imageError) {
+    const fieldErrors = {
+      ...(valid.ok ? {} : valid.fieldErrors),
+      ...(imageError ? { photo: imageError } : {}),
+    };
+    return { ok: false, state: { error: "invalidInput", fieldErrors } };
+  }
+  const newPhoto = photo
+    ? await uploadImage(photo)
+    : remove
+      ? null
+      : currentPhoto;
+  return {
+    ok: true,
+    body: {
+      name: form.name,
+      startsAt: form.startsAt || null,
+      endsAt: form.endsAt || null,
+      location: form.location,
+      categories: valid.content.categories,
+      description: form.description,
+      photoUrl: newPhoto,
+    },
+  };
+}
+
+/** Créer un événement (US-11) au nom de la page choisie à l'étape précédente. */
+export async function createEventAction(
+  pageId: string,
+  _: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const id = idField.safeParse(pageId);
+  if (!id.success) return { error: "invalidInput" };
+  const page = await memberPage(id.data);
+  if ("state" in page) return page.state;
+  const f = parseForm(eventShape, formData);
+  if (!f) return { error: "invalidInput" };
+  const { photo, removePhoto, ...form } = f;
+  const prepared = await prepareEvent(
+    form,
+    photo,
+    null,
+    removePhoto === "1",
+    null,
+  );
+  if (!prepared.ok) return prepared.state;
+  const result = await catchApiError(() =>
+    createEvent(page.pageId, prepared.body),
+  );
+  if (!result.ok) return result.state;
+  revalidatePath("/", "layout");
+  redirect(`/e/${result.value.id}?msg=published`);
+}
+
+export async function updateEventAction(
+  _: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const f = parseForm({ ...eventShape, id: idField }, formData);
+  if (!f) return { error: "invalidInput" };
+  const { id, photo, removePhoto, ...form } = f;
+  const current = await getEventById(id);
+  if (!current) return { error: "eventNotFound" };
+  // On agit au nom de la page organisatrice de l'événement.
+  const page = await memberPage(current.organizerPageId);
+  if ("state" in page) return page.state;
+  const prepared = await prepareEvent(
+    form,
+    photo,
+    current.photoUrl,
+    removePhoto === "1",
+    current.startsAt,
+  );
+  if (!prepared.ok) return prepared.state;
+  const result = await catchApiError(() =>
+    updateEvent(page.pageId, id, prepared.body),
+  );
+  if (!result.ok) return result.state;
+  revalidatePath("/", "layout");
+  redirect(`/e/${id}?msg=updated`);
+}
+
+export async function cancelEventAction(
+  _: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const f = parseForm({ id: idField, reason: textField(1000) }, formData);
+  if (!f) return { error: "invalidInput" };
+  const current = await getEventById(f.id);
+  if (!current) return { error: "eventNotFound" };
+  const page = await memberPage(current.organizerPageId);
+  if ("state" in page) return page.state;
+  const result = await catchApiError(() =>
+    cancelEvent(page.pageId, f.id, f.reason),
+  );
+  if (!result.ok) return result.state;
+  revalidatePath("/", "layout");
+  redirect(`/e/${f.id}?msg=cancelled`);
+}
+
+const filtersSchema = z.object({
+  categories: z.array(z.enum(CATEGORIES)).max(CATEGORIES.length),
+  periods: z.array(z.enum(PERIODS)).max(PERIODS.length),
+  pages: z.array(z.string().max(100)).max(100),
+});
+
+/** Chargement progressif du fil, 20 par 20 (US-16). */
+export async function loadEventsAction(filters: UrlFilters, offset: number) {
+  const f = filtersSchema.safeParse(filters);
+  const d = z.number().int().min(0).max(100_000).safeParse(offset);
+  if (!f.success || !d.success) return { events: [], nextOffset: null };
+  const { events, nextOffset } = await listEventsFromUrl(f.data, d.data);
+  return { events, nextOffset };
+}

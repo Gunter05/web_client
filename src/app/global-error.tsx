@@ -2,7 +2,7 @@
 
 // Remplace le layout racine quand c'est lui qui plante : il doit donc fournir
 // ses propres <html> et <body>, sans les styles globaux.
-export default function ErreurGlobale({
+export default function GlobalError({
   error,
   retry,
 }: {

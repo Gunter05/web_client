@@ -1,12 +1,12 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { COOKIE_LANGUE, estLangue } from "@/shared/i18n/langues";
+import { LOCALE_COOKIE, isLocale } from "@/shared/i18n/locales";
 
 /** Change la langue de l'interface et la mémorise (D2). */
-export async function changerLangue(langue: string): Promise<void> {
-  if (!estLangue(langue)) return;
-  (await cookies()).set(COOKIE_LANGUE, langue, {
+export async function changeLocale(locale: string): Promise<void> {
+  if (!isLocale(locale)) return;
+  (await cookies()).set(LOCALE_COOKIE, locale, {
     path: "/",
     maxAge: 60 * 60 * 24 * 365,
     sameSite: "lax",
