@@ -84,7 +84,7 @@ async function EnTete() {
           {admin && (
             <>
               <Cloche
-                nonLuesInitiales={nombreNonLues(admin.id)}
+                nonLuesInitiales={await nombreNonLues()}
                 actions={{
                   compter: actionCompterNotifications,
                   lister: actionListerNotifications,
@@ -108,7 +108,9 @@ async function EnTete() {
       </div>
       {admin && (
         <div className="mx-auto max-w-6xl px-4">
-          <OngletsAdmin demandesEnAttente={demandesEnAttente().length} />
+          <OngletsAdmin
+            demandesEnAttente={(await demandesEnAttente()).length}
+          />
         </div>
       )}
     </>

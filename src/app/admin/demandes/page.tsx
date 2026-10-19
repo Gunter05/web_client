@@ -1,5 +1,4 @@
 import { ListeVide } from "@/modules/administration";
-import { profilsParIds } from "@/modules/identite/server";
 import { demandesEnAttente } from "@/modules/pages/server";
 import { AvatarProfil } from "@/shared/composants/avatar-profil";
 import {
@@ -23,8 +22,7 @@ import { SqueletteAdmin } from "@/app/admin/_coque/squelette";
 async function Demandes() {
   const t = await getTranslations();
   if (!(await adminCourant())) return null;
-  const demandes = demandesEnAttente();
-  const demandeurs = profilsParIds(demandes.map((d) => d.demandeurId));
+  const demandes = await demandesEnAttente();
   return (
     <section className="grid gap-4">
       <ToastDepuisUrl
@@ -51,7 +49,7 @@ async function Demandes() {
             </TableHeader>
             <TableBody>
               {demandes.map((d) => {
-                const demandeur = demandeurs.get(d.demandeurId);
+                const demandeur = d.demandeur;
                 return (
                   <TableRow key={d.id} className="relative">
                     <TableCell className="font-medium">

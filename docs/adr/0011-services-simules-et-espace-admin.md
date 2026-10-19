@@ -1,6 +1,6 @@
 # 0011 — Services externes simulés et espace Administration
 
-Statut : Acceptée
+Statut : Remplacée par 0012
 Date : 2026-10-16
 Complète : 0003
 

@@ -1,5 +1,4 @@
 import { z } from "zod";
-import type { Echec } from "./resultat";
 
 /** État renvoyé par les Server Actions de formulaire à l'interface. */
 export type EtatFormulaire = {
@@ -7,7 +6,11 @@ export type EtatFormulaire = {
   champs?: Record<string, string>;
 };
 
-export function etatDepuisEchec(echec: Echec): EtatFormulaire {
+/** Convertit une erreur de l'API (ou de validation) en état de formulaire. */
+export function etatDepuisEchec(echec: {
+  code: string;
+  champs?: Record<string, string>;
+}): EtatFormulaire {
   return echec.champs
     ? { champs: echec.champs, erreur: echec.code }
     : { erreur: echec.code };

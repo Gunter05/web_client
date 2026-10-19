@@ -47,6 +47,15 @@ const nextConfig: NextConfig = {
     // Aucun domaine externe autorisé tant qu'on n'en a pas besoin.
     remotePatterns: [],
   },
+  // Les photos sont servies par l'API : même origine pour le navigateur.
+  async rewrites() {
+    return [
+      {
+        source: "/api/v1/medias/:id",
+        destination: `${process.env.API_URL ?? "http://localhost:8080"}/api/v1/medias/:id`,
+      },
+    ];
+  },
   async headers() {
     return [{ source: "/:path*", headers: enTetesDeSecurite }];
   },

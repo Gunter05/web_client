@@ -39,12 +39,6 @@ export type Evenement = {
   derniereModification: { le: string; changements: Changement[] } | null;
   annulation: { motif: string; le: string } | null;
   creeLe: string;
-  /** Auteur de chaque action, jamais affiché au public (US-06). */
-  journal: {
-    action: "creation" | "modification" | "annulation";
-    compteId: string;
-    le: string;
-  }[];
 };
 
 // ——— Période (US-16) ———

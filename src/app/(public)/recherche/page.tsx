@@ -31,7 +31,7 @@ async function Recherche({ searchParams }: PageProps<"/recherche">) {
     ? (brut as Periode)
     : null;
   const { categories } = lireFiltresUrl(params);
-  const { evenements, total } = rechercherEvenements({
+  const { evenements, total } = await rechercherEvenements({
     texte,
     periode,
     categories,

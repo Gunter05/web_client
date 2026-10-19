@@ -1,48 +1,39 @@
 import "server-only";
 import { cache } from "react";
-import { definirPageActive, sessionCourante } from "@/modules/identite/server";
-import { pageParId, pagesDuMembre } from "@/modules/pages/server";
-import {
-  type EtatProfilActif,
-  type ProfilPage,
-  resoudreProfilActif,
-} from "@/modules/profil-actif";
-
-export function profilsDePages(compteId: string): ProfilPage[] {
-  return pagesDuMembre(compteId).map((p) => ({
-    type: "page",
-    id: p.id,
-    nom: p.nom,
-    photo: p.photo,
-    slug: p.slug,
-    role: p.role,
-  }));
-}
+import { compteCourant } from "@/modules/identite/server";
+import type { PageDuMembre } from "@/modules/pages";
+import { pagesDuMembre } from "@/modules/pages/server";
 
 /**
- * Personne connectée et profil actif (US-37), lus une fois par requête.
- * Compose les modules identite, pages et profil-actif. Si l'accès à la page
- * active a été retiré, la session revient au profil personnel.
+ * Pages dont le compte connecté est membre, par nom. On publie toujours au nom
+ * de l'une d'elles, choisie au moment d'agir : aucune page « active » n'est
+ * mémorisée. L'API revérifie l'appartenance à chaque écriture.
  */
+export const mesPages = cache(async (): Promise<PageDuMembre[]> =>
+  (await pagesDuMembre()).map(({ page, role }) => ({
+    id: page.id,
+    slug: page.slug,
+    nom: page.nom,
+    photo: page.photo,
+    role,
+  })),
+);
+
+/** Personne connectée et ses pages, lues une fois par requête ; null sans session. */
 export const acteurCourant = cache(async () => {
-  const courante = await sessionCourante();
-  if (!courante) return null;
-  const { compte, session } = courante;
-  const { etat, reinitialiser } = resoudreProfilActif({
-    compte,
-    pageActiveId: session.pageActiveId,
-    pagesDuMembre: profilsDePages(compte.id),
-    nomDePage: (id) => pageParId(id)?.nom ?? null,
-  });
-  if (reinitialiser) definirPageActive(session.token, null);
-  return { compte, session, etat };
+  const compte = await compteCourant();
+  if (!compte) return null;
+  return { compte, pages: await mesPages() };
 });
 
-export async function profilActif(): Promise<EtatProfilActif | null> {
-  return (await acteurCourant())?.etat ?? null;
+/** Page de l'acteur désignée par son slug, ou null s'il n'en est pas membre. */
+export async function maPage(slug: string): Promise<PageDuMembre | null> {
+  const acteur = await acteurCourant();
+  return acteur?.pages.find((p) => p.slug === slug) ?? null;
 }
 
-/** Page active de l'acteur, ou null s'il agit en son nom propre. */
-export function pageActive(etat: EtatProfilActif | null): ProfilPage | null {
-  return etat?.actif.type === "page" ? etat.actif : null;
+/** Page de l'acteur désignée par son id, ou null s'il n'en est pas membre. */
+export async function maPageParId(id: string): Promise<PageDuMembre | null> {
+  const acteur = await acteurCourant();
+  return acteur?.pages.find((p) => p.id === id) ?? null;
 }

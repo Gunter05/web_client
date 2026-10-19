@@ -50,7 +50,6 @@
     "demandeDejaEnAttente": "You already have a pending request",
     "demandeDejaTraitee": "This request has already been processed",
     "dejaMembre": "Already a member",
-    "choisirPage": "Choose a page to publish",
     "pasAutorisePublier": "You are not allowed to publish on this page",
     "evenementIntrouvable": "This event doesn't exist",
     "evenementNonModifiable": "A past or cancelled event can no longer be edited",
@@ -62,7 +61,6 @@
     "creer": "Create",
     "notifications": "Notifications",
     "profil": "Profile",
-    "mesEvenements": "My events",
     "acces": "Access",
     "demanderPage": "Create a page",
     "connexion": "Sign in",
@@ -74,7 +72,8 @@
     "reduire": "Collapse menu",
     "etendre": "Expand menu",
     "pages": "Pages",
-    "rechercher": "Search"
+    "rechercher": "Search",
+    "mesPages": "My pages"
   },
   "identite": {
     "titreConnexion": "Sign in",
@@ -91,16 +90,6 @@
     "monProfil": "My profile",
     "profilEnregistre": "Profile saved",
     "profilPersonnel": "Personal profile"
-  },
-  "profilActif": {
-    "bandeau": "You are acting on behalf of {page}",
-    "revenirPersonnel": "Back to my profile",
-    "changerDeProfil": "Switch profile",
-    "profilPersonnel": "Personal profile",
-    "mesProfils": "My profiles",
-    "accesPerdu": "You no longer have access to the page {nom}",
-    "proprietaire": "Owner",
-    "contributeur": "Contributor"
   },
   "pages": {
     "types": {
@@ -147,6 +136,20 @@
       "ajouteLe": "Added on {date}",
       "accesDonne": "{nom} now has access to the page",
       "accesRetire": "Access removed"
+    },
+    "roles": {
+      "proprietaire": "Owner",
+      "contributeur": "Contributor"
+    },
+    "mesPages": {
+      "titre": "My pages",
+      "intro": "The pages you publish on behalf of.",
+      "vide": "You are not a member of any page yet.",
+      "evenements": "Events",
+      "acces": "Access",
+      "publier": "Publish an event",
+      "introuvable": "This page is not one of your pages.",
+      "retour": "My pages"
     }
   },
   "evenements": {
@@ -169,8 +172,8 @@
     "publier": "Publish",
     "enLigne": "Your event is live",
     "modificationsEnregistrees": "Changes saved",
-    "choisirPagePourPublier": "Choose a page to publish",
-    "choisirPageAide": "Events are always published on behalf of a page. Switch to one of your pages from the profile switcher.",
+    "choisirPagePourPublier": "Which page do you want to publish with?",
+    "choisirPageAide": "Events are always published on behalf of a page you belong to.",
     "pasDePage": "You are not a member of any page.",
     "derniereModification": "Last change:",
     "avant": "Before",
@@ -198,7 +201,10 @@
     "colonneNom": "Name",
     "colonneDebut": "Start",
     "colonneStatut": "Status",
-    "colonneVues": "Views"
+    "colonneVues": "Views",
+    "pasDePageAide": "Ask for a page for your club or association: an administrator will review it.",
+    "pageNonMembre": "You are not a member of this page. Choose another one.",
+    "modificationReservee": "Only members of the organizing page can edit this event."
   },
   "categories": {
     "match": "Match / competition",

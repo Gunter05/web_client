@@ -20,7 +20,7 @@ import { DateEvenement } from "./date-evenement";
 /**
  * Fiche d'un événement (US-01), accessible sans compte. Les actions (partager,
  * modifier, annuler) et le compteur de vues sont fournis par la page appelante
- * selon les droits du profil actif.
+ * selon les droits de la personne (membre ou non de la page organisatrice).
  */
 export function FicheEvenement({
   evenement,

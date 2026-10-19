@@ -1,24 +1,23 @@
 "use server";
 
-import { compteCourant } from "@/modules/identite/server";
 import type { Notification } from "@/modules/notifications";
 import {
   marquerToutesLues,
   nombreNonLues,
-  notificationsDe,
+  notificationsRecentes,
 } from "@/modules/notifications/server";
+import { lireJeton } from "@/shared/api/jeton";
 
 export async function actionCompterNotifications(): Promise<number> {
-  const compte = await compteCourant();
-  return compte ? nombreNonLues(compte.id) : 0;
+  if (!(await lireJeton())) return 0;
+  return nombreNonLues();
 }
 
 export async function actionListerNotifications(): Promise<Notification[]> {
-  const compte = await compteCourant();
-  return compte ? notificationsDe(compte.id) : [];
+  if (!(await lireJeton())) return [];
+  return notificationsRecentes();
 }
 
 export async function actionMarquerNotificationsLues(): Promise<void> {
-  const compte = await compteCourant();
-  if (compte) marquerToutesLues(compte.id);
+  if (await lireJeton()) await marquerToutesLues();
 }

@@ -1,9 +1,8 @@
 import { z } from "zod";
 
 export const serverSchema = z.object({
-  API_URL: z.url().optional(),
-  /** Dossier des données simulées (ADR 0011). Par défaut : ./data. */
-  CONTINENG_DATA_DIR: z.string().optional(),
+  /** API Le Contineng (back), appelée uniquement côté serveur (ADR 0003). */
+  API_URL: z.url().default("http://localhost:8080"),
   /**
    * Fuseau de l'aperçu WhatsApp (US-36), calculé côté serveur sans connaître
    * l'appareil du lecteur. L'interface affiche toujours l'heure de l'appareil (D7).

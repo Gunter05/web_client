@@ -1,19 +1,16 @@
 import "server-only";
-import * as sup from "./application/supervision";
-import type { SourcesSupervision } from "./application/supervision";
+import { apiAdministration } from "./infrastructure/api-administration";
 
-export type { LignePage, SourcesSupervision } from "./application/supervision";
+export type {
+  CompteAdmin,
+  DetailPageAdmin,
+  EvenementAdmin,
+  MembreAdmin,
+  PageAdmin,
+} from "./domain/supervision";
 
-/**
- * Lectures de l'espace Administration (US-07), en lecture seule. Les sources
- * viennent des autres modules, branchées par la route qui compose l'écran.
- */
-export const listerComptes = (s: SourcesSupervision, q: string, page: number) =>
-  sup.listerComptes(s, q, page);
-export const listerPages = (s: SourcesSupervision, q: string, page: number) =>
-  sup.listerPages(s, q, page);
-export const listerEvenements = (
-  s: SourcesSupervision,
-  q: string,
-  page: number,
-) => sup.listerEvenements(s, q, page);
+/** Supervision (US-07) : le rôle admin est vérifié par l'API à chaque appel. */
+export const listerComptes = apiAdministration.comptes;
+export const listerPages = apiAdministration.pages;
+export const detailPage = apiAdministration.page;
+export const listerEvenements = apiAdministration.evenements;

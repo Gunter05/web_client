@@ -27,7 +27,6 @@ function ev(partiel: Partial<Evenement>): Evenement {
     derniereModification: null,
     annulation: null,
     creeLe: "",
-    journal: [],
     ...partiel,
   };
 }

@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { compteCourant } from "@/modules/identite/server";
 import { DemandeEnAttente, FormulaireDemande } from "@/modules/pages";
-import { derniereDemandeDe } from "@/modules/pages/server";
+import { derniereDemande } from "@/modules/pages/server";
 import { ToastDepuisUrl } from "@/shared/composants/toast-depuis-url";
 import { actionDemanderPage, actionRetirerDemande } from "../../_actions/pages";
 import { EnTetePage } from "../_coque/en-tete-page";
@@ -15,7 +15,7 @@ async function DemandePage() {
   const compte = await compteCourant();
   if (!compte) redirect("/connexion?retour=/demande-page");
   const t = await getTranslations("pages.demande");
-  const derniere = derniereDemandeDe(compte.id);
+  const derniere = await derniereDemande();
 
   return (
     <div className="mx-auto max-w-xl px-4 pt-6 md:pt-10">

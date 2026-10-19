@@ -3,28 +3,26 @@ import { notFound, redirect } from "next/navigation";
 import { estModifiable, FormulaireEvenement } from "@/modules/evenements";
 import { evenementParId } from "@/modules/evenements/server";
 import { actionModifierEvenement } from "../../../../_actions/evenements";
-import { pageActive, profilActif } from "../../../../_services/acteur";
+import { acteurCourant, maPageParId } from "../../../../_services/acteur";
 import { EnTetePage } from "../../../_coque/en-tete-page";
 import { Suspense } from "react";
 import { SqueletteContenu } from "@/app/(public)/_coque/squelette";
 
-/** Modifier un événement (US-15) : réservé à la page organisatrice active. */
+/** Modifier un événement (US-15) : réservé aux membres de la page organisatrice. */
 async function ModifierEvenement({ params }: PageProps<"/e/[id]/modifier">) {
   const { id } = await params;
   const t = await getTranslations("evenements");
-  const evenement = evenementParId(id);
+  const evenement = await evenementParId(id);
   if (!evenement) notFound();
-  const etat = await profilActif();
-  if (!etat) redirect(`/connexion?retour=/e/${id}/modifier`);
-  const page = pageActive(etat);
-  const organisatrice = page?.id === evenement.pageId ? page : null;
+  if (!(await acteurCourant())) redirect(`/connexion?retour=/e/${id}/modifier`);
+  const organisatrice = await maPageParId(evenement.pageId);
 
   return (
     <div className="mx-auto max-w-2xl px-4 pt-6 md:pt-10">
       <EnTetePage titre={t("modifier")} retour={`/e/${id}`} />
       {!organisatrice ? (
         <p className="rounded-xl border bg-muted/40 p-4 text-sm">
-          {t("choisirPagePourPublier")}
+          {t("modificationReservee")}
         </p>
       ) : !estModifiable(evenement, new Date()) ? (
         <p className="rounded-xl border bg-muted/40 p-4 text-sm">

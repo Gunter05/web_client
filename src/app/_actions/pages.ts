@@ -3,13 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import {
-  compteCourant,
-  idsAdmins,
-  profilsParIds,
-  rechercherProfils,
-} from "@/modules/identite/server";
-import { notifier } from "@/modules/notifications/server";
+import { compteCourant, rechercherProfils } from "@/modules/identite/server";
 import type { ResultatRecherche } from "@/modules/pages";
 import {
   deposerDemande,
@@ -18,23 +12,23 @@ import {
   retirerAcces,
   retirerDemande,
 } from "@/modules/pages/server";
+import { televerserImage } from "@/shared/api/client";
 import {
   champFichier,
   champId,
   champTexte,
   type EtatFormulaire,
-  etatDepuisEchec,
   lireFormulaire,
 } from "@/shared/lib/formulaire";
-import { enregistrerImage, verifierImage } from "@/shared/stockage/fichiers";
+import { verifierImage } from "@/shared/lib/images";
+import { codeErreurApi, sansErreurApi } from "./_erreurs";
 
-/** Demander la création d'une page (US-03) ; les admins sont notifiés. */
+/** Demander la création d'une page (US-03) ; l'API prévient les admins. */
 export async function actionDemanderPage(
   _: EtatFormulaire,
   donnees: FormData,
 ): Promise<EtatFormulaire> {
-  const compte = await compteCourant();
-  if (!compte) return { erreur: "connexionRequise" };
+  if (!(await compteCourant())) return { erreur: "connexionRequise" };
   const f = lireFormulaire(
     {
       nom: champTexte(200),
@@ -51,31 +45,26 @@ export async function actionDemanderPage(
     return { erreur: "formulaireInvalide", champs: { photo: erreurImage } };
   }
   const { photo, ...formulaire } = f;
-  const resultat = deposerDemande(
-    compte.id,
-    formulaire,
-    photo ? await enregistrerImage(photo) : null,
+  const resultat = await sansErreurApi(async () =>
+    deposerDemande({
+      ...formulaire,
+      photo: photo ? await televerserImage(photo) : null,
+    }),
   );
-  if (!resultat.ok) return etatDepuisEchec(resultat);
-  notifier(
-    {
-      type: "demandeDeposee",
-      demandeId: resultat.valeur.id,
-      nomPage: resultat.valeur.nom,
-    },
-    idsAdmins(),
-  );
+  if (!resultat.ok) return resultat.etat;
   redirect("/demande-page?msg=envoyee");
 }
 
 export async function actionRetirerDemande(demandeId: string): Promise<void> {
-  const compte = await compteCourant();
   const id = champId.safeParse(demandeId);
-  if (compte && id.success) retirerDemande(compte.id, id.data);
+  if (id.success) await codeErreurApi(() => retirerDemande(id.data));
   revalidatePath("/demande-page");
 }
 
-/** US-06 : nom (3 caractères min) ou e-mail exact ; jamais d'e-mail en retour. */
+/**
+ * US-06 : nom (3 caractères min) ou e-mail exact ; jamais d'e-mail en retour.
+ * Les membres déjà présents sont signalés pour masquer « Donner l'accès ».
+ */
 export async function actionRechercherUtilisateurs(
   pageId: string,
   requete: string,
@@ -83,18 +72,16 @@ export async function actionRechercherUtilisateurs(
   const entree = z
     .object({ pageId: champId, requete: z.string().max(200) })
     .safeParse({ pageId, requete });
-  const compte = await compteCourant();
-  if (!entree.success || !compte) return [];
-  const membres = membresDe(entree.data.pageId);
-  const proprietaire = membres.some(
-    (m) => m.compteId === compte.id && m.role === "proprietaire",
-  );
-  if (!proprietaire) return [];
-  const ids = new Set(membres.map((m) => m.compteId));
-  return rechercherProfils(entree.data.requete).map((p) => ({
-    ...p,
-    membre: ids.has(p.id),
-  }));
+  if (!entree.success) return [];
+  const resultat = await sansErreurApi(async () => {
+    const [profils, membres] = await Promise.all([
+      rechercherProfils(entree.data.requete),
+      membresDe(entree.data.pageId),
+    ]);
+    const ids = new Set(membres.map((m) => m.compteId));
+    return profils.map((p) => ({ ...p, membre: ids.has(p.id) }));
+  });
+  return resultat.ok ? resultat.valeur : [];
 }
 
 const entreeAcces = z.object({ pageId: champId, compteId: champId });
@@ -105,24 +92,14 @@ export async function actionDonnerAcces(
 ): Promise<{ erreur?: string; nom?: string }> {
   const entree = entreeAcces.safeParse({ pageId, compteId });
   if (!entree.success) return { erreur: "formulaireInvalide" };
-  const proprietaire = await compteCourant();
-  if (!proprietaire) return { erreur: "connexionRequise" };
-  const resultat = donnerAcces(
-    proprietaire.id,
-    entree.data.pageId,
-    entree.data.compteId,
+  const erreur = await codeErreurApi(() =>
+    donnerAcces(entree.data.pageId, entree.data.compteId),
   );
-  if (!resultat.ok) return { erreur: resultat.code };
-  notifier({
-    type: "accesDonne",
-    nomPage: resultat.valeur.nom,
-    compteId: entree.data.compteId,
-  });
-  revalidatePath("/acces");
+  revalidatePath("/mes-pages", "layout");
+  if (erreur) return { erreur };
+  const membres = await membresDe(entree.data.pageId);
   return {
-    nom:
-      profilsParIds([entree.data.compteId]).get(entree.data.compteId)?.nom ??
-      "",
+    nom: membres.find((m) => m.compteId === entree.data.compteId)?.nom ?? "",
   };
 }
 
@@ -132,19 +109,9 @@ export async function actionRetirerAcces(
 ): Promise<{ erreur?: string }> {
   const entree = entreeAcces.safeParse({ pageId, compteId });
   if (!entree.success) return { erreur: "formulaireInvalide" };
-  const proprietaire = await compteCourant();
-  if (!proprietaire) return { erreur: "connexionRequise" };
-  const resultat = retirerAcces(
-    proprietaire.id,
-    entree.data.pageId,
-    entree.data.compteId,
+  const erreur = await codeErreurApi(() =>
+    retirerAcces(entree.data.pageId, entree.data.compteId),
   );
-  if (!resultat.ok) return { erreur: resultat.code };
-  notifier({
-    type: "accesRetire",
-    nomPage: resultat.valeur.nom,
-    compteId: entree.data.compteId,
-  });
-  revalidatePath("/acces");
-  return {};
+  revalidatePath("/mes-pages", "layout");
+  return erreur ? { erreur } : {};
 }

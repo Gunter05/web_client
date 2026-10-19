@@ -43,12 +43,11 @@ Les hooks Git (Husky) tournent tout seuls : avant chaque commit, `lint-staged` f
 
 Elles sont décrites et validées par Zod dans `src/shared/config/schema.ts`. Une variable manquante fait échouer le build en la nommant.
 
-| Variable               | Côté    | Obligatoire | Rôle                              |
-| ---------------------- | ------- | ----------- | --------------------------------- |
-| `NEXT_PUBLIC_SITE_URL` | public  | oui         | Adresse publique du site          |
-| `API_URL`              | serveur | non         | URL de l'API, quand elle existera |
-| `CONTINENG_DATA_DIR`   | serveur | non         | Dossier des données simulées      |
-| `FUSEAU_APERCU`        | serveur | non         | Fuseau de l'aperçu WhatsApp       |
+| Variable               | Côté    | Obligatoire | Rôle                        |
+| ---------------------- | ------- | ----------- | --------------------------- |
+| `NEXT_PUBLIC_SITE_URL` | public  | oui         | Adresse publique du site    |
+| `API_URL`              | serveur | non         | URL de l'API (défaut :8080) |
+| `FUSEAU_APERCU`        | serveur | non         | Fuseau de l'aperçu WhatsApp |
 
 - En local : `.env.local` (jamais commité).
 - En CI : bloc `env` de `.github/workflows/ci.yml`.
@@ -64,26 +63,25 @@ src/
 │   ├── (public)/            Espace public : fil, fiches, pages, compte, publication
 │   ├── admin/               Espace Administration (garde serveur, onglets US-07)
 │   ├── _actions/            Server Actions : valident (Zod), vérifient les droits, orchestrent
-│   └── _services/           Composition : profil actif, affichage des événements
+│   └── _services/           Composition : pages de la personne connectée, affichage des événements
 ├── modules/             Code métier, un dossier par domaine, chacun avec ses couches
 │   ├── identite/            Compte, connexion, session, profil personnel
-│   ├── pages/               Demandes de page, pages, propriétaire, contributeurs (US-03, US-06)
-│   ├── profil-actif/        Au nom de qui j'agis (US-37)
+│   ├── pages/               Demandes de page, pages, « Mes pages », accès (US-03, US-06)
 │   ├── evenements/          Événements, période, statut, filtres, partage (US-11/01/16/17/15/36)
 │   ├── audience/            Vues uniques par jour, « Mes événements » (US-39)
 │   ├── notifications/       Cloche et notifications dans l'application
-│   ├── mesure/              Métriques produit (analytics simulé)
+│   ├── mesure/              Métriques produit (partages)
 │   └── administration/      Supervision en lecture seule (US-07)
 │       ├── domain/              Types et règles métier, TypeScript pur
-│       ├── application/         Cas d'usage et ports (ne connaît que domain/)
-│       ├── infrastructure/      D'où viennent les données (simulées, puis API)
+│       ├── infrastructure/      Adaptateurs HTTP vers l'API (ADR 0012)
 │       ├── ui/                  Composants React du module
 │       ├── index.ts             Porte d'entrée sûre partout (types, composants)
 │       └── server.ts            Porte d'entrée serveur (données), protégée par server-only
 └── shared/              Ce qui sert partout
     ├── config/              Variables d'environnement validées
     ├── i18n/                Catalogues FR/EN, formats de date (US-16), langue (ADR 0009)
-    ├── stockage/            Persistance et images simulées (ADR 0011)
+    ├── api/                 Client HTTP de l'API et jeton de session (ADR 0012)
+    ├── stockage/            Images de démo par défaut
     ├── composants/          Composants génériques (avatar, champ, langue…)
     ├── hooks/, lib/         Utilitaires
     └── ui/                  Composants shadcn/ui, sans métier
@@ -91,7 +89,7 @@ src/
 
 ### Démonstration
 
-Les données de démo sont créées dans `data/` au premier lancement (supprimer le dossier les réinitialise). Mot de passe commun : `demo1234`.
+Les données de démo sont chargées par l'API lancée avec le profil `local` (`./mvnw spring-boot:run -Dspring-boot.run.profiles=local`). Mot de passe commun : `demo1234`.
 
 | E-mail                 | Rôle                                            |
 | ---------------------- | ----------------------------------------------- |
@@ -132,6 +130,7 @@ Voir l'ADR 0008. En résumé : en-têtes de sécurité sur toutes les pages, CSP
 
 - **Unitaires et composants** (Vitest + Testing Library) : à côté du code, en `*.test.ts(x)`. Le seuil de couverture (80 %) ne s'applique qu'à `domain/` et `application/`.
 - **Bout en bout** (Playwright) : dans `e2e/`. Ils vérifient la page d'accueil, l'absence de violation d'accessibilité WCAG A/AA (axe), les en-têtes de sécurité et la page 404.
+  Ils ne dépendent ni de la base ni de l'API Spring : Playwright démarre d'abord une **API factice** (`e2e/api-factice/serveur.mjs`, port 8089, sans dépendance) qui reproduit le contrat HTTP pour un visiteur sans compte avec les données de démonstration, puis lance Next avec `API_URL` pointant dessus. Si un test E2E a besoin d'une nouvelle route, on l'ajoute à ce serveur en respectant le contrat de l'API.
 
 ## Git et déploiement
 

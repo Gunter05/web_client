@@ -1,19 +1,9 @@
 import "server-only";
-import { horlogeSysteme } from "@/shared/lib/horloge";
-import * as cas from "./application/cas-usage";
-import type { Fait } from "./domain/notification";
-import { depotNotificationsJson } from "./infrastructure/depot-json";
+import { apiNotifications } from "./infrastructure/api-notifications";
 
-const deps: cas.DepsNotifications = {
-  notifications: depotNotificationsJson,
-  horloge: horlogeSysteme,
-};
+export type { Notification, TypeNotification } from "./domain/notification";
 
-/** `admins` : destinataires des faits réservés à l'équipe (nouvelle demande). */
-export const notifier = (fait: Fait, admins: readonly string[] = []) =>
-  cas.notifier(deps, fait, admins);
-export const notificationsDe = (compteId: string) => cas.lister(deps, compteId);
-export const nombreNonLues = (compteId: string) =>
-  cas.nombreNonLues(deps, compteId);
-export const marquerToutesLues = (compteId: string) =>
-  deps.notifications.marquerLues(compteId);
+/** Notifications du compte connecté (cloche). */
+export const notificationsRecentes = apiNotifications.recentes;
+export const nombreNonLues = apiNotifications.nonLues;
+export const marquerToutesLues = apiNotifications.marquerLues;

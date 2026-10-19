@@ -11,7 +11,7 @@ import {
 import { getTranslations } from "next-intl/server";
 import { DateCourte } from "../_coque/date-courte";
 import { adminCourant } from "../_coque/garde";
-import { lireRecherche, sourcesSupervision } from "../_coque/sources";
+import { lireRecherche } from "../_coque/sources";
 import { Suspense } from "react";
 import { SqueletteAdmin } from "@/app/admin/_coque/squelette";
 
@@ -19,7 +19,7 @@ async function Comptes({ searchParams }: PageProps<"/admin/comptes">) {
   const t = await getTranslations();
   const { q, page } = lireRecherche(await searchParams);
   if (!(await adminCourant())) return null;
-  const resultats = listerComptes(sourcesSupervision, q, page);
+  const resultats = await listerComptes(q, page);
   return (
     <section className="grid gap-4">
       <h1 className="text-xl font-semibold">{t("admin.onglets.comptes")}</h1>

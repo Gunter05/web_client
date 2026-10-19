@@ -1,11 +1,9 @@
 import "server-only";
-import type { Mesure } from "./domain/mesure";
-import { envoyer } from "./infrastructure/analytics-simule";
+import { apiMesures } from "./infrastructure/api-mesures";
 
 /**
- * Trace une action suivie par les métriques du cadrage : consultation de
- * fiche, arrivée par lien partagé, clic sur « Partager », publication.
+ * Clic sur « Partager » (métrique Viralité). Les autres mesures (fiche
+ * consultée, arrivée par lien partagé, publication) sont prises par l'API.
  */
-export function mesurer(mesure: Omit<Mesure, "le">): void {
-  envoyer({ ...mesure, le: new Date().toISOString() });
-}
+export const mesurerPartage = (evenementId: string, visiteurId: string) =>
+  apiMesures.partage(evenementId, visiteurId);

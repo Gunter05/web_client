@@ -18,11 +18,12 @@ export {
   type FiltresUrl,
   lireFiltresUrl,
 } from "./domain/filtres-url";
+export { statutDepuisApi } from "./infrastructure/codes-api";
 export { correspondRecherche, RECHERCHE_MAX } from "./domain/recherche";
 export { BarreFiltres } from "./ui/barre-filtres";
 export { BarreRecherche } from "./ui/barre-recherche";
 export { PastillesFiltres } from "./ui/pastilles-filtres";
-export { BoutonPartager } from "./ui/bouton-partager";
+export { BoutonPartager, IconePartager } from "./ui/bouton-partager";
 export { CarteEvenement, IMAGE_PAR_DEFAUT } from "./ui/carte-evenement";
 export { DateEvenement } from "./ui/date-evenement";
 export { DialogueAnnulation } from "./ui/dialogue-annulation";

@@ -21,15 +21,11 @@ import {
   actionOuvertureFiche,
 } from "../../../_actions/audience";
 import { actionAnnulerEvenement } from "../../../_actions/evenements";
-import { profilActif } from "../../../_services/acteur";
-import { afficherEvenements } from "../../../_services/affichage";
+import { maPageParId } from "../../../_services/acteur";
 import { Suspense } from "react";
 import { SqueletteContenu } from "@/app/(public)/_coque/squelette";
 
-function charger(id: string) {
-  const evenement = evenementParId(id);
-  return evenement ? (afficherEvenements([evenement])[0] ?? null) : null;
-}
+const charger = (id: string) => evenementParId(id);
 
 /**
  * Aperçu WhatsApp (US-36) : nom, image et « [date] · [lieu] », préfixé de
@@ -38,7 +34,7 @@ function charger(id: string) {
 export async function generateMetadata({
   params,
 }: PageProps<"/e/[id]">): Promise<Metadata> {
-  const evenement = charger((await params).id);
+  const evenement = await charger((await params).id);
   const t = await getTranslations();
   if (!evenement) return { title: t("evenements.introuvable") };
   const date = formaterDateEvenement(
@@ -76,7 +72,7 @@ export async function generateMetadata({
 async function PageFiche({ params }: PageProps<"/e/[id]">) {
   const { id } = await params;
   const t = await getTranslations();
-  const evenement = charger(id);
+  const evenement = await charger(id);
 
   if (!evenement) {
     return (
@@ -90,10 +86,9 @@ async function PageFiche({ params }: PageProps<"/e/[id]">) {
     );
   }
 
-  // Affichage selon le profil actif ; chaque action est revérifiée par le serveur.
-  const etat = await profilActif();
-  const organisatrice =
-    etat?.actif.type === "page" && etat.actif.id === evenement.pageId;
+  // Les membres de la page organisatrice voient les vues et peuvent agir ;
+  // chaque action est revérifiée par le serveur.
+  const organisatrice = (await maPageParId(evenement.pageId)) !== null;
   const modifiable = estModifiable(evenement, new Date());
 
   return (
@@ -113,7 +108,11 @@ async function PageFiche({ params }: PageProps<"/e/[id]">) {
         vues={
           organisatrice ? (
             <CompteurVues
-              n={compterVues([evenement.id]).get(evenement.id) ?? 0}
+              n={
+                (await compterVues(evenement.pageId, [evenement.id])).get(
+                  evenement.id,
+                ) ?? 0
+              }
             />
           ) : null
         }

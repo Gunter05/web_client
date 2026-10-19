@@ -5,40 +5,44 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import {
   CATEGORIES,
-  type FiltresUrl,
   type ChampsEvenement,
+  type FiltresUrl,
   PERIODES,
   validerFormulaire,
 } from "@/modules/evenements";
 import {
   annulerEvenement,
-  type Auteur,
   creerEvenement,
+  type DonneesEnvoyees,
   evenementParId,
   modifierEvenement,
 } from "@/modules/evenements/server";
-import { mesurer } from "@/modules/mesure/server";
-import { estMembre } from "@/modules/pages/server";
+import { televerserImage } from "@/shared/api/client";
 import {
   champFichier,
   champId,
   champTexte,
   type EtatFormulaire,
-  etatDepuisEchec,
   lireFormulaire,
 } from "@/shared/lib/formulaire";
-import { enregistrerImage, verifierImage } from "@/shared/stockage/fichiers";
-import { acteurCourant, pageActive } from "../_services/acteur";
+import { verifierImage } from "@/shared/lib/images";
+import { acteurCourant, maPageParId } from "../_services/acteur";
 import { listerDepuisUrl } from "../_services/affichage";
+import { sansErreurApi } from "./_erreurs";
 
-/** On agit au nom de la page active (US-37) ; le module revérifie l'appartenance. */
-async function auteurCourant(): Promise<Auteur | null> {
+/**
+ * Vérifie que la personne connectée est membre de la page au nom de laquelle
+ * elle agit (US-06, US-37). La page est choisie à chaque action : celle qui
+ * organise l'événement, ou celle choisie avant de créer. L'API revérifie.
+ */
+async function pageDuMembre(
+  pageId: string,
+): Promise<{ pageId: string } | { etat: EtatFormulaire }> {
   const acteur = await acteurCourant();
-  if (!acteur) return null;
-  return {
-    compteId: acteur.compte.id,
-    pageId: pageActive(acteur.etat)?.id ?? null,
-  };
+  if (!acteur) return { etat: { erreur: "connexionRequise" } };
+  const page = await maPageParId(pageId);
+  if (!page) return { etat: { erreur: "pasAutorisePublier" } };
+  return { pageId: page.id };
 }
 
 const formeEvenement = {
@@ -52,15 +56,18 @@ const formeEvenement = {
   retirerPhoto: champTexte(1),
 };
 
-/** Vérifie la photo, puis ne la stocke que si le reste du formulaire est valide. */
-async function photoValidee(
+/**
+ * Vérifie le formulaire et la photo avant tout envoi (pas d'image orpheline
+ * sur l'API pour un formulaire invalide), puis prépare le corps de la requête.
+ */
+async function preparer(
   formulaire: ChampsEvenement,
   photo: File | null,
+  photoActuelle: string | null,
   retirer: boolean,
   debutActuel: string | null,
 ): Promise<
-  | { ok: true; photo: string | null | undefined }
-  | { ok: false; etat: EtatFormulaire }
+  { ok: true; corps: DonneesEnvoyees } | { ok: false; etat: EtatFormulaire }
 > {
   const erreurImage = photo ? verifierImage(photo) : null;
   const valide = validerFormulaire(formulaire, new Date(), debutActuel);
@@ -71,35 +78,50 @@ async function photoValidee(
   if (Object.keys(champs).length) {
     return { ok: false, etat: { erreur: "formulaireInvalide", champs } };
   }
-  if (photo) return { ok: true, photo: await enregistrerImage(photo) };
-  return { ok: true, photo: retirer ? null : undefined };
+  const nouvellePhoto = photo
+    ? await televerserImage(photo)
+    : retirer
+      ? null
+      : photoActuelle;
+  return {
+    ok: true,
+    corps: {
+      nom: formulaire.nom,
+      debut: formulaire.debut || null,
+      fin: formulaire.fin || null,
+      lieu: formulaire.lieu,
+      categories: formulaire.categories,
+      description: formulaire.description,
+      photo: nouvellePhoto,
+    },
+  };
 }
 
+/** Créer un événement (US-11) au nom de la page choisie à l'étape précédente. */
 export async function actionCreerEvenement(
+  pageId: string,
   _: EtatFormulaire,
   donnees: FormData,
 ): Promise<EtatFormulaire> {
-  const auteur = await auteurCourant();
-  if (!auteur) return { erreur: "connexionRequise" };
-  if (!auteur.pageId) return { erreur: "choisirPage" };
+  const id = champId.safeParse(pageId);
+  if (!id.success) return { erreur: "formulaireInvalide" };
+  const page = await pageDuMembre(id.data);
+  if ("etat" in page) return page.etat;
   const f = lireFormulaire(formeEvenement, donnees);
   if (!f) return { erreur: "formulaireInvalide" };
   const { photo, retirerPhoto, ...formulaire } = f;
-  const image = await photoValidee(
+  const prepare = await preparer(
     formulaire,
     photo,
+    null,
     retirerPhoto === "1",
     null,
   );
-  if (!image.ok) return image.etat;
-  const resultat = creerEvenement(
-    auteur,
-    estMembre,
-    formulaire,
-    image.photo ?? null,
+  if (!prepare.ok) return prepare.etat;
+  const resultat = await sansErreurApi(() =>
+    creerEvenement(page.pageId, prepare.corps),
   );
-  if (!resultat.ok) return etatDepuisEchec(resultat);
-  mesurer({ type: "evenement_publie", evenementId: resultat.valeur.id });
+  if (!resultat.ok) return resultat.etat;
   revalidatePath("/", "layout");
   redirect(`/e/${resultat.valeur.id}?msg=enLigne`);
 }
@@ -108,26 +130,26 @@ export async function actionModifierEvenement(
   _: EtatFormulaire,
   donnees: FormData,
 ): Promise<EtatFormulaire> {
-  const auteur = await auteurCourant();
-  if (!auteur) return { erreur: "connexionRequise" };
   const f = lireFormulaire({ ...formeEvenement, id: champId }, donnees);
   if (!f) return { erreur: "formulaireInvalide" };
   const { id, photo, retirerPhoto, ...formulaire } = f;
-  const image = await photoValidee(
+  const actuel = await evenementParId(id);
+  if (!actuel) return { erreur: "evenementIntrouvable" };
+  // On agit au nom de la page organisatrice de l'événement.
+  const page = await pageDuMembre(actuel.pageId);
+  if ("etat" in page) return page.etat;
+  const prepare = await preparer(
     formulaire,
     photo,
+    actuel.photo,
     retirerPhoto === "1",
-    evenementParId(id)?.debut ?? null,
+    actuel.debut,
   );
-  if (!image.ok) return image.etat;
-  const resultat = modifierEvenement(
-    auteur,
-    estMembre,
-    id,
-    formulaire,
-    image.photo,
+  if (!prepare.ok) return prepare.etat;
+  const resultat = await sansErreurApi(() =>
+    modifierEvenement(page.pageId, id, prepare.corps),
   );
-  if (!resultat.ok) return etatDepuisEchec(resultat);
+  if (!resultat.ok) return resultat.etat;
   revalidatePath("/", "layout");
   redirect(`/e/${id}?msg=modifie`);
 }
@@ -136,12 +158,16 @@ export async function actionAnnulerEvenement(
   _: EtatFormulaire,
   donnees: FormData,
 ): Promise<EtatFormulaire> {
-  const auteur = await auteurCourant();
-  if (!auteur) return { erreur: "connexionRequise" };
   const f = lireFormulaire({ id: champId, motif: champTexte(1000) }, donnees);
   if (!f) return { erreur: "formulaireInvalide" };
-  const resultat = annulerEvenement(auteur, estMembre, f.id, f.motif);
-  if (!resultat.ok) return etatDepuisEchec(resultat);
+  const actuel = await evenementParId(f.id);
+  if (!actuel) return { erreur: "evenementIntrouvable" };
+  const page = await pageDuMembre(actuel.pageId);
+  if ("etat" in page) return page.etat;
+  const resultat = await sansErreurApi(() =>
+    annulerEvenement(page.pageId, f.id, f.motif),
+  );
+  if (!resultat.ok) return resultat.etat;
   revalidatePath("/", "layout");
   redirect(`/e/${f.id}?msg=annule`);
 }
@@ -160,5 +186,6 @@ export async function actionChargerEvenements(
   const f = formeFiltres.safeParse(filtres);
   const d = z.number().int().min(0).max(100_000).safeParse(depuis);
   if (!f.success || !d.success) return { evenements: [], suivant: null };
-  return listerDepuisUrl(f.data, d.data);
+  const { evenements, suivant } = await listerDepuisUrl(f.data, d.data);
+  return { evenements, suivant };
 }

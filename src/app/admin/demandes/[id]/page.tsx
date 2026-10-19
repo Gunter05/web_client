@@ -1,4 +1,3 @@
-import { profilsParIds } from "@/modules/identite/server";
 import { demandeParId } from "@/modules/pages/server";
 import { DecisionDemande } from "@/modules/pages";
 import { AvatarProfil } from "@/shared/composants/avatar-profil";
@@ -22,11 +21,9 @@ import { SqueletteAdmin } from "@/app/admin/_coque/squelette";
 async function Demande({ params }: PageProps<"/admin/demandes/[id]">) {
   const t = await getTranslations();
   if (!(await adminCourant())) return null;
-  const demande = demandeParId((await params).id);
+  const demande = await demandeParId((await params).id);
   if (!demande) notFound();
-  const demandeur = profilsParIds([demande.demandeurId]).get(
-    demande.demandeurId,
-  );
+  const demandeur = demande.demandeur;
   return (
     <section className="grid max-w-2xl gap-6">
       <Link
