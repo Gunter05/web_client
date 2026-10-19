@@ -130,6 +130,7 @@ Voir l'ADR 0008. En résumé : en-têtes de sécurité sur toutes les pages, CSP
 
 - **Unitaires et composants** (Vitest + Testing Library) : à côté du code, en `*.test.ts(x)`. Le seuil de couverture (80 %) ne s'applique qu'à `domain/` et `application/`.
 - **Bout en bout** (Playwright) : dans `e2e/`. Ils vérifient la page d'accueil, l'absence de violation d'accessibilité WCAG A/AA (axe), les en-têtes de sécurité et la page 404.
+  Ils ne dépendent ni de la base ni de l'API Spring : Playwright démarre d'abord une **API factice** (`e2e/api-factice/serveur.mjs`, port 8089, sans dépendance) qui reproduit le contrat HTTP pour un visiteur sans compte avec les données de démonstration, puis lance Next avec `API_URL` pointant dessus. Si un test E2E a besoin d'une nouvelle route, on l'ajoute à ce serveur en respectant le contrat de l'API.
 
 ## Git et déploiement
 
