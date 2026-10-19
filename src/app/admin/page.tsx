@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function Administration() {
-  redirect("/admin/demandes");
+  redirect("/admin/page-requests");
 }

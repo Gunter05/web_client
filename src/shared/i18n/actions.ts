@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { COOKIE_LANGUE, estLangue } from "./langues";
+import { COOKIE_LANGUE, estLangue } from "@/shared/i18n/langues";
 
 /** Change la langue de l'interface et la mémorise (D2). */
 export async function changerLangue(langue: string): Promise<void> {

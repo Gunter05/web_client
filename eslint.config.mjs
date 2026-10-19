@@ -18,6 +18,8 @@ const eslintConfig = defineConfig([
     "coverage/**",
     "playwright-report/**",
     "test-results/**",
+    // Copies de travail créées par Claude Code :
+    ".claude/**",
   ]),
 ]);
 

@@ -51,7 +51,7 @@ test("l'espace Administration demande une connexion (US-07)", async ({
   page,
 }) => {
   await page.goto("/admin");
-  await expect(page).toHaveURL(/\/connexion\?retour=\/admin/);
+  await expect(page).toHaveURL(/\/login\?retour=\/admin/);
 });
 
 test("la page d'accueil n'a aucune violation d'accessibilité A/AA", async ({

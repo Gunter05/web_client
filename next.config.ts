@@ -56,6 +56,33 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // Anciennes adresses françaises (liens déjà partagés, notifications
+  // enregistrées) : redirigées vers les adresses actuelles (ADR 0014).
+  async redirects() {
+    const anciennes: [string, string][] = [
+      ["/connexion", "/login"],
+      ["/inscription", "/register"],
+      ["/recherche", "/search"],
+      ["/evenements/nouveau", "/events/new"],
+      ["/e/:id/modifier", "/e/:id/edit"],
+      ["/mes-pages", "/my-pages"],
+      ["/mes-pages/:slug", "/my-pages/:slug"],
+      ["/mes-pages/:slug/acces", "/my-pages/:slug/access"],
+      ["/mes-evenements", "/my-pages"],
+      ["/acces", "/my-pages"],
+      ["/demande-page", "/page-request"],
+      ["/profil", "/profile"],
+      ["/admin/demandes", "/admin/page-requests"],
+      ["/admin/demandes/:id", "/admin/page-requests/:id"],
+      ["/admin/comptes", "/admin/accounts"],
+      ["/admin/evenements", "/admin/events"],
+    ];
+    return anciennes.map(([source, destination]) => ({
+      source,
+      destination,
+      permanent: true,
+    }));
+  },
   async headers() {
     return [{ source: "/:path*", headers: enTetesDeSecurite }];
   },

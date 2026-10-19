@@ -1,4 +1,4 @@
-import { imageDemo } from "@/shared/stockage/images-demo";
+import { imageDemo } from "@/shared/lib/images-demo";
 
 /** Images de démonstration et image par défaut des événements (SVG généré). */
 export async function GET(_: Request, { params }: RouteContext<"/demo/[nom]">) {
