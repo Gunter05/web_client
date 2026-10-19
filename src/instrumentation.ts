@@ -14,11 +14,11 @@ export const onRequestError: Instrumentation.onRequestError = async (
 
   console.error(
     JSON.stringify({
-      niveau: "erreur",
+      level: "error",
       message: err instanceof Error ? err.message : String(err),
       digest,
-      chemin: request.path,
-      methode: request.method,
+      path: request.path,
+      method: request.method,
       route: context.routePath,
       type: context.routeType,
     }),

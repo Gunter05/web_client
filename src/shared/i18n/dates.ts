@@ -3,14 +3,14 @@
  * « Aujourd'hui, 15h00 », « Demain, 15h00 », « samedi 17 octobre, 15h00 »,
  * « Today, 3:00 PM », « Saturday, October 17, 3:00 PM ». Année ajoutée si différente.
  */
-export type Libelles = {
-  aujourdhui: (heure: string) => string;
-  demain: (heure: string) => string;
+export type Labels = {
+  today: (time: string) => string;
+  tomorrow: (time: string) => string;
 };
 
-const intlLocale = (langue: string) => (langue === "fr" ? "fr-FR" : "en-US");
+const intlLocale = (locale: string) => (locale === "fr" ? "fr-FR" : "en-US");
 
-function jourLocal(date: Date, timeZone?: string): string {
+function localDay(date: Date, timeZone?: string): string {
   return new Intl.DateTimeFormat("en-CA", {
     timeZone,
     year: "numeric",
@@ -19,12 +19,12 @@ function jourLocal(date: Date, timeZone?: string): string {
   }).format(date);
 }
 
-export function formaterHeure(
+export function formatTime(
   date: Date,
-  langue: string,
+  locale: string,
   timeZone?: string,
 ): string {
-  if (langue === "fr") {
+  if (locale === "fr") {
     return new Intl.DateTimeFormat("fr-FR", {
       timeZone,
       hour: "2-digit",
@@ -41,48 +41,47 @@ export function formaterHeure(
   }).format(date);
 }
 
-export function formaterJour(
+export function formatDay(
   date: Date,
-  langue: string,
-  maintenant: Date,
+  locale: string,
+  now: Date,
   timeZone?: string,
 ): string {
-  const memeAnnee =
-    jourLocal(date, timeZone).slice(0, 4) ===
-    jourLocal(maintenant, timeZone).slice(0, 4);
-  return new Intl.DateTimeFormat(intlLocale(langue), {
+  const sameYear =
+    localDay(date, timeZone).slice(0, 4) ===
+    localDay(now, timeZone).slice(0, 4);
+  return new Intl.DateTimeFormat(intlLocale(locale), {
     timeZone,
     weekday: "long",
     day: "numeric",
     month: "long",
-    year: memeAnnee ? undefined : "numeric",
+    year: sameYear ? undefined : "numeric",
   }).format(date);
 }
 
-export function formaterDateEvenement(
+export function formatEventDate(
   iso: string,
-  langue: string,
-  libelles: Libelles,
-  maintenant = new Date(),
+  locale: string,
+  labels: Labels,
+  now = new Date(),
   timeZone?: string,
 ): string {
   const date = new Date(iso);
-  const heure = formaterHeure(date, langue, timeZone);
-  const jour = jourLocal(date, timeZone);
-  if (jour === jourLocal(maintenant, timeZone))
-    return libelles.aujourdhui(heure);
-  const demain = new Date(maintenant.getTime() + 24 * 3_600_000);
-  if (jour === jourLocal(demain, timeZone)) return libelles.demain(heure);
-  return `${formaterJour(date, langue, maintenant, timeZone)}, ${heure}`;
+  const time = formatTime(date, locale, timeZone);
+  const day = localDay(date, timeZone);
+  if (day === localDay(now, timeZone)) return labels.today(time);
+  const tomorrow = new Date(now.getTime() + 24 * 3_600_000);
+  if (day === localDay(tomorrow, timeZone)) return labels.tomorrow(time);
+  return `${formatDay(date, locale, now, timeZone)}, ${time}`;
 }
 
 /** Date courte pour les tableaux (« 14 oct. 2026 »). */
-export function formaterDateCourte(
+export function formatShortDate(
   iso: string,
-  langue: string,
+  locale: string,
   timeZone?: string,
 ): string {
-  return new Intl.DateTimeFormat(intlLocale(langue), {
+  return new Intl.DateTimeFormat(intlLocale(locale), {
     timeZone,
     dateStyle: "medium",
   }).format(new Date(iso));

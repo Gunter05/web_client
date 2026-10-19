@@ -1,4 +1,4 @@
 import "server-only";
-import { serverSchema, valider } from "@/shared/config/schema";
+import { serverSchema, validate } from "@/shared/config/schema";
 
-export const env = valider(serverSchema, process.env);
+export const env = validate(serverSchema, process.env);

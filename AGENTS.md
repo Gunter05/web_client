@@ -11,8 +11,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 # Règles du projet Le Contineng
 
 - Lire le `README.md` (architecture, commandes) et les ADR de `docs/adr/` avant de modifier le code.
-- `src/app/` ne fait que du routage. Le code métier vit dans `src/features/<feature>/` (`components/`, `actions/`, `api/`, `lib/`, `types/`) ; `app/` et `widgets/` n'utilisent une feature que par `index.ts`, `server.ts` ou `actions/`. `npm run arch` vérifie ces règles.
-- Les composants shadcn/ui restent intacts dans `src/shared/components/ui/` ; les composants métier les assemblent dans `src/features/<feature>/components/`.
+- Lire `docs/architecture.md` avant d'ajouter un fichier.
+- `src/app/` ne fait que du routage (`(auth)`, `(user)`, `(super-admin)/admin`). Le code métier vit dans `src/modules/<module>/` (`domain/`, `application/`, `infrastructure/`, `presentation/components/`) ; les coques et composants propres à un espace vivent dans `src/spaces/<espace>/`. `app/` et `spaces/` n'utilisent un module que par `index.ts`, `server.ts` ou `application/`. `npm run arch` vérifie ces règles.
+- Les composants shadcn/ui restent intacts dans `src/shared/ui/` ; les composants métier les assemblent dans `src/modules/<module>/presentation/components/`.
 - Jamais `process.env` directement : importer `env` ou `clientEnv` depuis `src/shared/config/`.
 - Toute Server Action valide ses entrées avec Zod et vérifie les droits.
 - Lancer `npm run check` avant de proposer un changement.

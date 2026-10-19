@@ -1,34 +1,35 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
-import { FormulaireInscription } from "@/features/auth";
-import { compteCourant } from "@/features/auth/server";
-import { actionInscription } from "@/features/auth/actions/auth.actions";
-import { CarteAuth } from "@/features/auth";
+import { RegisterForm } from "@/modules/auth";
+import { getCurrentAccount } from "@/modules/auth/server";
+import { registerAction } from "@/modules/auth/application/auth.actions";
+import { AuthCard } from "@/modules/auth";
 import { Suspense } from "react";
-import { SqueletteContenu } from "@/shared/components/layout/SqueletteContenu";
+import { ContentSkeleton } from "@/shared/components/layout/ContentSkeleton";
 
 /** Inscription ouverte à tous. */
-async function Inscription({ searchParams }: PageProps<"/register">) {
-  const { retour } = await searchParams;
-  const cible = typeof retour === "string" ? retour : "/";
-  if (await compteCourant()) redirect(cible.startsWith("/") ? cible : "/");
+async function Register({ searchParams }: PageProps<"/register">) {
+  const { returnTo } = await searchParams;
+  const target = typeof returnTo === "string" ? returnTo : "/";
+  if (await getCurrentAccount())
+    redirect(target.startsWith("/") ? target : "/");
   const t = await getTranslations();
   return (
-    <CarteAuth
-      titre={t("identite.titreInscription")}
-      sousTitre={t("identite.sousTitreInscription")}
-      pied={
+    <AuthCard
+      title={t("auth.registerTitle")}
+      subtitle={t("auth.registerSubtitle")}
+      footer={
         <>
-          {t("identite.dejaUnCompte")}{" "}
+          {t("auth.haveAccount")}{" "}
           <Link href="/login" className="font-semibold text-lien">
-            {t("nav.connexion")}
+            {t("nav.login")}
           </Link>
         </>
       }
     >
-      <FormulaireInscription action={actionInscription} retour={cible} />
-    </CarteAuth>
+      <RegisterForm action={registerAction} returnTo={target} />
+    </AuthCard>
   );
 }
 
@@ -38,8 +39,8 @@ async function Inscription({ searchParams }: PageProps<"/register">) {
  */
 export default function Page(props: PageProps<"/register">) {
   return (
-    <Suspense fallback={<SqueletteContenu />}>
-      <Inscription {...props} />
+    <Suspense fallback={<ContentSkeleton />}>
+      <Register {...props} />
     </Suspense>
   );
 }

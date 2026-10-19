@@ -1,6 +1,6 @@
 # 0014 — Architecture par features, adresses en anglais
 
-Statut : Acceptée
+Statut : Remplacée par [0016](0016-modules-en-couches-et-espaces.md)
 Date : 2026-10-19
 Remplace : l'organisation `src/modules/<module>/{domain,infrastructure,ui}` (ADR 0003 côté organisation)
 
@@ -11,9 +11,9 @@ L'organisation précédente répartissait le code entre `src/modules`, `src/app/
 ## Décision
 
 - **Un seul dossier de projet**, sans copie de travail séparée.
-- **`src/app/` = routage uniquement.** Trois groupes : `(auth)` (connexion, inscription, page épurée), `(site)` (le site) et `admin/` (l'application Administration, avec sa propre coque). Les pages composent des features ; elles ne contiennent pas de logique.
+- **`src/app/` = routage uniquement.** Trois groupes : `(auth)` (connexion, inscription, page épurée), `(user)` (l'application utilisateurs) et `admin/` (l'application Administration, avec sa propre coque). Les pages composent des features ; elles ne contiennent pas de logique.
 - **`src/features/<feature>/`** : `components/`, `actions/` (Server Actions), `api/` (appels à l'API Spring et traduction du contrat), `lib/` (règles pures, testées), `types/`, `index.ts` (API publique), `server.ts` (API publique côté serveur). Features : `auth`, `events`, `pages`, `audience`, `notifications`, `metrics`, `admin`.
-- **`src/widgets/`** : les coques qui composent plusieurs features (`site-shell`, `admin-shell`).
+- **`src/widgets/`** : les coques qui composent plusieurs features (`user-layout`, `admin-layout`).
 - **`src/shared/`** : `components/` (dont `ui/` pour shadcn et `layout/`), `api/`, `config/`, `i18n/`, `hooks/`, `lib/`.
 - **Nommage des fichiers** : composants en PascalCase (`CarteEvenement.tsx`), hooks en camelCase (`useMonte.ts`), suffixes `*.api.ts`, `*.types.ts`, `*.actions.ts`. Les composants shadcn gardent leur nom d'origine (`button.tsx`) pour rester compatibles avec la CLI.
 - **Adresses en anglais** : `/login`, `/register`, `/search`, `/events/new`, `/e/{id}/edit`, `/my-pages`, `/my-pages/{slug}/access`, `/page-request`, `/profile`, `/admin/page-requests`, `/admin/accounts`, `/admin/events`. Les liens permanents `/e/{id}` et `/p/{slug}` ne changent pas. Les anciennes adresses françaises redirigent (301) vers les nouvelles (`next.config.ts`), pour les liens déjà partagés et les notifications enregistrées. Les paramètres de requête (`?periode=`, `?retour=`…) sont inchangés.

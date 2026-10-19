@@ -5,6 +5,15 @@ import { WebVitals } from "@/shared/components/WebVitals";
 import { Providers } from "./providers";
 import "./globals.css";
 
+import { Poppins } from "next/font/google";
+
+// Configuration de la police
+const poppins = Poppins({
+  subsets: ["latin"], // Charge uniquement les caractères latins (plus léger)
+  weight: ["400", "600", "700"], // Choisissez les poids dont vous avez besoin
+  variable: "--font-poppins", // Crée une variable CSS réutilisable
+});
+
 const geistSans = Geist({
   variable: "--font-sans",
   subsets: ["latin"],
@@ -29,7 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="fr"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${poppins.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <WebVitals />
