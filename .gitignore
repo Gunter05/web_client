@@ -50,3 +50,6 @@ next-env.d.ts
 
 # Données simulées (ADR 0011), créées au premier lancement
 /data/
+
+# Copies de travail créées par Claude Code
+/.claude/worktrees/

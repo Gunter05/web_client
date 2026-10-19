@@ -1,5 +1,5 @@
-import { ListeVide, Pagination, Recherche } from "@/modules/administration";
-import { listerPages } from "@/modules/administration/server";
+import { ListeVide, Pagination, Recherche } from "@/features/admin";
+import { listerPages } from "@/features/admin/server";
 import {
   Table,
   TableBody,
@@ -7,14 +7,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/ui/table";
+} from "@/shared/components/ui/table";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { DateCourte } from "../_coque/date-courte";
-import { adminCourant } from "../_coque/garde";
-import { lireRecherche } from "../_coque/sources";
+import { DateCourte } from "@/features/admin";
+import { adminCourant } from "@/features/admin/server";
+import { lireRecherche } from "@/features/admin";
 import { Suspense } from "react";
-import { SqueletteAdmin } from "@/app/admin/_coque/squelette";
+import { SqueletteAdmin } from "@/widgets/admin-shell/SqueletteAdmin";
 
 async function Pages({ searchParams }: PageProps<"/admin/pages">) {
   const t = await getTranslations();

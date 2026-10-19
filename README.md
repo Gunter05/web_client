@@ -57,35 +57,55 @@ Les variables `NEXT_PUBLIC_*` sont recopiées dans le code au moment du build : 
 
 ## Architecture
 
+Organisation par feature ([ADR 0014](docs/adr/0014-architecture-par-features.md)). Deux applications partagent le même code : le **site** (visiteurs et membres) et l'**Administration**.
+
 ```
 src/
-├── app/                 Routes Next.js et composition des modules
-│   ├── (public)/            Espace public : fil, fiches, pages, compte, publication
-│   ├── admin/               Espace Administration (garde serveur, onglets US-07)
-│   ├── _actions/            Server Actions : valident (Zod), vérifient les droits, orchestrent
-│   └── _services/           Composition : pages de la personne connectée, affichage des événements
-├── modules/             Code métier, un dossier par domaine, chacun avec ses couches
-│   ├── identite/            Compte, connexion, session, profil personnel
-│   ├── pages/               Demandes de page, pages, « Mes pages », accès (US-03, US-06)
-│   ├── evenements/          Événements, période, statut, filtres, partage (US-11/01/16/17/15/36)
-│   ├── audience/            Vues uniques par jour, « Mes événements » (US-39)
-│   ├── notifications/       Cloche et notifications dans l'application
-│   ├── mesure/              Métriques produit (partages)
-│   └── administration/      Supervision en lecture seule (US-07)
-│       ├── domain/              Types et règles métier, TypeScript pur
-│       ├── infrastructure/      Adaptateurs HTTP vers l'API (ADR 0012)
-│       ├── ui/                  Composants React du module
-│       ├── index.ts             Porte d'entrée sûre partout (types, composants)
-│       └── server.ts            Porte d'entrée serveur (données), protégée par server-only
-└── shared/              Ce qui sert partout
-    ├── config/              Variables d'environnement validées
-    ├── i18n/                Catalogues FR/EN, formats de date (US-16), langue (ADR 0009)
-    ├── api/                 Client HTTP de l'API et jeton de session (ADR 0012)
-    ├── stockage/            Images de démo par défaut
-    ├── composants/          Composants génériques (avatar, champ, langue…)
-    ├── hooks/, lib/         Utilitaires
-    └── ui/                  Composants shadcn/ui, sans métier
+├── app/                      Routage Next.js uniquement
+│   ├── (auth)/                   /login, /register (page épurée)
+│   ├── (site)/                   Le site : /, /search, /e/{id}, /e/{id}/edit, /events/new,
+│   │                             /p/{slug}, /my-pages…, /page-request, /profile
+│   ├── admin/                    L'application Administration : /admin/page-requests,
+│   │                             /admin/accounts, /admin/pages, /admin/events
+│   ├── layout.tsx, providers.tsx Document racine et providers globaux (i18n, toasts)
+│   └── demo/[nom]/route.ts       Images de démonstration
+├── features/                 Cœur de l'application, une feature par domaine
+│   ├── auth/                     Compte, connexion, inscription, profil
+│   ├── events/                   Événements : fil, fiche, filtres, publication
+│   ├── pages/                    Pages, demandes de page, « Mes pages », accès
+│   ├── audience/                 Vues uniques par jour (US-39)
+│   ├── notifications/            Cloche et notifications
+│   ├── metrics/                  Métriques produit (partages)
+│   └── admin/                    Supervision (réservée à l'application Administration)
+│       ├── components/               Composants React de la feature
+│       ├── actions/                  Server Actions (Zod, droits, orchestration)
+│       ├── api/                      Appels à l'API Spring et traduction du contrat
+│       ├── lib/                      Règles pures (TypeScript sans React ni Next), testées
+│       ├── types/                    Types de la feature
+│       ├── index.ts                  API publique utilisable partout (composants, types, règles)
+│       └── server.ts                 API publique côté serveur (données), protégée par server-only
+├── widgets/                  Compositions de features
+│   ├── site-shell/               Coque du site : barre latérale, en-tête, navigation basse
+│   └── admin-shell/              Coque de l'Administration : en-tête, onglets, garde
+└── shared/                   Code partagé, sans métier
+    ├── components/               Composants génériques (avatar, champ, langue…)
+    │   ├── ui/                       Composants shadcn/ui
+    │   └── layout/                   Logo, en-tête de page, squelettes
+    ├── api/                      Client HTTP de l'API, jeton de session, erreurs
+    ├── config/                   Variables d'environnement validées
+    ├── i18n/                     Catalogues FR/EN, formats de date, langue (ADR 0009)
+    ├── hooks/                    Hooks transverses
+    └── lib/                      Utilitaires purs
 ```
+
+Règles vérifiées par `npm run arch` (dependency-cruiser) :
+
+- `app/` et `widgets/` n'utilisent une feature que par `index.ts`, `server.ts` ou ses Server Actions (`actions/`) ;
+- une feature n'utilise une autre feature que par `index.ts` ou `server.ts`, et ne connaît ni `app/` ni `widgets/` ;
+- `lib/` et `types/` restent purs ; `shared/` ne dépend de rien d'autre ;
+- la feature `admin` n'est utilisée que par l'application Administration, et le site n'importe rien de l'Administration.
+
+Les anciennes adresses françaises (`/connexion`, `/mes-pages`, `/admin/demandes`…) redirigent vers les nouvelles (`next.config.ts`).
 
 ### Démonstration
 
@@ -116,11 +136,11 @@ En plus, importer un `server.ts` depuis un composant `"use client"` fait échoue
 npx shadcn@latest add dialog
 ```
 
-`components.json` écrit les composants dans `src/shared/ui`. On ne les modifie pas pour y mettre du métier : un composant métier (comme `CarteEvenement`) vit dans `src/modules/<module>/ui` et **assemble** les composants de `shared/ui`.
+`components.json` écrit les composants dans `src/shared/components/ui`. On ne les modifie pas pour y mettre du métier : un composant métier (comme `CarteEvenement`) vit dans `src/features/<feature>/components` et **assemble** les composants de `shared/components/ui`.
 
 ### Cache
 
-`cacheComponents` est activé (ADR 0004) : rien n'est mis en cache par défaut. Une fonction ou un composant n'est mis en cache que s'il porte `"use cache"`, comme `listerLesEvenements` dans `src/modules/evenements/server.ts`. Les données propres à un utilisateur ne vont jamais dans un cache partagé.
+`cacheComponents` est activé (ADR 0004) : rien n'est mis en cache par défaut. Une fonction ou un composant n'est mis en cache que s'il porte `"use cache"`, dans `src/features/<feature>/server.ts`. Les données propres à un utilisateur ne vont jamais dans un cache partagé.
 
 ### Sécurité
 

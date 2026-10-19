@@ -6,7 +6,7 @@ import {
   estLangue,
   type Langue,
   langueDepuisNavigateur,
-} from "./langues";
+} from "@/shared/i18n/langues";
 
 export async function langueCourante(): Promise<Langue> {
   const choisie = (await cookies()).get(COOKIE_LANGUE)?.value;

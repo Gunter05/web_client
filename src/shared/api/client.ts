@@ -1,6 +1,6 @@
 import "server-only";
 import { env } from "@/shared/config/env";
-import { lireJeton } from "./jeton";
+import { lireJeton } from "@/shared/api/jeton";
 
 /**
  * Erreur renvoyée par l'API (ProblemDetail, ADR 0005 du backend). `code` est

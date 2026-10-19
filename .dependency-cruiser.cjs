@@ -12,63 +12,88 @@ module.exports = {
     {
       name: "app-par-points-d-entree",
       comment:
-        "app/ n'importe un module que par son index.ts ou son server.ts.",
+        "app/ (routage) n'importe une feature que par index.ts, server.ts ou ses Server Actions (actions/).",
       severity: "error",
       from: { path: "^src/app/" },
       to: {
-        path: "^src/modules/",
-        pathNot: "^src/modules/[^/]+/(index|server)\\.ts$",
+        path: "^src/features/",
+        pathNot: [
+          "^src/features/[^/]+/(index|server)\\.ts$",
+          "^src/features/[^/]+/actions/",
+        ],
       },
     },
     {
-      name: "module-vers-autre-module",
-      comment: "Un module n'importe d'un autre module que son index.ts.",
-      severity: "error",
-      from: { path: "^src/modules/([^/]+)/" },
-      to: {
-        path: "^src/modules/",
-        pathNot: ["^src/modules/$1/", "^src/modules/[^/]+/index\\.ts$"],
-      },
-    },
-    {
-      name: "domaine-pur",
+      name: "widget-par-points-d-entree",
       comment:
-        "domain/ ne dépend de rien d'autre que de son propre dossier (ni React, ni Next, ni bibliothèque).",
+        "Un widget compose des features par index.ts, server.ts ou leurs Server Actions.",
       severity: "error",
-      from: { path: "^src/modules/([^/]+)/domain/" },
-      to: { pathNot: "^src/modules/$1/domain/" },
+      from: { path: "^src/widgets/" },
+      to: {
+        path: "^src/features/",
+        pathNot: [
+          "^src/features/[^/]+/(index|server)\\.ts$",
+          "^src/features/[^/]+/actions/",
+        ],
+      },
     },
     {
-      name: "application-sans-ui-ni-infrastructure",
-      comment: "application/ ne connaît que domain/.",
+      name: "feature-vers-autre-feature",
+      comment:
+        "Une feature n'importe d'une autre feature que son index.ts ou son server.ts (jamais ses actions).",
       severity: "error",
-      from: { path: "^src/modules/([^/]+)/application/" },
-      to: { path: "^src/modules/$1/(ui|infrastructure)/" },
+      from: { path: "^src/features/([^/]+)/" },
+      to: {
+        path: "^src/features/",
+        pathNot: [
+          "^src/features/$1/",
+          "^src/features/[^/]+/(index|server)\\.ts$",
+        ],
+      },
+    },
+    {
+      name: "features-sans-app-ni-widgets",
+      comment: "Une feature ne connaît ni le routage ni les coques.",
+      severity: "error",
+      from: { path: "^src/features/" },
+      to: { path: "^src/(app|widgets)/" },
+    },
+    {
+      name: "lib-et-types-purs",
+      comment:
+        "lib/ et types/ d'une feature ne dépendent que de lib/ et types/ de la même feature (TypeScript pur, sans React ni Next).",
+      severity: "error",
+      from: { path: "^src/features/([^/]+)/(lib|types)/" },
+      to: { pathNot: "^src/features/$1/(lib|types)/" },
     },
     {
       name: "shared-independant",
-      comment: "shared/ ne dépend ni des modules ni de app/.",
+      comment: "shared/ ne dépend ni des features, ni des widgets, ni de app/.",
       severity: "error",
       from: { path: "^src/shared/" },
-      to: { path: "^src/(modules|app)/" },
+      to: { path: "^src/(features|widgets|app)/" },
     },
     {
-      name: "administration-reservee-a-admin",
+      name: "admin-reserve-a-l-application-admin",
       comment:
-        "Le module administration n'est utilisé que par l'espace src/app/admin.",
+        "La feature admin n'est utilisée que par l'application Administration.",
       severity: "error",
       from: {
         path: "^src/",
-        pathNot: ["^src/app/admin/", "^src/modules/administration/"],
+        pathNot: [
+          "^src/app/admin/",
+          "^src/widgets/admin-shell/",
+          "^src/features/admin/",
+        ],
       },
-      to: { path: "^src/modules/administration/" },
+      to: { path: "^src/features/admin/" },
     },
     {
-      name: "public-sans-admin",
-      comment: "L'espace public n'importe rien de l'espace Administration.",
+      name: "site-sans-admin",
+      comment: "Le site n'importe rien de l'application Administration.",
       severity: "error",
-      from: { path: "^src/app/\\(public\\)/" },
-      to: { path: "^src/app/admin/" },
+      from: { path: "^src/(app/\\((site|auth)\\)|widgets/site-shell)/" },
+      to: { path: "^src/(app/admin|widgets/admin-shell|features/admin)/" },
     },
   ],
   options: {

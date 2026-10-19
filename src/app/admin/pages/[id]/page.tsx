@@ -1,15 +1,15 @@
-import { detailPage } from "@/modules/administration/server";
-import { AvatarProfil } from "@/shared/composants/avatar-profil";
-import { Badge } from "@/shared/ui/badge";
-import { buttonVariants } from "@/shared/ui/button";
+import { detailPage } from "@/features/admin/server";
+import { AvatarProfil } from "@/shared/components/AvatarProfil";
+import { Badge } from "@/shared/components/ui/badge";
+import { buttonVariants } from "@/shared/components/ui/button";
 import { ArrowLeftIcon, ExternalLinkIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { DateCourte } from "../../_coque/date-courte";
-import { adminCourant } from "../../_coque/garde";
+import { DateCourte } from "@/features/admin";
+import { adminCourant } from "@/features/admin/server";
 import { Suspense } from "react";
-import { SqueletteAdmin } from "@/app/admin/_coque/squelette";
+import { SqueletteAdmin } from "@/widgets/admin-shell/SqueletteAdmin";
 
 /** Détail d'une page : propriétaire, membres nominatifs et événements (US-07). */
 async function DetailPage({ params }: PageProps<"/admin/pages/[id]">) {
