@@ -17,7 +17,7 @@ export function PageProfileHeader({
   return (
     <header className="flex flex-col gap-4 px-4 py-6 sm:flex-row sm:items-center sm:gap-10 sm:px-0">
       <div className="flex items-center gap-6 sm:block">
-        <ProfileAvatar name={page.name} photo={page.photoUrl} size="xl" ring />
+        <ProfileAvatar name={page.name} photo={page.photoUrl} size="xl" />
         <div className="grid gap-1 sm:hidden">
           <h1 className="text-xl font-semibold">{page.name}</h1>
           <Badge variant="secondary" className="w-fit">

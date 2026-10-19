@@ -19,7 +19,11 @@ import {
 } from "@/modules/notifications/application/notifications.actions";
 import { countUnread } from "@/modules/notifications/server";
 import { getCurrentUser } from "@/modules/pages/server";
-import { DropdownMenuItem } from "@/shared/ui/dropdown-menu";
+import { ThemeSwitcher } from "@/shared/components/ThemeSwitcher";
+import {
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/shared/ui/dropdown-menu";
 
 /** Server Actions de la cloche de notifications. */
 export const notificationActions = {
@@ -70,6 +74,12 @@ export const getNavigation = cache(async () => {
           <ShieldIcon /> {t("nav.admin")}
         </DropdownMenuItem>
       )}
+      <DropdownMenuSeparator />
+      <div className="flex items-center justify-between gap-3 px-2 py-1.5 text-sm">
+        {t("theme.darkMode")}
+        <ThemeSwitcher />
+      </div>
+      <DropdownMenuSeparator />
       <form action={logoutAction}>
         <DropdownMenuItem
           render={<button type="submit" className="w-full" />}

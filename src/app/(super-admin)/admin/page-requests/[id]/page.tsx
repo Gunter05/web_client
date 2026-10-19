@@ -44,7 +44,6 @@ async function PageRequestDetails({
             name={pageRequest.name}
             photo={pageRequest.photoUrl}
             size="lg"
-            ring
           />
           <div className="grid gap-1">
             <h1 className="text-xl font-semibold">{pageRequest.name}</h1>

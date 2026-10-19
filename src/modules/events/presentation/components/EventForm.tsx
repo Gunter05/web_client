@@ -83,7 +83,7 @@ export function EventForm({
       {event && <input type="hidden" name="id" value={event.id} />}
 
       <div className="flex items-center gap-3 rounded-xl border bg-muted/40 p-3">
-        <ProfileAvatar name={page.name} photo={page.photoUrl} size="sm" ring />
+        <ProfileAvatar name={page.name} photo={page.photoUrl} size="sm" />
         <div className="text-sm">
           <p className="text-xs text-muted-foreground">
             {t("events.organizerPage")}

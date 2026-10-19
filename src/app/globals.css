@@ -109,7 +109,7 @@
   --chart-5: oklch(0.269 0 0);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: oklch(0.922 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
@@ -129,15 +129,8 @@
   }
 }
 
-/*
- * Marque Le Contineng : dégradé « coucher de soleil » des anneaux d'avatar
- * et couleurs d'état (succès, avertissement, danger) utilisées par les badges.
- */
+/* Couleurs d'état (succès, avertissement, danger) utilisées par les badges et les messages. */
 :root {
-  --marque-1: oklch(0.8 0.17 75);
-  --marque-2: oklch(0.65 0.24 20);
-  --marque-3: oklch(0.55 0.25 330);
-  --lien: oklch(0.5 0.2 260);
   --succes: oklch(0.55 0.15 150);
   --succes-fond: oklch(0.96 0.04 150);
   --avertissement: oklch(0.5 0.13 65);
@@ -147,24 +140,29 @@
   --danger: oklch(0.5 0.2 27);
 }
 
+/* Mêmes couleurs d'état en thème sombre : texte clair, fonds foncés. */
+.dark {
+  --succes: oklch(0.75 0.15 150);
+  --succes-fond: oklch(0.3 0.06 150);
+  --avertissement: oklch(0.8 0.13 75);
+  --avertissement-fond: oklch(0.3 0.06 75);
+  --danger-fond: oklch(0.3 0.08 25);
+  --danger: oklch(0.75 0.17 25);
+}
+
+/* Contrôles natifs (champs de date, barres de défilement) au thème. */
+:root {
+  color-scheme: light;
+}
+.dark {
+  color-scheme: dark;
+}
+
 @theme inline {
-  --color-marque-1: var(--marque-1);
-  --color-marque-2: var(--marque-2);
-  --color-marque-3: var(--marque-3);
-  --color-lien: var(--lien);
   --color-succes: var(--succes);
   --color-succes-fond: var(--succes-fond);
   --color-avertissement: var(--avertissement);
   --color-avertissement-fond: var(--avertissement-fond);
   --color-danger-fond: var(--danger-fond);
   --color-danger: var(--danger);
-}
-
-@utility degrade-marque {
-  background-image: linear-gradient(
-    45deg,
-    var(--marque-1),
-    var(--marque-2) 50%,
-    var(--marque-3)
-  );
 }

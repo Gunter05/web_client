@@ -7,7 +7,6 @@ export {
   ORGANIZATION_TYPES,
   type OrganizationType,
 } from "@/modules/pages/domain/page.types";
-export { PagesCarousel } from "@/modules/pages/presentation/components/PagesCarousel";
 export { PageRequestDecision } from "@/modules/pages/presentation/components/PageRequestDecision";
 export { PendingPageRequest } from "@/modules/pages/presentation/components/PendingPageRequest";
 export { PageProfileHeader } from "@/modules/pages/presentation/components/PageProfileHeader";

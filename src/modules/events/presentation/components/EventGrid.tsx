@@ -2,9 +2,13 @@ import { cn } from "@/shared/lib/utils";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import type { EventView } from "@/modules/events/domain/event-view.types";
-import { DEFAULT_IMAGE } from "@/modules/events/presentation/components/EventCard";
+import { eventImage } from "@/modules/events/domain/event-image";
 
-/** Grille de vignettes carrées, comme la grille d'un profil Instagram. */
+/**
+ * Grille de vignettes au format portrait 3:4 (comme la grille d'Instagram),
+ * comme sur les réseaux sociaux : la photo n'est ni coupée ni déformée, elle
+ * est centrée sur un fond noir qui comble l'espace restant.
+ */
 export function EventGrid({
   events,
   className,
@@ -14,20 +18,25 @@ export function EventGrid({
 }) {
   const t = useTranslations();
   return (
-    <ul className={cn("grid grid-cols-3 gap-0.5 sm:gap-1", className)}>
+    <ul
+      className={cn(
+        "grid grid-cols-3 gap-0.5 sm:gap-1 lg:grid-cols-4 xl:grid-cols-5",
+        className,
+      )}
+    >
       {events.map((e) => (
         <li key={e.id}>
           <Link
             href={`/e/${e.id}`}
-            className="group relative block aspect-square overflow-hidden bg-muted"
+            className="group relative block aspect-[3/4] overflow-hidden bg-black"
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- images simulées (SVG) */}
             <img
-              src={e.photoUrl ?? DEFAULT_IMAGE}
+              src={eventImage(e)}
               alt=""
               loading="lazy"
               className={cn(
-                "size-full object-cover",
+                "size-full object-contain",
                 e.status === "cancelled" && "grayscale",
               )}
             />

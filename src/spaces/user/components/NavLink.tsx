@@ -5,6 +5,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { SIDEBAR_LABEL } from "@/spaces/user/components/sidebar-classes";
+import { useSidebarPanel } from "@/spaces/user/components/sidebar-panel";
+
+/**
+ * Onglet actif : icône pleine. Les traits intérieurs des icônes carrées
+ * (le « + » de Créer) passent en couleur de fond pour rester visibles.
+ */
+const ACTIVE_ICON = "[&_svg]:fill-current [&_svg_rect~path]:stroke-background";
 
 /** Entrée de navigation : barre latérale (icône + libellé) ou barre basse (icône). */
 export function NavLink({
@@ -19,7 +26,10 @@ export function NavLink({
   variant: "sidebar" | "bottom";
 }) {
   const path = usePathname();
-  const active = href === "/" ? path === "/" : path.startsWith(href);
+  const { panel } = useSidebarPanel();
+  const onPage = href === "/" ? path === "/" : path.startsWith(href);
+  // Un tiroir ouvert (notifications, « Plus ») devient l'onglet actif.
+  const active = onPage && !(variant === "sidebar" && panel);
   if (variant === "bottom") {
     return (
       <Link
@@ -28,9 +38,7 @@ export function NavLink({
         aria-current={active ? "page" : undefined}
         className={cn(
           "grid flex-1 place-items-center py-3 [&_svg]:size-6",
-          active
-            ? "text-foreground [&_svg]:stroke-[2.5]"
-            : "text-foreground/80",
+          active ? cn("text-foreground", ACTIVE_ICON) : "text-foreground/80",
         )}
       >
         {icon}
@@ -44,7 +52,7 @@ export function NavLink({
       aria-current={active ? "page" : undefined}
       className={cn(
         "flex h-11 items-center gap-3 rounded-lg px-3 text-base transition-colors hover:bg-muted [&_svg]:size-6 [&_svg]:shrink-0",
-        active && "text-danger [&_svg]:stroke-[2.5]",
+        active && cn("font-semibold text-foreground", ACTIVE_ICON),
       )}
     >
       {icon}

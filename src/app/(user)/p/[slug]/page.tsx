@@ -49,7 +49,7 @@ async function PublicPage({ params }: PageProps<"/p/[slug]">) {
         <Grid3x3Icon className="size-3.5" /> {t("events.listTitle")}
       </h2>
       {events.length ? (
-        <EventGrid events={events} />
+        <EventGrid events={events} className="lg:grid-cols-3 xl:grid-cols-3" />
       ) : (
         <p className="py-16 text-center text-sm text-muted-foreground">
           {t("pages.public.noEvents")}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { clientEnv } from "@/shared/config/env.client";
 import { WebVitals } from "@/shared/components/WebVitals";
+import { THEME_SCRIPT } from "@/shared/lib/theme";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -38,8 +39,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="fr"
+      // La classe `dark` est posée par le script du thème avant React.
+      suppressHydrationWarning
       className={`${poppins.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        {/* Thème appliqué avant le premier affichage (pas de flash clair). */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="flex min-h-full flex-col">
         <WebVitals />
         <Providers>{children}</Providers>

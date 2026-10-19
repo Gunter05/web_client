@@ -52,7 +52,7 @@ async function AdminHeader() {
           href="/admin/page-requests"
           className="flex items-center gap-2 font-semibold"
         >
-          <span className="grid size-8 place-items-center rounded-lg degrade-marque text-white">
+          <span className="grid size-8 place-items-center rounded-lg bg-primary text-primary-foreground">
             <ShieldIcon className="size-4" />
           </span>
           <span className="hidden sm:inline">

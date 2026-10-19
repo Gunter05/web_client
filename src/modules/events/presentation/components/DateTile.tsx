@@ -32,7 +32,7 @@ export function DateTile({
         className,
       )}
     >
-      <span className="bg-danger py-1 text-[11px] font-bold tracking-wider text-white">
+      <span className="bg-primary py-1 text-[11px] font-bold tracking-wider text-primary-foreground">
         {mounted ? month : " "}
       </span>
       <span className="py-1.5 text-2xl font-bold tabular-nums">

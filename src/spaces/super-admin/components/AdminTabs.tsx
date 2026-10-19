@@ -41,7 +41,7 @@ export function AdminTabs({
                 <Icon className="size-4" />
                 {t(key)}
                 {key === "pageRequests" && pendingPageRequests > 0 && (
-                  <span className="rounded-full bg-marque-2 px-1.5 text-xs font-bold text-white">
+                  <span className="rounded-full bg-primary px-1.5 text-xs font-bold text-primary-foreground">
                     {pendingPageRequests}
                   </span>
                 )}

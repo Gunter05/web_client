@@ -71,7 +71,6 @@
     "main": "Navigation principale",
     "collapse": "Réduire le menu",
     "expand": "Étendre le menu",
-    "pages": "Pages",
     "search": "Rechercher",
     "myPages": "Mes pages"
   },
@@ -204,7 +203,21 @@
     "columnViews": "Vues",
     "noPageHelp": "Demandez la création d’une page pour votre club ou votre association : un administrateur la validera.",
     "notMember": "Vous n’êtes pas membre de cette page. Choisissez-en une autre.",
-    "editRestricted": "Seuls les membres de la page organisatrice peuvent modifier cet événement."
+    "editRestricted": "Seuls les membres de la page organisatrice peuvent modifier cet événement.",
+    "sheet": {
+      "close": "Fermer l'aperçu",
+      "copyLink": "Copier le lien",
+      "linkCopied": "Lien copié",
+      "eventPage": "Page de l'événement",
+      "previous": "Événement précédent",
+      "next": "Événement suivant",
+      "organizedBy": "Organisé par {name}",
+      "about": "À propos de l'événement",
+      "presentedBy": "Présenté par",
+      "openMaps": "Maps",
+      "actions": "Partager et gérer"
+    },
+    "later": "Plus tard"
   },
   "categories": {
     "match": "Match / compétition",
@@ -248,7 +261,17 @@
     "requestRejected": "Votre demande pour {name} a été refusée : {reason}",
     "accessGranted": "Vous avez maintenant accès à la page {name}",
     "accessRevoked": "Votre accès à la page {name} a été retiré",
-    "newRequest": "Nouvelle demande de page : {name}"
+    "newRequest": "Nouvelle demande de page : {name}",
+    "close": "Fermer",
+    "filter": "Filtrer les notifications",
+    "thisMonth": "Ce mois",
+    "earlier": "Précédent",
+    "categories": {
+      "all": "Toutes les activités",
+      "pages": "Pages",
+      "access": "Accès",
+      "requests": "Demandes"
+    }
   },
   "dates": {
     "today": "Aujourd'hui, {time}",
@@ -316,5 +339,17 @@
     "all": "Tous",
     "noResults": "Aucun événement ne correspond à votre recherche",
     "results": "{n, plural, =0 {Aucun résultat} one {# événement} other {# événements}}"
+  },
+  "more": {
+    "settings": "Paramètres",
+    "account": "Compte",
+    "other": "Autres"
+  },
+  "theme": {
+    "label": "Thème",
+    "darkMode": "Mode sombre",
+    "system": "Comme l'appareil",
+    "dark": "Sombre",
+    "light": "Clair"
   }
 }
