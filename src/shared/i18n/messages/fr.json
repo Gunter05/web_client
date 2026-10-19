@@ -50,7 +50,6 @@
     "demandeDejaEnAttente": "Vous avez déjà une demande en attente",
     "demandeDejaTraitee": "Cette demande a déjà été traitée",
     "dejaMembre": "Déjà membre",
-    "choisirPage": "Choisissez une page pour publier",
     "pasAutorisePublier": "Vous n'avez pas l'autorisation de publier sur cette page",
     "evenementIntrouvable": "Cet événement n'existe pas",
     "evenementNonModifiable": "Un événement passé ou annulé ne peut plus être modifié",
@@ -62,7 +61,6 @@
     "creer": "Créer",
     "notifications": "Notifications",
     "profil": "Profil",
-    "mesEvenements": "Mes événements",
     "acces": "Accès",
     "demanderPage": "Créer une page",
     "connexion": "Se connecter",
@@ -74,7 +72,8 @@
     "reduire": "Réduire le menu",
     "etendre": "Étendre le menu",
     "pages": "Pages",
-    "rechercher": "Rechercher"
+    "rechercher": "Rechercher",
+    "mesPages": "Mes pages"
   },
   "identite": {
     "titreConnexion": "Connexion",
@@ -91,16 +90,6 @@
     "monProfil": "Mon profil",
     "profilEnregistre": "Profil enregistré",
     "profilPersonnel": "Profil personnel"
-  },
-  "profilActif": {
-    "bandeau": "Vous agissez au nom de {page}",
-    "revenirPersonnel": "Revenir à mon profil",
-    "changerDeProfil": "Changer de profil",
-    "profilPersonnel": "Profil personnel",
-    "mesProfils": "Mes profils",
-    "accesPerdu": "Vous n'avez plus accès à la page {nom}",
-    "proprietaire": "Propriétaire",
-    "contributeur": "Contributeur"
   },
   "pages": {
     "types": {
@@ -147,6 +136,20 @@
       "ajouteLe": "Ajouté le {date}",
       "accesDonne": "{nom} a maintenant accès à la page",
       "accesRetire": "Accès retiré"
+    },
+    "roles": {
+      "proprietaire": "Propriétaire",
+      "contributeur": "Contributeur"
+    },
+    "mesPages": {
+      "titre": "Mes pages",
+      "intro": "Les pages au nom desquelles vous publiez.",
+      "vide": "Vous n’êtes membre d’aucune page pour l’instant.",
+      "evenements": "Événements",
+      "acces": "Accès",
+      "publier": "Publier un événement",
+      "introuvable": "Cette page ne fait pas partie de vos pages.",
+      "retour": "Mes pages"
     }
   },
   "evenements": {
@@ -169,8 +172,8 @@
     "publier": "Publier",
     "enLigne": "Votre événement est en ligne",
     "modificationsEnregistrees": "Modifications enregistrées",
-    "choisirPagePourPublier": "Choisissez une page pour publier",
-    "choisirPageAide": "Les événements sont toujours publiés au nom d'une page. Basculez sur l'une de vos pages depuis le sélecteur de profil.",
+    "choisirPagePourPublier": "Avec quelle page voulez-vous publier ?",
+    "choisirPageAide": "Les événements sont toujours publiés au nom d’une page dont vous êtes membre.",
     "pasDePage": "Vous n'êtes membre d'aucune page.",
     "derniereModification": "Dernière modification :",
     "avant": "Avant",
@@ -198,7 +201,10 @@
     "colonneNom": "Nom",
     "colonneDebut": "Début",
     "colonneStatut": "Statut",
-    "colonneVues": "Vues"
+    "colonneVues": "Vues",
+    "pasDePageAide": "Demandez la création d’une page pour votre club ou votre association : un administrateur la validera.",
+    "pageNonMembre": "Vous n’êtes pas membre de cette page. Choisissez-en une autre.",
+    "modificationReservee": "Seuls les membres de la page organisatrice peuvent modifier cet événement."
   },
   "categories": {
     "match": "Match / compétition",

@@ -155,7 +155,7 @@ export function GestionAcces({
               <p className="truncate text-sm font-semibold">{m.nom}</p>
               <p className="text-xs text-muted-foreground">
                 {m.role === "proprietaire"
-                  ? t("profilActif.proprietaire")
+                  ? t("pages.roles.proprietaire")
                   : t("pages.acces.ajouteLe", {
                       date: monte
                         ? format.dateTime(new Date(m.ajouteLe), {

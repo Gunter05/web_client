@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/shared/ui/table";
 
-/** « Mes événements » de la page active, avec le nombre de vues (US-39). */
+/** Événements d'une page dont on est membre, avec le nombre de vues (US-39). */
 export function MesEvenements({
   evenements,
   vues,

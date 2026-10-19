@@ -95,7 +95,7 @@ export async function actionDonnerAcces(
   const erreur = await codeErreurApi(() =>
     donnerAcces(entree.data.pageId, entree.data.compteId),
   );
-  revalidatePath("/acces");
+  revalidatePath("/mes-pages", "layout");
   if (erreur) return { erreur };
   const membres = await membresDe(entree.data.pageId);
   return {
@@ -112,6 +112,6 @@ export async function actionRetirerAcces(
   const erreur = await codeErreurApi(() =>
     retirerAcces(entree.data.pageId, entree.data.compteId),
   );
-  revalidatePath("/acces");
+  revalidatePath("/mes-pages", "layout");
   return erreur ? { erreur } : {};
 }

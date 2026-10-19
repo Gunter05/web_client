@@ -42,7 +42,7 @@ export const evenementsDeLaPage = cache((slug: string) =>
   apiEvenements.deLaPage(slug),
 );
 
-// ——— Écriture au nom de la page active (US-11, US-15) ———
+// ——— Écriture au nom d'une page dont on est membre (US-11, US-15) ———
 export const creerEvenement = (pageId: string, d: DonneesEnvoyees) =>
   apiEvenements.creer(pageId, d);
 export const modifierEvenement = (

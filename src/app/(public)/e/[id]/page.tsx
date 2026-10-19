@@ -21,7 +21,7 @@ import {
   actionOuvertureFiche,
 } from "../../../_actions/audience";
 import { actionAnnulerEvenement } from "../../../_actions/evenements";
-import { profilActif } from "../../../_services/acteur";
+import { maPageParId } from "../../../_services/acteur";
 import { Suspense } from "react";
 import { SqueletteContenu } from "@/app/(public)/_coque/squelette";
 
@@ -86,10 +86,9 @@ async function PageFiche({ params }: PageProps<"/e/[id]">) {
     );
   }
 
-  // Affichage selon le profil actif ; chaque action est revérifiée par le serveur.
-  const etat = await profilActif();
-  const organisatrice =
-    etat?.actif.type === "page" && etat.actif.id === evenement.pageId;
+  // Les membres de la page organisatrice voient les vues et peuvent agir ;
+  // chaque action est revérifiée par le serveur.
+  const organisatrice = (await maPageParId(evenement.pageId)) !== null;
   const modifiable = estModifiable(evenement, new Date());
 
   return (

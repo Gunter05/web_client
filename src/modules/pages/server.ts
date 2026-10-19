@@ -14,7 +14,7 @@ export type {
 export const toutesLesPages = cache(() => apiPages.pages());
 export const pageParSlug = cache((slug: string) => apiPages.page(slug));
 
-// ——— Profil actif (US-37) ———
+// ——— Pages de la personne connectée (« Mes pages », choix avant de publier) ———
 export const pagesDuMembre = cache(() => apiPages.mesPages());
 
 // ——— Accès (US-06), réservé aux membres de la page ———

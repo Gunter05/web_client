@@ -21,6 +21,14 @@ export type Page = {
 
 export type Role = "proprietaire" | "contributeur";
 
+/**
+ * Page dont le compte connecté est membre, avec son rôle (US-06). On publie
+ * toujours au nom d'une de ces pages ; aucun « profil actif » n'est mémorisé.
+ */
+export type PageDuMembre = Pick<Page, "id" | "slug" | "nom" | "photo"> & {
+  role: Role;
+};
+
 /** Membre d'une page, avec son profil public (US-06). */
 export type Membre = {
   compteId: string;

@@ -26,18 +26,22 @@ import {
   lireFormulaire,
 } from "@/shared/lib/formulaire";
 import { verifierImage } from "@/shared/lib/images";
-import { acteurCourant, pageActive } from "../_services/acteur";
+import { acteurCourant, maPageParId } from "../_services/acteur";
 import { listerDepuisUrl } from "../_services/affichage";
 import { sansErreurApi } from "./_erreurs";
 
-/** On agit au nom de la page active (US-37) ; l'API revérifie l'appartenance. */
-async function pageDeLActeur(): Promise<
-  { pageId: string } | { etat: EtatFormulaire }
-> {
+/**
+ * Vérifie que la personne connectée est membre de la page au nom de laquelle
+ * elle agit (US-06, US-37). La page est choisie à chaque action : celle qui
+ * organise l'événement, ou celle choisie avant de créer. L'API revérifie.
+ */
+async function pageDuMembre(
+  pageId: string,
+): Promise<{ pageId: string } | { etat: EtatFormulaire }> {
   const acteur = await acteurCourant();
   if (!acteur) return { etat: { erreur: "connexionRequise" } };
-  const page = pageActive(acteur.etat);
-  if (!page) return { etat: { erreur: "choisirPage" } };
+  const page = await maPageParId(pageId);
+  if (!page) return { etat: { erreur: "pasAutorisePublier" } };
   return { pageId: page.id };
 }
 
@@ -93,11 +97,15 @@ async function preparer(
   };
 }
 
+/** Créer un événement (US-11) au nom de la page choisie à l'étape précédente. */
 export async function actionCreerEvenement(
+  pageId: string,
   _: EtatFormulaire,
   donnees: FormData,
 ): Promise<EtatFormulaire> {
-  const page = await pageDeLActeur();
+  const id = champId.safeParse(pageId);
+  if (!id.success) return { erreur: "formulaireInvalide" };
+  const page = await pageDuMembre(id.data);
   if ("etat" in page) return page.etat;
   const f = lireFormulaire(formeEvenement, donnees);
   if (!f) return { erreur: "formulaireInvalide" };
@@ -122,13 +130,14 @@ export async function actionModifierEvenement(
   _: EtatFormulaire,
   donnees: FormData,
 ): Promise<EtatFormulaire> {
-  const page = await pageDeLActeur();
-  if ("etat" in page) return page.etat;
   const f = lireFormulaire({ ...formeEvenement, id: champId }, donnees);
   if (!f) return { erreur: "formulaireInvalide" };
   const { id, photo, retirerPhoto, ...formulaire } = f;
   const actuel = await evenementParId(id);
   if (!actuel) return { erreur: "evenementIntrouvable" };
+  // On agit au nom de la page organisatrice de l'événement.
+  const page = await pageDuMembre(actuel.pageId);
+  if ("etat" in page) return page.etat;
   const prepare = await preparer(
     formulaire,
     photo,
@@ -149,10 +158,12 @@ export async function actionAnnulerEvenement(
   _: EtatFormulaire,
   donnees: FormData,
 ): Promise<EtatFormulaire> {
-  const page = await pageDeLActeur();
-  if ("etat" in page) return page.etat;
   const f = lireFormulaire({ id: champId, motif: champTexte(1000) }, donnees);
   if (!f) return { erreur: "formulaireInvalide" };
+  const actuel = await evenementParId(f.id);
+  if (!actuel) return { erreur: "evenementIntrouvable" };
+  const page = await pageDuMembre(actuel.pageId);
+  if ("etat" in page) return page.etat;
   const resultat = await sansErreurApi(() =>
     annulerEvenement(page.pageId, f.id, f.motif),
   );

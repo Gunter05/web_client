@@ -1,24 +1,18 @@
 import {
-  BarChart3Icon,
   FlagIcon,
   HomeIcon,
+  LayoutGridIcon,
   LogOutIcon,
   PlusSquareIcon,
   SearchIcon,
   ShieldIcon,
   UserIcon,
-  UsersIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { cache, type ReactNode, Suspense } from "react";
 import { Cloche } from "@/modules/notifications";
 import { nombreNonLues } from "@/modules/notifications/server";
-import {
-  AlerteAccesPerdu,
-  BandeauPageActive,
-  SelecteurProfil,
-} from "@/modules/profil-actif";
 import { AvatarProfil } from "@/shared/composants/avatar-profil";
 import { SelecteurLangue } from "@/shared/composants/selecteur-langue";
 import { buttonVariants } from "@/shared/ui/button";
@@ -30,17 +24,14 @@ import {
   actionListerNotifications,
   actionMarquerNotificationsLues,
 } from "../../_actions/notifications";
-import {
-  actionChoisirProfil,
-  actionOublierPageActive,
-} from "../../_actions/profil";
-import { acteurCourant, pageActive } from "../../_services/acteur";
+import { acteurCourant } from "../../_services/acteur";
 import { pagesDuFiltre } from "../../_services/affichage";
 import { CadreCoque } from "./cadre-coque";
 import { BLOC_BARRE, LIBELLE_BARRE } from "./classes-barre";
 import { LienNav } from "./lien-nav";
-import { MenuPlus } from "./menu-plus";
 import { Logo } from "./logo";
+import { MenuCompte } from "./menu-compte";
+import { MenuPlus } from "./menu-plus";
 
 const actionsNotifications = {
   compter: actionCompterNotifications,
@@ -48,51 +39,36 @@ const actionsNotifications = {
   marquerLues: actionMarquerNotificationsLues,
 };
 
-/** Lit une fois par requête l'acteur, ses liens de navigation et son menu. */
+/**
+ * Lit une fois par requête la personne connectée et ses liens. « Créer » est
+ * visible par tous : le choix de la page se fait à l'étape suivante.
+ */
 const navigation = cache(async () => {
   const t = await getTranslations();
   const acteur = await acteurCourant();
-  const etat = acteur?.etat ?? null;
-  const page = pageActive(etat);
-  const nonLues = etat ? await nombreNonLues() : 0;
+  const compte = acteur?.compte ?? null;
+  const nonLues = compte ? await nombreNonLues() : 0;
 
   const liens = [
     { href: "/", icone: <HomeIcon />, libelle: t("nav.accueil") },
     { href: "/recherche", icone: <SearchIcon />, libelle: t("nav.rechercher") },
-    ...(page
+    {
+      href: "/evenements/nouveau",
+      icone: <PlusSquareIcon />,
+      libelle: t("nav.creer"),
+    },
+    ...(compte
       ? [
           {
-            href: "/evenements/nouveau",
-            icone: <PlusSquareIcon />,
-            libelle: t("nav.creer"),
+            href: "/mes-pages",
+            icone: <LayoutGridIcon />,
+            libelle: t("nav.mesPages"),
           },
-          {
-            href: "/mes-evenements",
-            icone: <BarChart3Icon />,
-            libelle: t("nav.mesEvenements"),
-          },
-          ...(page.role === "proprietaire"
-            ? [
-                {
-                  href: "/acces",
-                  icone: <UsersIcon />,
-                  libelle: t("nav.acces"),
-                },
-              ]
-            : []),
         ]
-      : etat
-        ? [
-            {
-              href: "/demande-page",
-              icone: <FlagIcon />,
-              libelle: t("nav.demanderPage"),
-            },
-          ]
-        : []),
+      : []),
   ];
 
-  const menuProfil = etat && (
+  const menuCompte = compte && (
     <>
       <DropdownMenuItem render={<Link href="/profil" />}>
         <UserIcon /> {t("identite.monProfil")}
@@ -100,7 +76,7 @@ const navigation = cache(async () => {
       <DropdownMenuItem render={<Link href="/demande-page" />}>
         <FlagIcon /> {t("nav.demanderPage")}
       </DropdownMenuItem>
-      {etat.estAdmin && (
+      {compte.estAdmin && (
         <DropdownMenuItem render={<Link href="/admin" />}>
           <ShieldIcon /> {t("nav.administration")}
         </DropdownMenuItem>
@@ -116,22 +92,11 @@ const navigation = cache(async () => {
     </>
   );
 
-  const selecteur = (compact: boolean) =>
-    etat && (
-      <SelecteurProfil
-        actif={etat.actif}
-        profils={etat.profils}
-        choisir={actionChoisirProfil}
-        pied={menuProfil}
-        compact={compact}
-      />
-    );
-
-  return { t, etat, page, nonLues, liens, selecteur };
+  return { t, compte, nonLues, liens, menuCompte };
 });
 
 async function NavLaterale() {
-  const { t, etat, nonLues, liens } = await navigation();
+  const { t, compte, nonLues, liens } = await navigation();
   const pages = await pagesDuFiltre();
   const libelleGras = `font-semibold ${LIBELLE_BARRE}`;
   return (
@@ -140,7 +105,7 @@ async function NavLaterale() {
         {liens.map((l) => (
           <LienNav key={l.href} {...l} variante="laterale" />
         ))}
-        {etat && (
+        {compte && (
           <Cloche
             nonLuesInitiales={nonLues}
             actions={actionsNotifications}
@@ -148,18 +113,24 @@ async function NavLaterale() {
             classeLibelle={libelleGras}
           />
         )}
-        {etat && (
-          <SelecteurProfil
-            actif={etat.actif}
-            profils={etat.profils}
-            choisir={actionChoisirProfil}
+        {compte && (
+          <LienNav
+            href="/profil"
+            icone={
+              <AvatarProfil
+                nom={compte.nom}
+                photo={compte.photo}
+                taille="xs"
+                className="shrink-0"
+              />
+            }
             libelle={t("nav.profil")}
-            classeLibelle={libelleGras}
+            variante="laterale"
           />
         )}
         <MenuPlus
-          connecte={!!etat}
-          estAdmin={etat?.estAdmin ?? false}
+          connecte={!!compte}
+          estAdmin={compte?.estAdmin ?? false}
           deconnecter={actionDeconnexion}
         />
       </nav>
@@ -205,11 +176,13 @@ async function NavLaterale() {
 }
 
 async function ActionsEntete() {
-  const { t, etat, nonLues, selecteur } = await navigation();
-  return etat ? (
+  const { t, compte, nonLues, menuCompte } = await navigation();
+  return compte ? (
     <>
       <Cloche nonLuesInitiales={nonLues} actions={actionsNotifications} />
-      {selecteur(true)}
+      <MenuCompte nom={compte.nom} photo={compte.photo}>
+        {menuCompte}
+      </MenuCompte>
     </>
   ) : (
     <>
@@ -221,29 +194,8 @@ async function ActionsEntete() {
   );
 }
 
-async function Bandeau() {
-  const { etat, page } = await navigation();
-  return (
-    <>
-      {page && (
-        <div className="sticky top-14 z-20 md:top-0">
-          <BandeauPageActive
-            nom={page.nom}
-            photo={page.photo}
-            choisir={actionChoisirProfil}
-          />
-        </div>
-      )}
-      <AlerteAccesPerdu
-        nom={etat?.accesPerdu ?? null}
-        oublier={actionOublierPageActive}
-      />
-    </>
-  );
-}
-
 async function NavBasse() {
-  const { t, etat, liens } = await navigation();
+  const { t, compte, liens } = await navigation();
   return (
     <nav
       aria-label={t("nav.principale")}
@@ -253,9 +205,9 @@ async function NavBasse() {
         <LienNav key={l.href} {...l} variante="basse" />
       ))}
       <LienNav
-        href={etat ? "/profil" : "/inscription"}
+        href={compte ? "/profil" : "/inscription"}
         icone={<UserIcon />}
-        libelle={etat ? t("nav.profil") : t("nav.inscription")}
+        libelle={compte ? t("nav.profil") : t("nav.inscription")}
         variante="basse"
       />
     </nav>
@@ -289,10 +241,6 @@ export function Coque({ children }: { children: ReactNode }) {
           </div>
         </div>
       </header>
-
-      <Suspense>
-        <Bandeau />
-      </Suspense>
 
       <main className="pb-20 md:pb-10">{children}</main>
 

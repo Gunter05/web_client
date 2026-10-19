@@ -17,7 +17,6 @@ import {
   lireFormulaire,
 } from "@/shared/lib/formulaire";
 import { verifierImage } from "@/shared/lib/images";
-import { ecrirePageActive } from "../_services/acteur";
 import { sansErreurApi } from "./_erreurs";
 
 /** N'accepte qu'un chemin interne, pour éviter les redirections ouvertes. */
@@ -40,8 +39,6 @@ export async function actionConnexion(
   if (!f) return { erreur: "formulaireInvalide" };
   const resultat = await sansErreurApi(() => connecter(f.email, f.motDePasse));
   if (!resultat.ok) return resultat.etat;
-  // US-37 : après chaque connexion, le profil actif est le profil personnel.
-  await ecrirePageActive(null);
   redirect(cheminInterne(f.retour));
 }
 
@@ -63,13 +60,11 @@ export async function actionInscription(
     inscrire({ nom: f.nom, email: f.email, motDePasse: f.motDePasse }),
   );
   if (!resultat.ok) return resultat.etat;
-  await ecrirePageActive(null);
   redirect(cheminInterne(f.retour));
 }
 
 export async function actionDeconnexion(): Promise<void> {
   await deconnecter();
-  await ecrirePageActive(null);
   redirect("/");
 }
 

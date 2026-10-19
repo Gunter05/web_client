@@ -45,7 +45,7 @@ function nomDuFuseau(langue: string): string {
 
 /**
  * Formulaire de création (US-11) et de modification (US-15). La page
- * organisatrice est la page active, non modifiable. Les valeurs saisies
+ * organisatrice, choisie avant le formulaire, n'y est pas modifiable. Les valeurs saisies
  * sont conservées en cas d'erreur.
  */
 export function FormulaireEvenement({

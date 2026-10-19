@@ -63,11 +63,10 @@ src/
 │   ├── (public)/            Espace public : fil, fiches, pages, compte, publication
 │   ├── admin/               Espace Administration (garde serveur, onglets US-07)
 │   ├── _actions/            Server Actions : valident (Zod), vérifient les droits, orchestrent
-│   └── _services/           Composition : profil actif, affichage des événements
+│   └── _services/           Composition : pages de la personne connectée, affichage des événements
 ├── modules/             Code métier, un dossier par domaine, chacun avec ses couches
 │   ├── identite/            Compte, connexion, session, profil personnel
-│   ├── pages/               Demandes de page, pages, propriétaire, contributeurs (US-03, US-06)
-│   ├── profil-actif/        Au nom de qui j'agis (US-37)
+│   ├── pages/               Demandes de page, pages, « Mes pages », accès (US-03, US-06)
 │   ├── evenements/          Événements, période, statut, filtres, partage (US-11/01/16/17/15/36)
 │   ├── audience/            Vues uniques par jour, « Mes événements » (US-39)
 │   ├── notifications/       Cloche et notifications dans l'application

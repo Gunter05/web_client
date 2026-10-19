@@ -60,7 +60,7 @@ async function DetailPage({ params }: PageProps<"/admin/pages/[id]">) {
                 <Badge
                   variant={m.role === "proprietaire" ? "default" : "secondary"}
                 >
-                  {t(`profilActif.${m.role}`)}
+                  {t(`pages.roles.${m.role}`)}
                 </Badge>
               </li>
             ))}
