@@ -21,6 +21,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
       disabled={enCours}
       className={className}
       lang={autre}
+      aria-label={autre === "fr" ? t("french") : t("english")}
       onClick={() =>
         startTransition(async () => {
           await changeLocale(autre);
@@ -28,7 +29,12 @@ export function LanguageSwitcher({ className }: { className?: string }) {
         })
       }
     >
-      <LanguagesIcon /> {autre === "fr" ? t("french") : t("english")}
+      <LanguagesIcon />
+      {/* Sur petit écran, le code de langue suffit (pas de débordement). */}
+      <span className="sm:hidden">{autre.toUpperCase()}</span>
+      <span className="hidden sm:inline">
+        {autre === "fr" ? t("french") : t("english")}
+      </span>
     </Button>
   );
 }
