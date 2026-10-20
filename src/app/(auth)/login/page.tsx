@@ -22,7 +22,7 @@ async function Login({ searchParams }: PageProps<"/login">) {
           {t("auth.noAccount")}{" "}
           <Link
             href={`/register?returnTo=${encodeURIComponent(target)}`}
-            className="font-semibold text-lien"
+            className="font-semibold text-foreground"
           >
             {t("nav.register")}
           </Link>

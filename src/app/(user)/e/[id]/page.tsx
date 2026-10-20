@@ -91,7 +91,7 @@ async function EventPage({ params }: PageProps<"/e/[id]">) {
   const editable = isEditable(event, new Date());
 
   return (
-    <div className="mx-auto max-w-5xl md:px-6 md:pt-8">
+    <div className="pb-10 md:px-6 md:pt-8">
       <UrlToast
         messages={{
           published: t("events.published"),

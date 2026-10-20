@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { EventForm } from "@/modules/events";
+import { ChoosePageDialog, EventForm } from "@/modules/events";
 import { MemberPageList } from "@/modules/pages";
 import { buttonVariants } from "@/shared/ui/button";
 import { createEventAction } from "@/modules/events/application/events.actions";
@@ -12,7 +12,7 @@ import { ContentSkeleton } from "@/shared/components/layout/ContentSkeleton";
 
 /**
  * Créer un événement (US-11), en deux étapes : choisir la page au nom de
- * laquelle publier, puis remplir le formulaire (`?page={slug}`). Ouvert à
+ * laquelle publier (dans une fenêtre), puis remplir le formulaire (`?page={slug}`). Ouvert à
  * tous : sans compte, on passe d'abord par la connexion ; sans page, on
  * propose d'en demander une.
  */
@@ -36,40 +36,40 @@ async function NewEvent({ searchParams }: PageProps<"/events/new">) {
     );
   }
 
+  const hasPages = user.pages.length > 0;
   return (
-    <div className="mx-auto grid max-w-2xl gap-4 px-4 pt-6 md:pt-10">
-      <PageTitle
-        title={t("events.create")}
-        subtitle={t("events.choosePageHelp")}
-        returnTo="/"
-      />
-      {user.pages.length === 0 ? (
-        <div className="grid gap-3 rounded-xl border bg-muted/40 p-5">
-          <p className="font-semibold">{t("events.noPage")}</p>
-          <p className="text-sm text-muted-foreground">
-            {t("events.noPageHelp")}
-          </p>
-          <Link
-            href="/page-request"
-            className={buttonVariants({ className: "justify-self-start" })}
-          >
-            {t("nav.requestPage")}
-          </Link>
-        </div>
-      ) : (
-        <>
-          {chosen && (
-            <p className="rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-sm">
-              {t("events.notMember")}
-            </p>
-          )}
-          <h2 className="font-semibold">{t("events.choosePage")}</h2>
-          <MemberPageList
-            pages={user.pages}
-            link={(p) => `/events/new?page=${encodeURIComponent(p.slug)}`}
-          />
-        </>
-      )}
+    <div className="mx-auto max-w-2xl px-4 pt-6 md:pt-10">
+      <PageTitle title={t("events.create")} returnTo="/" />
+      <ChoosePageDialog
+        title={hasPages ? t("events.choosePage") : t("events.noPage")}
+        description={
+          hasPages ? t("events.choosePageHelp") : t("events.noPageHelp")
+        }
+        primaryAction={
+          hasPages ? undefined : (
+            <Link
+              href="/page-request"
+              className={buttonVariants({ size: "lg" })}
+            >
+              {t("nav.requestPage")}
+            </Link>
+          )
+        }
+      >
+        {hasPages && (
+          <div className="grid max-h-[40vh] gap-3 overflow-y-auto">
+            {chosen && (
+              <p className="rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-sm">
+                {t("events.notMember")}
+              </p>
+            )}
+            <MemberPageList
+              pages={user.pages}
+              link={(p) => `/events/new?page=${encodeURIComponent(p.slug)}`}
+            />
+          </div>
+        )}
+      </ChoosePageDialog>
     </div>
   );
 }

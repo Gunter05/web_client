@@ -1,14 +1,12 @@
 /**
  * Images de démonstration générées en SVG (simule un stockage d'images) :
- * un dégradé et un motif, déterminés par le nom. Sert aussi d'image par défaut.
+ * un dégradé de gris et un motif, déterminés par le nom. Sert aussi d'image par défaut.
  */
 const PALETTES = [
-  ["#f59e0b", "#ef4444", "#be185d"],
-  ["#0ea5e9", "#6366f1", "#7c3aed"],
-  ["#10b981", "#0d9488", "#0369a1"],
-  ["#f97316", "#db2777", "#7c3aed"],
-  ["#84cc16", "#16a34a", "#0f766e"],
-  ["#facc15", "#f97316", "#dc2626"],
+  ["#0a0a0a", "#262626", "#404040"],
+  ["#171717", "#404040", "#525252"],
+  ["#262626", "#3f3f46", "#52525b"],
+  ["#0a0a0a", "#1c1917", "#44403c"],
 ] as const;
 
 function hash(text: string): number {

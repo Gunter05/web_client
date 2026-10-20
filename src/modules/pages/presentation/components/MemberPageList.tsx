@@ -25,12 +25,7 @@ export function MemberPageList({
             href={link(page)}
             className="flex items-center gap-3 px-4 py-3 hover:bg-muted"
           >
-            <ProfileAvatar
-              name={page.name}
-              photo={page.photoUrl}
-              size="md"
-              ring
-            />
+            <ProfileAvatar name={page.name} photo={page.photoUrl} size="md" />
             <span className="min-w-0 flex-1">
               <span className="block truncate font-semibold">{page.name}</span>
               <span className="block truncate text-sm text-muted-foreground">

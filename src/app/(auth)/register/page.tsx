@@ -22,7 +22,7 @@ async function Register({ searchParams }: PageProps<"/register">) {
       footer={
         <>
           {t("auth.haveAccount")}{" "}
-          <Link href="/login" className="font-semibold text-lien">
+          <Link href="/login" className="font-semibold text-foreground">
             {t("nav.login")}
           </Link>
         </>

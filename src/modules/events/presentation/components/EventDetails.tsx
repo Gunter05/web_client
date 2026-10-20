@@ -1,26 +1,26 @@
-import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
-import { Badge } from "@/shared/ui/badge";
-import { cn } from "@/shared/lib/utils";
-import {
-  AlertTriangleIcon,
-  BanIcon,
-  CalendarIcon,
-  ClockIcon,
-  MapPinIcon,
-} from "lucide-react";
+"use client";
+
+import { AlertTriangleIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import type { ReactNode } from "react";
+import { cn } from "@/shared/lib/utils";
+import { eventImage } from "@/modules/events/domain/event-image";
 import type { EventView } from "@/modules/events/domain/event-view.types";
 import type { TrackedChange } from "@/modules/events/domain/event";
 import { EventBadges } from "@/modules/events/presentation/components/EventBadges";
-import { DEFAULT_IMAGE } from "@/modules/events/presentation/components/EventCard";
 import { EventDate } from "@/modules/events/presentation/components/EventDate";
+import {
+  EventAboutAndPlace,
+  EventCancellation,
+  EventPresenter,
+  EventWhenWhere,
+} from "@/modules/events/presentation/components/EventInfo";
 
 /**
- * Fiche d'un événement (US-01), accessible sans compte. Les actions (partager,
- * modifier, annuler) et le compteur de vues sont fournis par la page appelante
- * selon les droits de la personne (membre ou non de la page organisatrice).
+ * Fiche d'un événement (US-01), sur le modèle d'une page d'événement : à
+ * gauche la photo, la page organisatrice et les catégories ; à droite le nom,
+ * la date, le lieu, les actions, puis la description et le lieu. Sur
+ * téléphone, tout s'empile. Les actions et les vues dépendent des droits.
  */
 export function EventDetails({
   event,
@@ -32,147 +32,61 @@ export function EventDetails({
   views?: ReactNode;
 }) {
   const t = useTranslations();
-  const annule = event.status === "cancelled";
+  const cancelled = event.status === "cancelled";
   return (
-    <article className="grid overflow-hidden bg-card sm:rounded-xl sm:border md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-      <div className="relative aspect-square bg-muted md:aspect-auto md:min-h-full">
+    <div className="mx-auto grid max-w-[960px] gap-8 px-4 md:grid-cols-[330px_minmax(0,1fr)] md:gap-10">
+      <aside className="grid content-start gap-6">
         {/* eslint-disable-next-line @next/next/no-img-element -- images simulées (SVG) */}
         <img
-          src={event.photoUrl ?? DEFAULT_IMAGE}
+          src={eventImage(event)}
           alt=""
           className={cn(
-            "size-full object-cover md:absolute md:inset-0",
-            annule && "grayscale",
+            // Toute la largeur, hauteur libre : la photo garde ses proportions.
+            "h-auto w-full rounded-xl",
+            cancelled && "grayscale",
           )}
         />
-      </div>
-
-      <div className="flex min-w-0 flex-col">
-        <header className="flex items-center gap-3 border-b px-4 py-3">
-          <Link
-            href={`/p/${event.organizer.slug}`}
-            className="flex min-w-0 items-center gap-2.5"
-          >
-            <ProfileAvatar
-              name={event.organizer.name}
-              photo={event.organizer.photoUrl}
-              size="sm"
-              ring
-            />
-            <span className="truncate text-sm font-semibold">
-              {event.organizer.name}
-            </span>
-          </Link>
-          <EventBadges
-            status={event.status}
-            period={event.period}
-            className="ml-auto justify-end"
-          />
-        </header>
-
-        <div className="grid gap-5 p-4">
-          {annule && event.cancellation && (
-            <div
-              role="status"
-              className="flex gap-3 rounded-lg border border-destructive/40 bg-danger-fond p-3 text-sm"
+        <EventPresenter event={event} />
+        <div className="flex flex-wrap gap-1.5">
+          {event.categories.map((c) => (
+            <span
+              key={c}
+              className="rounded-full border px-2.5 py-0.5 text-sm text-muted-foreground"
             >
-              <BanIcon className="mt-0.5 size-4 shrink-0 text-danger" />
-              <div className="grid gap-1">
-                <p className="font-semibold text-danger">
-                  {t("statuses.cancelled")} ·{" "}
-                  <EventDate iso={event.cancellation.at} />
-                </p>
-                <p>
-                  <span className="text-muted-foreground">
-                    {t("events.reason")}{" "}
-                  </span>
-                  {event.cancellation.reason}
-                </p>
-              </div>
-            </div>
-          )}
+              # {t(`categories.${c}`)}
+            </span>
+          ))}
+        </div>
+        {views}
+      </aside>
 
+      <div className="grid content-start gap-6">
+        <div className="grid gap-3">
           <h1
             className={cn(
-              "text-2xl leading-tight font-bold",
-              annule && "text-muted-foreground line-through",
+              "text-3xl leading-tight font-bold md:text-4xl",
+              cancelled && "text-muted-foreground line-through",
             )}
           >
             {event.name}
           </h1>
-
-          <dl className="grid gap-3 text-sm">
-            <Info
-              icon={<CalendarIcon />}
-              label={event.endsAt ? t("events.from") : t("events.startsAt")}
-            >
-              <EventDate
-                iso={event.startsAt}
-                className="font-medium first-letter:uppercase"
-              />
-            </Info>
-            {event.endsAt && (
-              <Info icon={<ClockIcon />} label={t("events.to")}>
-                <EventDate
-                  iso={event.endsAt}
-                  className="font-medium first-letter:uppercase"
-                />
-              </Info>
-            )}
-            <Info icon={<MapPinIcon />} label={t("events.location")}>
-              <span className="font-medium">{event.location}</span>
-            </Info>
-          </dl>
-
-          <div className="flex flex-wrap gap-1.5">
-            {event.categories.map((c) => (
-              <Badge key={c} variant="secondary">
-                {t(`categories.${c}`)}
-              </Badge>
-            ))}
-          </div>
-
-          {event.description && (
-            <p className="text-sm leading-relaxed whitespace-pre-line">
-              {event.description}
-            </p>
-          )}
-
-          {event.status === "updated" && event.latestUpdate && (
-            <LatestUpdate
-              at={event.latestUpdate.at}
-              changes={event.latestUpdate.changes}
-            />
-          )}
-
-          {views}
+          <EventBadges status={event.status} period={event.period} />
         </div>
-
-        <footer className="mt-auto flex flex-wrap gap-2 border-t p-4">
-          {actions}
-        </footer>
-      </div>
-    </article>
-  );
-}
-
-function Info({
-  icon,
-  label,
-  children,
-}: {
-  icon: ReactNode;
-  label: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className="flex items-start gap-3">
-      <span className="mt-0.5 text-muted-foreground [&_svg]:size-4">
-        {icon}
-      </span>
-      <div className="grid">
-        <dt className="text-xs text-muted-foreground">{label}</dt>
-        <dd>{children}</dd>
+        <EventWhenWhere event={event} />
+        <EventCancellation event={event} />
+        {event.status === "updated" && event.latestUpdate && (
+          <LatestUpdate
+            at={event.latestUpdate.at}
+            changes={event.latestUpdate.changes}
+          />
+        )}
+        <section className="overflow-hidden rounded-xl border">
+          <h2 className="bg-muted px-4 py-2 text-sm text-muted-foreground">
+            {t("events.sheet.actions")}
+          </h2>
+          <div className="flex flex-wrap gap-2 p-4">{actions}</div>
+        </section>
+        <EventAboutAndPlace event={event} showCategories={false} />
       </div>
     </div>
   );

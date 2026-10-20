@@ -1,8 +1,10 @@
+import { eventImage } from "@/modules/events/domain/event-image";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { cn } from "@/shared/lib/utils";
 import { MapPinIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import type React from "react";
 import type { EventView } from "@/modules/events/domain/event-view.types";
 import { EventBadges } from "@/modules/events/presentation/components/EventBadges";
 import { ShareIconButton } from "@/modules/events/presentation/components/ShareButton";
@@ -21,16 +23,29 @@ export function EventCard({
   event,
   priority = false,
   onShare,
+  onOpen,
 }: {
   event: EventView;
   priority?: boolean;
+  /**
+   * Ouvre l'aperçu au lieu de naviguer. Le lien vers /e/{id} reste en place
+   * pour l'ouverture dans un nouvel onglet (Ctrl/Cmd + clic, clic molette).
+   */
+  onOpen?: (eventId: string) => void;
   /** Mesure du clic sur « Partager », fournie par la route (métrique Viralité). */
   onShare?: (eventId: string) => Promise<void>;
 }) {
   const t = useTranslations();
   const annule = event.status === "cancelled";
+  const open = onOpen
+    ? (e: React.MouseEvent) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+        e.preventDefault();
+        onOpen(event.id);
+      }
+    : undefined;
   return (
-    <article className="overflow-hidden border-b bg-card pb-4 sm:rounded-xl sm:border-none">
+    <article className="overflow-hidden border-b pb-4 sm:rounded-xl sm:border-none">
       <header className="flex items-center gap-3 px-3 py-2.5 sm:px-0">
         <Link
           href={`/p/${event.organizer.slug}`}
@@ -59,17 +74,19 @@ export function EventCard({
       </header>
       <Link
         href={`/e/${event.id}`}
+        onClick={open}
         className="group block"
         aria-label={event.name}
       >
-        <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+        <div className="relative overflow-hidden bg-muted">
           {/* eslint-disable-next-line @next/next/no-img-element -- images simulées (SVG) */}
           <img
-            src={event.photoUrl ?? DEFAULT_IMAGE}
+            src={eventImage(event)}
             alt=""
             loading={priority ? "eager" : "lazy"}
             className={cn(
-              "size-full rounded-sm object-cover transition-transform duration-500 group-hover:scale-[1.02]",
+              // Largeur du fil, hauteur libre : la photo garde ses proportions.
+              "block h-auto w-full rounded-sm transition-transform duration-500 group-hover:scale-[1.02]",
               annule && "grayscale",
             )}
           />
@@ -100,7 +117,11 @@ export function EventCard({
             annule && "text-muted-foreground line-through",
           )}
         >
-          <Link href={`/e/${event.id}`} className="hover:underline">
+          <Link
+            href={`/e/${event.id}`}
+            onClick={open}
+            className="hover:underline"
+          >
             {event.name}
           </Link>
         </h2>
@@ -112,7 +133,7 @@ export function EventCard({
           <MapPinIcon className="size-4 shrink-0" />
           <span className="truncate">{event.location}</span>
         </p>
-        <p className="flex flex-wrap gap-x-2 text-sm text-lien">
+        <p className="flex flex-wrap gap-x-2 text-sm text-foreground">
           {event.categories.map((c) => (
             <span key={c}>#{t(`categories.${c}`).replaceAll(" ", "")}</span>
           ))}

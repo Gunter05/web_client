@@ -71,7 +71,6 @@
     "main": "Main navigation",
     "collapse": "Collapse menu",
     "expand": "Expand menu",
-    "pages": "Pages",
     "search": "Search",
     "myPages": "My pages"
   },
@@ -204,7 +203,21 @@
     "columnViews": "Views",
     "noPageHelp": "Ask for a page for your club or association: an administrator will review it.",
     "notMember": "You are not a member of this page. Choose another one.",
-    "editRestricted": "Only members of the organizing page can edit this event."
+    "editRestricted": "Only members of the organizing page can edit this event.",
+    "sheet": {
+      "close": "Close preview",
+      "copyLink": "Copy link",
+      "linkCopied": "Link copied",
+      "eventPage": "Event page",
+      "previous": "Previous event",
+      "next": "Next event",
+      "organizedBy": "Hosted by {name}",
+      "about": "About the event",
+      "presentedBy": "Presented by",
+      "openMaps": "Maps",
+      "actions": "Share and manage"
+    },
+    "later": "Maybe later"
   },
   "categories": {
     "match": "Match / competition",
@@ -248,7 +261,17 @@
     "requestRejected": "Your request for {name} was declined: {reason}",
     "accessGranted": "You now have access to the page {name}",
     "accessRevoked": "Your access to the page {name} has been removed",
-    "newRequest": "New page request: {name}"
+    "newRequest": "New page request: {name}",
+    "close": "Close",
+    "filter": "Filter notifications",
+    "thisMonth": "This month",
+    "earlier": "Earlier",
+    "categories": {
+      "all": "All activity",
+      "pages": "Pages",
+      "access": "Access",
+      "requests": "Requests"
+    }
   },
   "dates": {
     "today": "Today, {time}",
@@ -316,5 +339,17 @@
     "all": "All",
     "noResults": "No events match your search",
     "results": "{n, plural, =0 {No results} one {# event} other {# events}}"
+  },
+  "more": {
+    "settings": "Settings",
+    "account": "Account",
+    "other": "Other"
+  },
+  "theme": {
+    "label": "Theme",
+    "darkMode": "Dark mode",
+    "system": "Match device",
+    "dark": "Dark",
+    "light": "Light"
   }
 }

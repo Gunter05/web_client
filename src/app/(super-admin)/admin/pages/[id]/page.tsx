@@ -33,7 +33,7 @@ async function AdminPageDetailsView({
         <ArrowLeftIcon /> {t("admin.tabs.pages")}
       </Link>
       <div className="flex flex-wrap items-center gap-4 rounded-xl border bg-card p-6">
-        <ProfileAvatar name={page.name} photo={page.photoUrl} size="lg" ring />
+        <ProfileAvatar name={page.name} photo={page.photoUrl} size="lg" />
         <div className="grid gap-1">
           <h1 className="text-xl font-semibold">{page.name}</h1>
           <Badge variant="secondary">{t(`pages.types.${page.type}`)}</Badge>
