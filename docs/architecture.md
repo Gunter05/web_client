@@ -24,6 +24,7 @@ src/
 │   ├── audience/                    Vues uniques par jour
 │   ├── notifications/               Cloche et notifications
 │   ├── metrics/                     Métriques produit
+│   ├── medias/                      Photos : compression et envoi direct au stockage (ADR 0014 du backend)
 │   └── admin/                       Supervision (réservé au Super-Admin)
 └── shared/                      Transverse, sans métier
     ├── ui/                          Composants shadcn/ui (non modifiés)

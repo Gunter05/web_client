@@ -22,7 +22,8 @@
     "removePhoto": "Retirer la photo",
     "photoFormats": "JPEG, PNG ou WebP, 5 Mo max.",
     "optional": "facultatif",
-    "characters": "{n}/{max}"
+    "characters": "{n}/{max}",
+    "photoUploading": "Envoi de la photo…"
   },
   "errors": {
     "required": "Ce champ est obligatoire",
@@ -54,7 +55,10 @@
     "eventNotFound": "Cet événement n'existe pas",
     "eventNotEditable": "Un événement passé ou annulé ne peut plus être modifié",
     "invalidInput": "Corrigez les champs signalés",
-    "unknown": "Une erreur est survenue"
+    "unknown": "Une erreur est survenue",
+    "uploadFailed": "L'envoi de la photo a échoué, réessayez",
+    "tooManyUploads": "Trop de photos envoyées, réessayez dans une heure",
+    "mediaNotFound": "Photo introuvable, choisissez-la à nouveau"
   },
   "nav": {
     "home": "Accueil",

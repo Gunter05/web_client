@@ -12,15 +12,13 @@ import {
   revokeAccess,
   withdrawPageRequest,
 } from "@/modules/pages/server";
-import { uploadImage } from "@/shared/api/client";
+import { photoUrlField } from "@/modules/medias";
 import {
-  fileField,
   idField,
   textField,
   type FormState,
   parseForm,
 } from "@/shared/lib/form";
-import { checkImage } from "@/shared/lib/images";
 import { apiErrorCode, catchApiError } from "@/shared/api/errors";
 
 /** Demander la création d'une page (US-03) ; l'API prévient les admins. */
@@ -35,22 +33,12 @@ export async function requestPageAction(
       description: textField(2000),
       type: textField(50),
       justification: textField(2000),
-      photo: fileField,
+      photoUrl: photoUrlField,
     },
     formData,
   );
   if (!f) return { error: "invalidInput" };
-  const imageError = f.photo ? checkImage(f.photo) : null;
-  if (imageError) {
-    return { error: "invalidInput", fieldErrors: { photo: imageError } };
-  }
-  const { photo, ...form } = f;
-  const result = await catchApiError(async () =>
-    submitPageRequest({
-      ...form,
-      photoUrl: photo ? await uploadImage(photo) : null,
-    }),
-  );
+  const result = await catchApiError(() => submitPageRequest(f));
   if (!result.ok) return result.state;
   redirect("/page-request?msg=sent");
 }

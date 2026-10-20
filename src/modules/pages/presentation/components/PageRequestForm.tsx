@@ -8,6 +8,7 @@ import type { FormAction, FormState } from "@/shared/lib/form";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
+import { usePhotoUpload } from "@/modules/medias";
 import { ORGANIZATION_TYPES } from "@/modules/pages/domain/page.types";
 
 /** Formulaire « Créer une page » (US-03). */
@@ -21,6 +22,8 @@ export function PageRequestForm({ action }: { action: FormAction }) {
     action: send,
   } = useFormAction<FormState>(action, {});
   const c = state.fieldErrors ?? {};
+  // La photo part dès qu'elle est choisie ; le formulaire n'envoie que son adresse.
+  const photo = usePhotoUpload();
   return (
     <form action={send} onSubmit={onSubmit} className="grid gap-5" noValidate>
       <FormField
@@ -68,14 +71,24 @@ export function PageRequestForm({ action }: { action: FormAction }) {
       <FormField
         id="photo"
         label={t("common.optionalPhoto")}
-        error={errors(c.photo)}
-        help={t("common.photoFormats")}
+        error={errors(photo.error ?? c.photo ?? c.photoUrl)}
+        help={
+          photo.uploading
+            ? t("common.photoUploading")
+            : t("common.photoFormats")
+        }
       >
+        <input type="hidden" name="photoUrl" value={photo.url ?? ""} />
         <Input
           id="photo"
-          name="photo"
           type="file"
           accept="image/jpeg,image/png,image/webp"
+          aria-invalid={!!photo.error}
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) void photo.upload(f);
+            else photo.reset();
+          }}
         />
       </FormField>
       <FormField
@@ -97,7 +110,11 @@ export function PageRequestForm({ action }: { action: FormAction }) {
           {errors(state.error)}
         </p>
       )}
-      <Button type="submit" disabled={enCours} className="justify-self-start">
+      <Button
+        type="submit"
+        disabled={enCours || photo.uploading}
+        className="justify-self-start"
+      >
         {t("common.send")}
       </Button>
     </form>

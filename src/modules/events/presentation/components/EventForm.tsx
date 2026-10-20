@@ -15,6 +15,7 @@ import { Checkbox } from "@/shared/ui/checkbox";
 import { Input } from "@/shared/ui/input";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { Textarea } from "@/shared/ui/textarea";
+import { usePhotoUpload } from "@/modules/medias";
 import { CATEGORIES, type Event } from "@/modules/events/domain/event";
 import { DEFAULT_IMAGE } from "@/modules/events/presentation/components/EventCard";
 
@@ -72,6 +73,8 @@ export function EventForm({
   });
   const [preview, setPreview] = useState(event?.photoUrl ?? null);
   const [remove, setRemove] = useState(false);
+  // La photo part dès qu'elle est choisie ; le formulaire n'envoie que son adresse.
+  const photo = usePhotoUpload();
   const [description, setDescription] = useState(event?.description ?? "");
   const c = state.fieldErrors ?? {};
 
@@ -95,9 +98,14 @@ export function EventForm({
       <FormField
         id="photo"
         label={t("common.optionalPhoto")}
-        error={errors(c.photo)}
-        help={t("common.photoFormats")}
+        error={errors(photo.error ?? c.photo ?? c.photoUrl)}
+        help={
+          photo.uploading
+            ? t("common.photoUploading")
+            : t("common.photoFormats")
+        }
       >
+        <input type="hidden" name="photoUrl" value={photo.url ?? ""} />
         <div className="flex items-center gap-4">
           <div className="relative size-24 shrink-0 overflow-hidden rounded-lg border bg-muted">
             {/* eslint-disable-next-line @next/next/no-img-element -- aperçu local */}
@@ -113,16 +121,17 @@ export function EventForm({
           <div className="grid flex-1 gap-2">
             <Input
               id="photo"
-              name="photo"
               type="file"
               accept="image/jpeg,image/png,image/webp"
-              aria-invalid={!!c.photo}
+              aria-invalid={!!(photo.error ?? c.photo)}
               onChange={(e) => {
                 const f = e.target.files?.[0];
                 setPreview(
                   f ? URL.createObjectURL(f) : (event?.photoUrl ?? null),
                 );
                 setRemove(false);
+                if (f) void photo.upload(f);
+                else photo.reset();
               }}
             />
             {event?.photoUrl && (
@@ -275,7 +284,7 @@ export function EventForm({
       <Button
         type="submit"
         size="lg"
-        disabled={enCours}
+        disabled={enCours || photo.uploading}
         className="sm:justify-self-start"
       >
         {event ? t("common.save") : t("events.publish")}
