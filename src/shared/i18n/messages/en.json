@@ -22,7 +22,8 @@
     "removePhoto": "Remove photo",
     "photoFormats": "JPEG, PNG or WebP, 5 MB max.",
     "optional": "optional",
-    "characters": "{n}/{max}"
+    "characters": "{n}/{max}",
+    "photoUploading": "Uploading photo…"
   },
   "errors": {
     "required": "This field is required",
@@ -54,7 +55,10 @@
     "eventNotFound": "This event doesn't exist",
     "eventNotEditable": "A past or cancelled event can no longer be edited",
     "invalidInput": "Please fix the highlighted fields",
-    "unknown": "Something went wrong"
+    "unknown": "Something went wrong",
+    "uploadFailed": "The photo could not be uploaded, try again",
+    "tooManyUploads": "Too many photos uploaded, try again in an hour",
+    "mediaNotFound": "Photo not found, choose it again"
   },
   "nav": {
     "home": "Home",

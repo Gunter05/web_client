@@ -17,15 +17,13 @@ import {
   getEventById,
   updateEvent,
 } from "@/modules/events/server";
-import { uploadImage } from "@/shared/api/client";
+import { photoUrlField } from "@/modules/medias";
 import {
-  fileField,
   idField,
   textField,
   type FormState,
   parseForm,
 } from "@/shared/lib/form";
-import { checkImage } from "@/shared/lib/images";
 import { getCurrentUser, getMyPageById } from "@/modules/pages/server";
 import { listEventsFromUrl } from "@/modules/events/infrastructure/event-queries";
 import { catchApiError } from "@/shared/api/errors";
@@ -52,35 +50,29 @@ const eventShape = {
   location: textField(500),
   categories: z.array(z.string().max(50)).max(CATEGORIES.length),
   description: textField(5000),
-  photo: fileField,
+  photoUrl: photoUrlField,
   removePhoto: textField(1),
 };
 
 /**
- * Vérifie le formulaire et la photo avant tout envoi (pas d'image orpheline
- * sur l'API pour un formulaire invalide), puis prépare le corps de la requête.
+ * Vérifie le formulaire puis prépare le corps de la requête. La photo a déjà
+ * été envoyée par le navigateur (`usePhotoUpload`) : seule son adresse arrive.
  */
 async function prepareEvent(
   form: EventFormFields,
-  photo: File | null,
+  photoUrl: string | null,
   currentPhoto: string | null,
   remove: boolean,
   currentStartsAt: string | null,
 ): Promise<{ ok: true; body: EventPayload } | { ok: false; state: FormState }> {
-  const imageError = photo ? checkImage(photo) : null;
   const valid = validateEventForm(form, new Date(), currentStartsAt);
-  if (!valid.ok || imageError) {
-    const fieldErrors = {
-      ...(valid.ok ? {} : valid.fieldErrors),
-      ...(imageError ? { photo: imageError } : {}),
+  if (!valid.ok) {
+    return {
+      ok: false,
+      state: { error: "invalidInput", fieldErrors: valid.fieldErrors },
     };
-    return { ok: false, state: { error: "invalidInput", fieldErrors } };
   }
-  const newPhoto = photo
-    ? await uploadImage(photo)
-    : remove
-      ? null
-      : currentPhoto;
+  const newPhoto = photoUrl ?? (remove ? null : currentPhoto);
   return {
     ok: true,
     body: {
@@ -107,10 +99,10 @@ export async function createEventAction(
   if ("state" in page) return page.state;
   const f = parseForm(eventShape, formData);
   if (!f) return { error: "invalidInput" };
-  const { photo, removePhoto, ...form } = f;
+  const { photoUrl, removePhoto, ...form } = f;
   const prepared = await prepareEvent(
     form,
-    photo,
+    photoUrl,
     null,
     removePhoto === "1",
     null,
@@ -130,7 +122,7 @@ export async function updateEventAction(
 ): Promise<FormState> {
   const f = parseForm({ ...eventShape, id: idField }, formData);
   if (!f) return { error: "invalidInput" };
-  const { id, photo, removePhoto, ...form } = f;
+  const { id, photoUrl, removePhoto, ...form } = f;
   const current = await getEventById(id);
   if (!current) return { error: "eventNotFound" };
   // On agit au nom de la page organisatrice de l'événement.
@@ -138,7 +130,7 @@ export async function updateEventAction(
   if ("state" in page) return page.state;
   const prepared = await prepareEvent(
     form,
-    photo,
+    photoUrl,
     current.photoUrl,
     removePhoto === "1",
     current.startsAt,

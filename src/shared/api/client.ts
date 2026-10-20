@@ -72,9 +72,9 @@ export async function api<T>(path: string, options: Options = {}): Promise<T> {
 }
 
 /**
- * Codes d'erreur des modules de l'API encore en français (comptes, médias,
+ * Codes d'erreur des modules de l'API encore en français (comptes,
  * administration, audience) → clés `errors.*` du front. Les modules passés
- * en anglais (events, pages) renvoient déjà des codes anglais.
+ * en anglais (events, pages, medias) renvoient déjà des codes anglais.
  */
 const FRENCH_ERROR_CODES: Record<string, string> = {
   obligatoire: "required",
@@ -122,16 +122,6 @@ export async function apiOrNull<T>(
     if (error instanceof ApiError && error.status === 404) return null;
     throw error;
   }
-}
-
-/** Téléverse une image vers l'API (ADR 0010 du backend) et renvoie son adresse. */
-export async function uploadImage(file: File): Promise<string> {
-  const form = new FormData();
-  form.append("fichier", file);
-  const { url } = await api<{ url: string }>("/api/v1/medias", {
-    form: form,
-  });
-  return url;
 }
 
 /**

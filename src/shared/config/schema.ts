@@ -11,6 +11,13 @@ export const serverSchema = z.object({
    * l'appareil du lecteur. L'interface affiche toujours l'heure de l'appareil (D7).
    */
   FUSEAU_APERCU: z.string().default("Africa/Douala"),
+  /**
+   * Origine du stockage des photos (ADR 0014 du backend), autorisée par la
+   * politique de sécurité : le navigateur y envoie les photos et y lit les
+   * images. Ex. http://localhost:8333 (SeaweedFS), l'URL du projet Supabase ou
+   * le domaine R2. Vide : stockage sur disque, tout passe par l'API.
+   */
+  MEDIAS_STORAGE_ORIGINS: z.string().default(""),
 });
 
 export const clientSchema = z.object({

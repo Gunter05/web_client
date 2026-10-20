@@ -9,14 +9,8 @@ import {
   register,
   updateProfile,
 } from "@/modules/auth/server";
-import { uploadImage } from "@/shared/api/client";
-import {
-  fileField,
-  textField,
-  type FormState,
-  parseForm,
-} from "@/shared/lib/form";
-import { checkImage } from "@/shared/lib/images";
+import { photoUrlField } from "@/modules/medias";
+import { textField, type FormState, parseForm } from "@/shared/lib/form";
 import { catchApiError } from "@/shared/api/errors";
 
 /** N'accepte qu'un chemin interne, pour éviter les redirections ouvertes. */
@@ -76,17 +70,14 @@ export async function updateProfileAction(
 ): Promise<FormState> {
   const account = await getCurrentAccount();
   if (!account) return { error: "loginRequired" };
-  const f = parseForm({ name: textField(200), photo: fileField }, formData);
+  const f = parseForm(
+    { name: textField(200), photoUrl: photoUrlField },
+    formData,
+  );
   if (!f) return { error: "invalidInput" };
-  if (f.photo) {
-    const error = checkImage(f.photo);
-    if (error) return { fieldErrors: { photo: error } };
-  }
-  const result = await catchApiError(async () =>
-    updateProfile(
-      f.name,
-      f.photo ? await uploadImage(f.photo) : account.photoUrl,
-    ),
+  // La photo a déjà été envoyée par le navigateur : seule son adresse arrive.
+  const result = await catchApiError(() =>
+    updateProfile(f.name, f.photoUrl ?? account.photoUrl),
   );
   if (!result.ok) return result.state;
   revalidatePath("/", "layout");

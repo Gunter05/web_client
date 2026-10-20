@@ -6,8 +6,14 @@ import {
   validate,
 } from "./src/shared/config/schema";
 
-validate(serverSchema, process.env);
+const serverEnv = validate(serverSchema, process.env);
 validate(clientSchema, process.env);
+
+// Stockage des photos : le navigateur y envoie les photos (connect-src) et y
+// lit les images vers lesquelles l'API redirige (img-src), ADR 0014 du backend.
+const storageOrigins = serverEnv.MEDIAS_STORAGE_ORIGINS.split(/[\s,]+/)
+  .filter(Boolean)
+  .join(" ");
 
 // Mode « observation » : le navigateur signale les violations sans rien bloquer.
 // Une CSP stricte à nonce rendrait toutes les pages dynamiques (voir ADR 0008).
@@ -15,9 +21,9 @@ const contentSecurityPolicy = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://images.unsplash.com",
+  `img-src 'self' data: blob: https://images.unsplash.com ${storageOrigins}`.trim(),
   "font-src 'self'",
-  "connect-src 'self'",
+  `connect-src 'self' ${storageOrigins}`.trim(),
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
