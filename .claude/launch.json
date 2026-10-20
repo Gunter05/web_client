@@ -9,6 +9,15 @@
         "NEXT_PUBLIC_SITE_URL=http://localhost:3100 npx next dev -p 3100"
       ],
       "port": 3100
+    },
+    {
+      "name": "web-mock",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "(PORT=8089 node e2e/api-factice/serveur.mjs &) ; API_URL=http://localhost:8089 NEXT_PUBLIC_SITE_URL=http://localhost:3100 npx next dev -p 3100"
+      ],
+      "port": 3100
     }
   ]
 }

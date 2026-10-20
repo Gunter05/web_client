@@ -124,6 +124,15 @@
   body {
     @apply bg-background text-foreground;
   }
+  /*
+   * Jamais de défilement horizontal : sur téléphone, il agrandit la zone
+   * d'affichage et sort de l'écran les barres fixes (navigation du bas).
+   * `clip` (et non `hidden`) garde le fonctionnement de `position: sticky`.
+   */
+  html,
+  body {
+    overflow-x: clip;
+  }
   html {
     @apply font-sans;
   }

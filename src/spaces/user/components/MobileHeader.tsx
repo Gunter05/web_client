@@ -39,9 +39,10 @@ async function MobileHeaderActions() {
 export function MobileHeader() {
   return (
     <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur md:hidden">
-      <div className="flex h-14 items-center gap-2 px-4">
-        <Logo />
-        <div className="ml-auto flex items-center gap-1">
+      <div className="flex h-14 items-center gap-2 px-3 sm:px-4">
+        {/* Logo seul : le nom de l'application ferait déborder l'en-tête. */}
+        <Logo compact />
+        <div className="ml-auto flex min-w-0 items-center gap-1">
           <Suspense fallback={<Skeleton className="size-8 rounded-full" />}>
             <MobileHeaderActions />
           </Suspense>
