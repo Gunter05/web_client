@@ -25,6 +25,8 @@ const contentSecurityPolicy = [
   "font-src 'self'",
   `connect-src 'self' ${storageOrigins}`.trim(),
   "object-src 'none'",
+  // Manifeste de l'application installable (PWA), servi par le site
+  "manifest-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",
 ].join("; ");
