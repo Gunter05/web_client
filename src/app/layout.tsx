@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { clientEnv } from "@/shared/config/env.client";
 import { WebVitals } from "@/shared/components/WebVitals";
@@ -32,6 +32,21 @@ export const metadata: Metadata = {
     template: "%s · Le Contineng",
   },
   description: "Le réseau social des événements.",
+  applicationName: "Le Contineng",
+  // Application ajoutée à l'écran d'accueil d'un iPhone : plein écran, nom court
+  appleWebApp: {
+    capable: true,
+    title: "Contineng",
+    statusBarStyle: "default",
+  },
+};
+
+/** Couleur de la barre du navigateur et de l'application installée, selon le thème. */
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
 /** Document racine : polices, mesures Web Vitals et providers globaux. */
