@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { clientEnv } from "@/shared/config/env.client";
 import { WebVitals } from "@/shared/components/WebVitals";
 import { THEME_SCRIPT } from "@/shared/lib/theme";
+import { env } from "@/shared/config/env";
+import { PUBLIC_IMAGE_HOST } from "@/modules/events";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -61,6 +63,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         {/* Thème appliqué avant le premier affichage (pas de flash clair). */}
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        {/* Connexion ouverte d'avance vers les serveurs d'images : la première photo arrive plus tôt */}
+        {[...storageOrigins(), PUBLIC_IMAGE_HOST].map((origin) => (
+          <link key={origin} rel="preconnect" href={origin} />
+        ))}
       </head>
       <body className="flex min-h-full flex-col">
         <WebVitals />
@@ -68,4 +74,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </body>
     </html>
   );
+}
+
+/** Origines du stockage des photos (préconnexion), lues dans la configuration. */
+function storageOrigins(): string[] {
+  return env.MEDIAS_STORAGE_ORIGINS.split(/[\s,]+/).filter(Boolean);
 }

@@ -2,7 +2,11 @@ import { cn } from "@/shared/lib/utils";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import type { EventView } from "@/modules/events/domain/event-view.types";
-import { eventImage } from "@/modules/events/domain/event-image";
+import {
+  eventImage,
+  eventImageLayout,
+} from "@/modules/events/domain/event-image";
+import { ProgressiveImage } from "@/shared/components/ProgressiveImage";
 
 /**
  * Grille de vignettes au format portrait 3:4 (comme la grille d'Instagram),
@@ -30,15 +34,13 @@ export function EventGrid({
             href={`/e/${e.id}`}
             className="group relative block aspect-[3/4] overflow-hidden bg-black"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element -- images simulées (SVG) */}
-            <img
+            <ProgressiveImage
               src={eventImage(e)}
-              alt=""
-              loading="lazy"
-              className={cn(
-                "size-full object-contain",
-                e.status === "cancelled" && "grayscale",
-              )}
+              placeholder={eventImageLayout(e)?.placeholder}
+              fill
+              fit="contain"
+              className="bg-black"
+              imageClassName={cn(e.status === "cancelled" && "grayscale")}
             />
             <span className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-transparent p-2 text-left text-xs font-semibold text-white">
               <span className="line-clamp-2">{e.name}</span>

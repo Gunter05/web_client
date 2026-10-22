@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { cn } from "@/shared/lib/utils";
 import { eventImage } from "@/modules/events/domain/event-image";
+import { ProgressiveImage } from "@/shared/components/ProgressiveImage";
+import { layoutProps } from "@/modules/events/presentation/components/EventCard";
 import type { EventView } from "@/modules/events/domain/event-view.types";
 import type { TrackedChange } from "@/modules/events/domain/event";
 import { EventBadges } from "@/modules/events/presentation/components/EventBadges";
@@ -36,15 +38,13 @@ export function EventDetails({
   return (
     <div className="mx-auto grid max-w-[960px] gap-8 px-4 md:grid-cols-[330px_minmax(0,1fr)] md:gap-10">
       <aside className="grid content-start gap-6">
-        {/* eslint-disable-next-line @next/next/no-img-element -- images simulées (SVG) */}
-        <img
+        {/* Toute la largeur, place réservée aux proportions de la photo */}
+        <ProgressiveImage
           src={eventImage(event)}
-          alt=""
-          className={cn(
-            // Toute la largeur, hauteur libre : la photo garde ses proportions.
-            "h-auto w-full rounded-xl",
-            cancelled && "grayscale",
-          )}
+          {...layoutProps(event)}
+          priority
+          className="rounded-xl"
+          imageClassName={cn(cancelled && "grayscale")}
         />
         <EventPresenter event={event} />
         <div className="flex flex-wrap gap-1.5">

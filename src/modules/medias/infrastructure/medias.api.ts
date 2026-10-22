@@ -1,6 +1,13 @@
 import "server-only";
 import { api, ApiError } from "@/shared/api/client";
 
+/** Dimensions et aperçu flou annoncés avec une photo. */
+export type PhotoLayoutBody = {
+  width: number;
+  height: number;
+  placeholder: string | null;
+};
+
 /** Où et comment le navigateur envoie le fichier (réponse de l'API). */
 export type DirectUpload = {
   id: string;
@@ -17,10 +24,11 @@ export type DirectUpload = {
 export async function reserveDirectUpload(
   type: string,
   size: number,
+  layout: PhotoLayoutBody | null,
 ): Promise<DirectUpload | null> {
   try {
     return await api<DirectUpload>("/api/v1/medias/uploads", {
-      body: { type, size },
+      body: { type, size, ...layout },
     });
   } catch (error) {
     if (error instanceof ApiError && error.code === "directUploadUnavailable") {
@@ -40,9 +48,17 @@ export async function confirmDirectUpload(id: string): Promise<string> {
 }
 
 /** Envoi par l'API (stockage sur disque) : le fichier passe par le serveur. */
-export async function uploadThroughApi(file: File): Promise<string> {
+export async function uploadThroughApi(
+  file: File,
+  layout: PhotoLayoutBody | null,
+): Promise<string> {
   const form = new FormData();
   form.append("file", file);
+  if (layout) {
+    form.append("width", String(layout.width));
+    form.append("height", String(layout.height));
+    if (layout.placeholder) form.append("placeholder", layout.placeholder);
+  }
   const { url } = await api<{ url: string }>("/api/v1/medias", { form });
   return url;
 }
