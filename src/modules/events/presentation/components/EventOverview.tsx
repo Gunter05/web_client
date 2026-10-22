@@ -6,6 +6,8 @@ import type { ReactNode } from "react";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { cn } from "@/shared/lib/utils";
 import { eventImage } from "@/modules/events/domain/event-image";
+import { ProgressiveImage } from "@/shared/components/ProgressiveImage";
+import { layoutProps } from "@/modules/events/presentation/components/EventCard";
 import type { EventView } from "@/modules/events/domain/event-view.types";
 import { EventBadges } from "@/modules/events/presentation/components/EventBadges";
 import {
@@ -38,15 +40,13 @@ export function EventOverview({
 
   return (
     <article className="grid gap-6 px-6 pt-8 pb-10">
-      {/* eslint-disable-next-line @next/next/no-img-element -- images simulées (SVG) */}
-      <img
+      {/* Toute la largeur, place réservée aux proportions de la photo */}
+      <ProgressiveImage
         src={eventImage(event)}
-        alt=""
-        className={cn(
-          // Toute la largeur, hauteur libre : la photo garde ses proportions.
-          "h-auto w-full rounded-xl",
-          cancelled && "grayscale",
-        )}
+        {...layoutProps(event)}
+        priority
+        className="rounded-xl"
+        imageClassName={cn(cancelled && "grayscale")}
       />
 
       <div className="grid gap-2">

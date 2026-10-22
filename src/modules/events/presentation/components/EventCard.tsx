@@ -1,4 +1,8 @@
-import { eventImage } from "@/modules/events/domain/event-image";
+import {
+  eventImage,
+  eventImageLayout,
+} from "@/modules/events/domain/event-image";
+import { ProgressiveImage } from "@/shared/components/ProgressiveImage";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { cn } from "@/shared/lib/utils";
 import { MapPinIcon } from "lucide-react";
@@ -79,14 +83,14 @@ export function EventCard({
         aria-label={event.name}
       >
         <div className="relative overflow-hidden bg-muted">
-          {/* eslint-disable-next-line @next/next/no-img-element -- images simulées (SVG) */}
-          <img
+          {/* Largeur du fil, place réservée aux proportions de la photo */}
+          <ProgressiveImage
             src={eventImage(event)}
-            alt=""
-            loading={priority ? "eager" : "lazy"}
-            className={cn(
-              // Largeur du fil, hauteur libre : la photo garde ses proportions.
-              "block h-auto w-full rounded-sm transition-transform duration-500 group-hover:scale-[1.02]",
+            {...layoutProps(event)}
+            priority={priority}
+            className="rounded-sm"
+            imageClassName={cn(
+              "transition-transform duration-500 group-hover:scale-[1.02]",
               annule && "grayscale",
             )}
           />
@@ -141,4 +145,16 @@ export function EventCard({
       </div>
     </article>
   );
+}
+
+/** Dimensions et aperçu flou à passer à l'image, quand ils sont connus. */
+export function layoutProps(event: EventView) {
+  const layout = eventImageLayout(event);
+  return layout
+    ? {
+        width: layout.width,
+        height: layout.height,
+        placeholder: layout.placeholder,
+      }
+    : {};
 }

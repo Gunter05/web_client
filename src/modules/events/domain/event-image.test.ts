@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { eventImage, PUBLIC_IMAGE_HOST } from "./event-image";
+import { eventImage, eventImageLayout, PUBLIC_IMAGE_HOST } from "./event-image";
 
 describe("eventImage", () => {
   it("garde la photo de l'événement quand elle existe", () => {
@@ -26,5 +26,23 @@ describe("eventImage", () => {
         PUBLIC_IMAGE_HOST,
       ),
     ).toBe(true);
+  });
+});
+
+describe("eventImageLayout", () => {
+  it("reprend la disposition de la photo de l'événement", () => {
+    const photo = { width: 1080, height: 810, placeholder: "abcdefgh" };
+    expect(eventImageLayout({ photoUrl: "/api/v1/medias/x", photo })).toBe(
+      photo,
+    );
+  });
+
+  it("est inconnue pour une ancienne photo, 4:5 pour une photo publique", () => {
+    expect(eventImageLayout({ photoUrl: "/api/v1/medias/x" })).toBeNull();
+    expect(eventImageLayout({ photoUrl: null })).toEqual({
+      width: 1080,
+      height: 1350,
+      placeholder: null,
+    });
   });
 });

@@ -1,4 +1,5 @@
 import type { Category, Event } from "@/modules/events/domain/event";
+import type { PhotoLayout } from "@/modules/events/domain/event-view.types";
 
 /** Hôte des photos publiques utilisées quand un événement n'a pas d'image. */
 export const PUBLIC_IMAGE_HOST = "https://images.unsplash.com";
@@ -50,4 +51,16 @@ export function eventImage(
   if (event.photoUrl) return event.photoUrl;
   const choices = PHOTOS[event.categories[0] ?? "other"];
   return photo(choices[hash(event.id) % choices.length]!);
+}
+
+/**
+ * Disposition de l'image affichée pour un événement : celle de sa photo si
+ * l'API la connaît, celle des photos publiques (4:5) sinon. `null` pour une
+ * ancienne photo dont les dimensions sont inconnues.
+ */
+export function eventImageLayout(
+  event: Pick<Event, "photoUrl"> & { photo?: PhotoLayout | null },
+): PhotoLayout | null {
+  if (event.photoUrl) return event.photo ?? null;
+  return { width: IDEAL_WIDTH, height: IDEAL_HEIGHT, placeholder: null };
 }
