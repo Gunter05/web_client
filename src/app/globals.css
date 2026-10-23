@@ -50,8 +50,12 @@
 }
 
 :root {
-  /* Rouge du logo (public/brand) : onglet actif de la navigation. */
-  --brand: #ef0000;
+  /*
+   * Rouge du logo (public/brand), pour l'onglet actif de la navigation :
+   * #e60000 plutôt que #ef0000 (4,49:1) pour un contraste ≥ 4,5:1 sur blanc
+   * (WCAG 1.4.3).
+   */
+  --brand: #e60000;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -87,6 +91,8 @@
 }
 
 .dark {
+  /* Rouge de marque éclairci : contraste ≥ 4,5:1 sur les fonds sombres. */
+  --brand: #ff3b3b;
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
