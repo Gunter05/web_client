@@ -50,3 +50,7 @@ export {
   eventImage,
   PUBLIC_IMAGE_HOST,
 } from "@/modules/events/domain/event-image";
+export {
+  categoryColor,
+  CATEGORY_COLORS,
+} from "@/modules/events/domain/category-color";
