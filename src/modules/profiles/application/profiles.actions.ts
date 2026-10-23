@@ -7,7 +7,7 @@ import {
   saveLanguage,
   updateProfile,
 } from "@/modules/profiles/server";
-import { photoUrlField } from "@/modules/medias";
+import { photoUrlField } from "@/modules/medias/server";
 import { catchApiError } from "@/shared/api/errors";
 import { readToken } from "@/shared/api/token";
 import { changeLocale } from "@/shared/i18n/actions";

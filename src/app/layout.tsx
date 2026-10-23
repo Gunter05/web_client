@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, TikTok_Sans } from "next/font/google";
+import { TikTok_Sans } from "next/font/google";
 import { clientEnv } from "@/shared/config/env.client";
 import { WebVitals } from "@/shared/components/WebVitals";
 import { THEME_SCRIPT } from "@/shared/lib/theme";
@@ -17,11 +17,6 @@ const tiktokSans = TikTok_Sans({
   subsets: ["latin"],
   adjustFontFallback: false,
   fallback: ["system-ui", "Arial", "sans-serif"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -55,7 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="fr"
       // La classe `dark` est posée par le script du thème avant React.
       suppressHydrationWarning
-      className={`${tiktokSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${tiktokSans.variable} h-full antialiased`}
     >
       <head>
         {/* Thème appliqué avant le premier affichage (pas de flash clair). */}
@@ -66,7 +61,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         ))}
       </head>
       <body className="flex min-h-full flex-col">
-        <WebVitals />
+        {/* Mesures affichées en développement seulement : rien à envoyer au navigateur en prod */}
+        {env.NODE_ENV === "development" && <WebVitals />}
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -8,6 +8,7 @@ import { AuthCard } from "@/modules/authentication";
 import { Suspense } from "react";
 import { ContentSkeleton } from "@/shared/components/layout/ContentSkeleton";
 import { UrlToast } from "@/shared/components/UrlToast";
+import { env } from "@/shared/config/env";
 
 async function Login({ searchParams }: PageProps<"/login">) {
   const { returnTo } = await searchParams;
@@ -37,7 +38,8 @@ async function Login({ searchParams }: PageProps<"/login">) {
         }}
       />
       <LoginForm action={loginAction} returnTo={target} />
-      <DemoAccounts />
+      {/* Comptes de test (ADR 0010) : jamais affichés en production */}
+      {env.NODE_ENV !== "production" && <DemoAccounts />}
     </AuthCard>
   );
 }

@@ -7,4 +7,3 @@ export {
   type PhotoError,
 } from "@/modules/medias/domain/photo";
 export { usePhotoUpload } from "@/modules/medias/presentation/hooks/usePhotoUpload";
-export { photoUrlField } from "@/modules/medias/application/photo-url-field";
