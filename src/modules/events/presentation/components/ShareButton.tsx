@@ -65,7 +65,7 @@ export function ShareIconButton({
       aria-label={t("share")}
       title={t("share")}
       className={cn(
-        "grid size-10 place-items-center rounded-full outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 [&_svg]:size-6",
+        "ct-press grid size-11 place-items-center rounded-full outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 [&_svg]:size-6",
         className,
       )}
     >

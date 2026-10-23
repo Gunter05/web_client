@@ -9,7 +9,6 @@ import { useFormAction } from "@/shared/hooks/useFormAction";
 import { useMounted } from "@/shared/hooks/useMounted";
 import { useErrorMessages } from "@/shared/i18n/errors";
 import type { FormAction, FormState } from "@/shared/lib/form";
-import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { Input } from "@/shared/ui/input";
@@ -18,6 +17,11 @@ import { Textarea } from "@/shared/ui/textarea";
 import { usePhotoUpload } from "@/modules/medias";
 import { CATEGORIES, type Event } from "@/modules/events/domain/event";
 import { DEFAULT_IMAGE } from "@/modules/events/presentation/components/EventCard";
+import {
+  CAPSULE_CLASS,
+  CapsuleMark,
+  chipStyle,
+} from "@/modules/events/presentation/components/CategoryChips";
 
 /** ISO UTC → valeur d'un champ datetime-local dans l'heure de l'appareil (D7). */
 function toLocal(iso: string | null): string {
@@ -221,23 +225,16 @@ export function EventForm({
         </legend>
         <div className="flex flex-wrap gap-2">
           {CATEGORIES.map((cat) => (
-            <label key={cat} className="cursor-pointer">
+            <label key={cat} className={CAPSULE_CLASS} style={chipStyle(cat)}>
               <input
                 type="checkbox"
                 name="categories"
                 value={cat}
                 defaultChecked={event?.categories.includes(cat)}
-                className="peer sr-only"
+                className="sr-only"
               />
-              <span
-                className={cn(
-                  "inline-flex rounded-full border px-3 py-1.5 text-sm transition-colors select-none",
-                  "peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground",
-                  "peer-focus-visible:ring-2 peer-focus-visible:ring-ring",
-                )}
-              >
-                {t(`categories.${cat}`)}
-              </span>
+              <CapsuleMark />
+              {t(`categories.${cat}`)}
             </label>
           ))}
         </div>

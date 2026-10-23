@@ -235,6 +235,7 @@
   --color-ct-red-press: var(--ct-red-press);
   --color-ct-blue: var(--ct-blue);
   --color-ct-blue-ink: var(--ct-blue-ink);
+  --color-ct-blue-label: var(--ct-blue-label);
   --color-ct-blue-soft: var(--ct-blue-soft);
   --color-ct-green: var(--ct-green);
   --color-ct-orange: var(--ct-orange);
@@ -411,15 +412,6 @@
     inset 0 0 0 1px rgb(255 255 255 / 0.18),
     0 2px 8px rgb(0 0 0 / 0.18);
   color: #fff;
-  height: 28px;
-  padding: 0 12px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1;
-  white-space: nowrap;
 }
 @supports not (background: color-mix(in srgb, red 50%, transparent)) {
   .ct-glass-chip {
@@ -427,81 +419,158 @@
   }
 }
 
-/* ---------- Composants ---------- */
-/* Barre d'onglets : capsule flottante, compacte (icônes seules) au défilement. */
-.ct-tabbar {
-  position: fixed;
-  z-index: 30;
-  left: 16px;
-  right: 16px;
-  bottom: calc(16px + env(safe-area-inset-bottom));
-  height: 64px;
-  border-radius: var(--glass-r-bar);
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  padding: 0 5px;
-  transition:
-    height var(--glass-dur-morph) var(--glass-ease),
-    left var(--glass-dur-morph) var(--glass-ease),
-    right var(--glass-dur-morph) var(--glass-ease),
-    border-radius var(--glass-dur-morph) var(--glass-ease);
-}
-.ct-tabbar.is-compact {
-  /* 48 px par onglet (zone tactile ≥ 44 px), centrée. */
-  left: calc(50% - var(--tabs, 4) * 24px - 5px);
-  right: calc(50% - var(--tabs, 4) * 24px - 5px);
-  height: 54px;
-  border-radius: var(--glass-r-bar-compact);
-}
-.ct-tabbar.is-compact .ct-tab {
-  height: 46px;
-}
-.ct-tabbar.is-compact .ct-tab__label {
-  display: none;
-}
-.ct-tab {
-  flex: 1 1 0;
-  min-width: 44px;
-  height: 54px;
-  border-radius: 27px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  color: #2b313a;
-  font-size: 11px;
-  font-weight: 500;
-  transition: height var(--glass-dur-morph) var(--glass-ease);
-}
-.ct-tab[aria-current="page"] {
-  background: var(--ct-blue-soft);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.75),
-    inset 0 0 0 1px rgb(47 160 193 / 0.24);
-  color: var(--ct-blue-ink);
-  font-weight: 600;
-}
-.ct-tab[aria-current="page"] .ct-tab__label {
-  color: var(--ct-blue-label);
-}
-.dark .ct-tab {
-  color: #d5dae1;
-}
-.dark .ct-tab[aria-current="page"] {
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.18),
-    inset 0 0 0 1px rgb(91 192 222 / 0.28);
+/* ---------- Composants ----------
+   Mise en page en couche « components » : les utilitaires Tailwind
+   (md:hidden, rounded-*…) peuvent la surcharger ; les matériaux, eux,
+   restent hors couche. */
+@layer components {
+  .ct-glass-chip {
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* Barre d'onglets : capsule flottante, compacte (icônes seules) au défilement. */
+  .ct-tabbar {
+    position: fixed;
+    z-index: 30;
+    left: 16px;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    height: 64px;
+    border-radius: var(--glass-r-bar);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 0 5px;
+    transition:
+      height var(--glass-dur-morph) var(--glass-ease),
+      left var(--glass-dur-morph) var(--glass-ease),
+      right var(--glass-dur-morph) var(--glass-ease),
+      border-radius var(--glass-dur-morph) var(--glass-ease);
+  }
+  .ct-tabbar.is-compact {
+    /* 48 px par onglet (zone tactile ≥ 44 px), centrée. */
+    left: calc(50% - var(--tabs, 4) * 24px - 5px);
+    right: calc(50% - var(--tabs, 4) * 24px - 5px);
+    height: 54px;
+    border-radius: var(--glass-r-bar-compact);
+  }
+  .ct-tabbar.is-compact .ct-tab {
+    height: 46px;
+  }
+  .ct-tabbar.is-compact .ct-tab__label {
+    display: none;
+  }
+  .ct-tab {
+    flex: 1 1 0;
+    min-width: 44px;
+    height: 54px;
+    border-radius: 27px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: #2b313a;
+    font-size: 11px;
+    font-weight: 500;
+    transition: height var(--glass-dur-morph) var(--glass-ease);
+  }
+  .ct-tab[aria-current="page"] {
+    background: var(--ct-blue-soft);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.75),
+      inset 0 0 0 1px rgb(47 160 193 / 0.24);
+    color: var(--ct-blue-ink);
+    font-weight: 600;
+  }
+  .ct-tab[aria-current="page"] .ct-tab__label {
+    color: var(--ct-blue-label);
+  }
+  .dark .ct-tab {
+    color: #d5dae1;
+  }
+  .dark .ct-tab[aria-current="page"] {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.18),
+      inset 0 0 0 1px rgb(91 192 222 / 0.28);
+  }
+
+  /* Barre de navigation collante : coins bas arrondis. */
+  .ct-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    border-radius: 0 0 24px 24px;
+  }
+
+  .ct-search {
+    height: 50px;
+    border-radius: 25px;
+  }
+  .ct-btn-group {
+    display: inline-flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 999px;
+  }
+
+  /* Contrôle segmenté : rail et curseur qui glisse sous le segment actif. */
+  .ct-segmented {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    padding: 3px;
+    border-radius: 999px;
+    background: var(--glass-track);
+  }
+  .dark .ct-segmented {
+    background: rgb(255 255 255 / 0.12);
+  }
+  .ct-segmented__thumb {
+    position: absolute;
+    z-index: -1;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: calc((100% - 6px) / var(--count));
+    transform: translateX(calc(var(--index) * 100%));
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: var(--glass-edge-light), var(--glass-shadow);
+    transition:
+      transform var(--glass-dur-press) var(--glass-spring),
+      scale var(--glass-dur-press) var(--glass-spring);
+  }
+  .ct-segmented:active .ct-segmented__thumb {
+    scale: 1.06 1.12;
+  }
+  .dark .ct-segmented__thumb {
+    background: rgb(255 255 255 / 0.2);
+    box-shadow: var(--glass-edge-dark);
+  }
+
+  .ct-sheet__handle {
+    width: 40px;
+    height: 5px;
+    border-radius: 999px;
+    background: rgb(10 10 10 / 0.22);
+    margin: 8px auto;
+  }
+  .dark .ct-sheet__handle {
+    background: rgb(255 255 255 / 0.3);
+  }
 }
 
-/* Barre de navigation collante : coins bas arrondis. */
-.ct-navbar {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  border-radius: 0 0 24px 24px;
-}
 /* Sur une photo : seuls les cercles flottent. */
 .ct-navbar.is-over-image {
   background: transparent;
@@ -510,10 +579,7 @@
   backdrop-filter: none;
 }
 
-.ct-search {
-  height: 50px;
-  border-radius: 25px;
-}
+/* Anneau de focus de la recherche, par-dessus l'ombre du verre */
 .ct-search:focus-within {
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.9),
@@ -526,50 +592,6 @@
     inset 0 0 0 1.5px #5bc0de,
     0 0 0 4px rgb(91 192 222 / 0.3),
     var(--glass-shadow-dark);
-}
-
-.ct-btn-group {
-  display: inline-flex;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 999px;
-}
-
-/* Contrôle segmenté : rail et curseur qui glisse sous le segment actif. */
-.ct-segmented {
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(0, 1fr);
-  padding: 3px;
-  border-radius: 999px;
-  background: var(--glass-track);
-}
-.dark .ct-segmented {
-  background: rgb(255 255 255 / 0.12);
-}
-.ct-segmented__thumb {
-  position: absolute;
-  z-index: -1;
-  top: 3px;
-  bottom: 3px;
-  left: 3px;
-  width: calc((100% - 6px) / var(--count));
-  transform: translateX(calc(var(--index) * 100%));
-  border-radius: 999px;
-  background: #fff;
-  box-shadow: var(--glass-edge-light), var(--glass-shadow);
-  transition:
-    transform var(--glass-dur-press) var(--glass-spring),
-    scale var(--glass-dur-press) var(--glass-spring);
-}
-.ct-segmented:active .ct-segmented__thumb {
-  scale: 1.06 1.12;
-}
-.dark .ct-segmented__thumb {
-  background: rgb(255 255 255 / 0.2);
-  box-shadow: var(--glass-edge-dark);
 }
 
 /* Feuille modale (téléphone) */
@@ -591,17 +613,6 @@
   box-shadow: var(--glass-edge-dark), var(--glass-shadow-dark);
   color: #f5f6f8;
 }
-.ct-sheet__handle {
-  width: 40px;
-  height: 5px;
-  border-radius: 999px;
-  background: rgb(10 10 10 / 0.22);
-  margin: 8px auto;
-}
-.dark .ct-sheet__handle {
-  background: rgb(255 255 255 / 0.3);
-}
-
 /* Menus et popovers de verre : morphing depuis le déclencheur (transform-origin de base-ui). */
 .ct-menu {
   border-radius: var(--glass-r-menu);
@@ -611,17 +622,16 @@
 .ct-menu[data-closed] {
   animation: var(--animate-morph-out);
 }
+/* Sans border-radius : le dépassement du ressort le ferait passer sous zéro. */
 @keyframes ct-morph-in {
   from {
     opacity: 0;
     transform: scale(0.35, 0.25);
-    border-radius: 999px;
     filter: blur(4px);
   }
   to {
     opacity: 1;
     transform: none;
-    border-radius: var(--glass-r-menu);
     filter: none;
   }
 }
