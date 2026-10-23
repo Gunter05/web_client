@@ -13,7 +13,7 @@ import {
   revokeAccess,
   withdrawPageRequest,
 } from "@/modules/pages/server";
-import { photoUrlField } from "@/modules/medias";
+import { photoUrlField } from "@/modules/medias/server";
 import {
   idField,
   textField,
