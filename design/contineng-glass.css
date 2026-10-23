@@ -6,6 +6,22 @@
    contrôle ; cartes, images et textes restent opaques.
    ===================================================================== */
 
+/* ---------- 0. Usage allégé (v2, après retours de l'équipe) ----------
+   VERRE uniquement pour ce qui flotte au-dessus du contenu :
+     - barre d'onglets mobile (.ct-tabbar) — seule surface de verre persistante ;
+     - cercles de retour / partage posés sur une photo (.ct-circle) ;
+     - feuilles modales (.ct-sheet) et menus / popovers (.ct-menu), temporaires.
+   OPAQUE pour tout le reste : barres hautes, filtres, recherche, segmentés,
+   boutons (rouge plein), pastilles de catégorie, tuile date, cartes, formulaires. */
+.ct-solid      { background: #fff; box-shadow: inset 0 0 0 1px #E2E6EC, 0 1px 3px rgb(10 10 10 / .06); color: #0A0A0A; }
+.ct-solid--ink { background: #0A0A0A; color: #fff; }
+.ct-solid--red { background: #EB0405; color: #fff; box-shadow: 0 6px 16px rgb(235 4 5 / .22); }
+.ct-solid--red:active { background: #C40303; }
+.ct-bar        { background: #fff; border-bottom: 1px solid #E2E6EC; }
+.dark .ct-solid { background: #15171B; box-shadow: inset 0 0 0 1px #2A2E35; color: #F5F6F8; }
+.dark .ct-solid--ink { background: #F5F6F8; color: #0A0A0A; }
+.dark .ct-bar  { background: #0A0A0A; border-bottom-color: #2A2E35; }
+
 /* ---------- 1. Tokens ---------- */
 :root {
   /* Flou */
