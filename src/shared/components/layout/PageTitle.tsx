@@ -21,7 +21,7 @@ export function PageTitle({
           href={returnTo}
           aria-label={t("back")}
           className={cn(
-            buttonVariants({ variant: "secondary", size: "circle" }),
+            buttonVariants({ variant: "surface", size: "circle" }),
             "shrink-0",
           )}
         >

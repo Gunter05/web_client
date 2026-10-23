@@ -20,7 +20,6 @@ export function EventGrid({
   events: EventView[];
   className?: string;
 }) {
-  const t = useTranslations();
   return (
     <ul
       className={cn(
@@ -45,17 +44,37 @@ export function EventGrid({
             <span className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-transparent p-2 text-left text-xs font-semibold text-white">
               <span className="line-clamp-2">{e.name}</span>
             </span>
-            {(e.status !== "published" || e.period !== "upcoming") && (
-              // Verre encre sans flou : pas de backdrop-filter dans une liste.
-              <span className="absolute top-1.5 right-1.5 rounded-full bg-[rgb(10_10_10/0.8)] px-2 py-0.5 text-[11px] font-semibold text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.25),inset_0_0_0_1px_rgb(255_255_255/0.08)] dark:bg-[rgb(255_255_255/0.92)] dark:text-[#0a0a0a]">
-                {e.status === "published"
-                  ? t(`periods.${e.period}`)
-                  : t(`statuses.${e.status}`)}
-              </span>
-            )}
+            <GridBadge event={e} className="absolute top-1.5 right-1.5" />
           </Link>
         </li>
       ))}
     </ul>
+  );
+}
+
+/**
+ * Badge encre opaque d'une vignette (Passé, En cours, Modifié, Annulé) ;
+ * rien pour un événement publié à venir.
+ */
+export function GridBadge({
+  event,
+  className,
+}: {
+  event: EventView;
+  className?: string;
+}) {
+  const t = useTranslations();
+  if (event.status === "published" && event.period === "upcoming") return null;
+  return (
+    <span
+      className={cn(
+        "rounded-full bg-ct-ink px-2 py-0.5 text-[11px] font-semibold text-background",
+        className,
+      )}
+    >
+      {event.status === "published"
+        ? t(`periods.${event.period}`)
+        : t(`statuses.${event.status}`)}
+    </span>
   );
 }

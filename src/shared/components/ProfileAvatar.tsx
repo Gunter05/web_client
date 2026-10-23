@@ -28,7 +28,8 @@ export function ProfileAvatar({
   return (
     <Avatar className={cn(sizes[size], className)}>
       {photo && <AvatarImage src={photo} alt="" className="object-cover" />}
-      <AvatarFallback className="bg-muted font-semibold text-foreground">
+      {/* text-[1em] : l'initiale suit la taille choisie (text-2xl…). */}
+      <AvatarFallback className="bg-muted text-[1em] font-semibold text-foreground">
         {initials}
       </AvatarFallback>
     </Avatar>

@@ -53,9 +53,9 @@ export function LoginForm({
       <Button
         type="submit"
         variant="primary"
-        size="pill"
+        size="xl"
         disabled={enCours}
-        className="mt-1 h-[52px] w-full text-base"
+        className="mt-1 w-full"
       >
         {t("login")}
       </Button>

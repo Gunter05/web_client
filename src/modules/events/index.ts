@@ -46,6 +46,9 @@ export {
 } from "@/modules/events/presentation/components/EventFeed";
 export { EventForm } from "@/modules/events/presentation/components/EventForm";
 export { EventGrid } from "@/modules/events/presentation/components/EventGrid";
+export { EventTiles } from "@/modules/events/presentation/components/EventTiles";
+export { NextEventCard } from "@/modules/events/presentation/components/NextEventCard";
+export { nextEvent } from "@/modules/events/domain/next-event";
 export { ChoosePageDialog } from "@/modules/events/presentation/components/ChoosePageDialog";
 export {
   eventImage,

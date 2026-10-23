@@ -125,6 +125,7 @@
     "public": {
       "events": "{n, plural, =0 {aucun événement} one {# événement} other {# événements}}",
       "members": "{n, plural, one {# membre} other {# membres}}",
+      "nextEvent": "Prochain événement",
       "noEvents": "Cette page n'a encore publié aucun événement.",
       "notFound": "Cette page n'existe pas"
     },

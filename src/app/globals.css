@@ -81,6 +81,9 @@
   --ct-blue-label: #15647f;
   --ct-blue-soft: #e3f3f8;
   --ct-green: #6ac73c;
+  /* Compteur de membres : fond vert clair, icône verte (5:1 sur blanc). */
+  --ct-green-soft: #e5f4ea;
+  --ct-green-ink: #1e7f3e;
   --ct-orange: #f7850d;
   --ct-violet: #6c3fd1;
 
@@ -124,6 +127,8 @@
   --ct-blue-ink: #5bc0de;
   --ct-blue-label: #5bc0de;
   --ct-blue-soft: #1e3640;
+  --ct-green-soft: #18301f;
+  --ct-green-ink: #7fd556;
   --ct-red-soft: rgb(235 4 5 / 0.16);
   --ct-shadow-card: 0 0 0 1px #2a2e35;
   --ct-shadow-pop: 0 0 0 1px #2a2e35, 0 16px 40px rgb(0 0 0 / 0.5);
@@ -248,6 +253,8 @@
   --color-ct-blue-label: var(--ct-blue-label);
   --color-ct-blue-soft: var(--ct-blue-soft);
   --color-ct-green: var(--ct-green);
+  --color-ct-green-soft: var(--ct-green-soft);
+  --color-ct-green-ink: var(--ct-green-ink);
   --color-ct-orange: var(--ct-orange);
   --color-cat-match: var(--ct-cat-match);
   --color-cat-inter-club: var(--ct-cat-inter-club);
