@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function Logo({ compact = false }: { compact?: boolean }) {
@@ -7,10 +8,15 @@ export function Logo({ compact = false }: { compact?: boolean }) {
       className="flex items-center gap-2 font-semibold tracking-tight whitespace-nowrap"
       aria-label="Le Contineng"
     >
-      <span className="grid size-8 place-items-center rounded-lg bg-primary text-sm font-black text-primary-foreground">
-        C
-      </span>
-      {!compact && <span className="text-lg italic">Le Contineng</span>}
+      <Image
+        src="/brand/nameless-contineng.svg"
+        alt=""
+        width={36}
+        height={32}
+        unoptimized
+        className="h-8 w-auto"
+      />
+      {!compact && <span className="text-lg font-bold">Le Contineng</span>}
     </Link>
   );
 }

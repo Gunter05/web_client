@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { getCurrentAccount, searchProfiles } from "@/modules/auth/server";
+import { getCurrentAccount } from "@/modules/authentication/server";
+import { searchProfiles } from "@/modules/profiles/server";
 import type { SearchResult } from "@/modules/pages";
 import {
   submitPageRequest,

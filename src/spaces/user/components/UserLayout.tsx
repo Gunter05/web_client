@@ -2,6 +2,7 @@ import { type ReactNode, Suspense } from "react";
 import { Logo } from "@/shared/components/layout/Logo";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { BottomNav } from "@/spaces/user/components/BottomNav";
+import { EmailVerificationForAccount } from "@/spaces/user/components/EmailVerificationForAccount";
 import { MobileHeader } from "@/spaces/user/components/MobileHeader";
 import { PushSyncForAccount } from "@/spaces/user/components/PushSyncForAccount";
 import { Sidebar } from "@/spaces/user/components/Sidebar";
@@ -25,6 +26,9 @@ export function UserLayout({ children }: { children: ReactNode }) {
       }
     >
       <MobileHeader />
+      <Suspense>
+        <EmailVerificationForAccount />
+      </Suspense>
       <main className="pb-20 md:pb-10">{children}</main>
       <Suspense>
         <BottomNav />

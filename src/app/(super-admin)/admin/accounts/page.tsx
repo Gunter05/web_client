@@ -14,6 +14,12 @@ import { getCurrentAdmin } from "@/modules/admin/server";
 import { readSearchParams } from "@/modules/admin";
 import { Suspense } from "react";
 import { AdminSkeleton } from "@/spaces/super-admin";
+import { SuspensionControls } from "@/modules/authentication";
+import {
+  reactivateAccountAction,
+  suspendAccountAction,
+} from "@/modules/authentication/application/authentication.actions";
+import { Badge } from "@/shared/ui/badge";
 
 async function AdminAccounts({ searchParams }: PageProps<"/admin/accounts">) {
   const t = await getTranslations();
@@ -38,6 +44,8 @@ async function AdminAccounts({ searchParams }: PageProps<"/admin/accounts">) {
                 <TableHead className="hidden sm:table-cell">
                   {t("admin.accounts.createdOn")}
                 </TableHead>
+                <TableHead>{t("admin.accounts.status")}</TableHead>
+                <TableHead className="w-0" />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -47,6 +55,35 @@ async function AdminAccounts({ searchParams }: PageProps<"/admin/accounts">) {
                   <TableCell className="max-w-40 truncate">{c.email}</TableCell>
                   <TableCell className="hidden sm:table-cell">
                     <ShortDate iso={c.createdAt} />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap gap-1">
+                      {c.isAdmin && (
+                        <Badge variant="secondary">
+                          {t("admin.accounts.admin")}
+                        </Badge>
+                      )}
+                      {c.suspendedUntil && (
+                        <Badge variant="destructive">
+                          {t("admin.accounts.suspendedBadge")}
+                        </Badge>
+                      )}
+                      {!c.emailVerified && (
+                        <Badge variant="outline">
+                          {t("admin.accounts.unverified")}
+                        </Badge>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {!c.isAdmin && (
+                      <SuspensionControls
+                        accountId={c.id}
+                        suspended={!!c.suspendedUntil}
+                        suspend={suspendAccountAction}
+                        reactivate={reactivateAccountAction}
+                      />
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

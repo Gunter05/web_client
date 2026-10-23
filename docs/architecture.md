@@ -7,7 +7,7 @@ Frontend Next.js (App Router) qui consomme l'API Spring de Le Contineng. Aucune 
 ```
 src/
 ├── app/                         Routage uniquement
-│   ├── (auth)/                      /login, /register
+│   ├── (auth)/                      /login, /register, /forgot-password, /reset-password, /verify-email
 │   ├── (user)/                      Espace utilisateur : /, /search, /e/{id}, /e/{id}/edit,
 │   │                                /events/new, /p/{slug}, /my-pages…, /page-request, /profile
 │   ├── (super-admin)/admin/         Espace Super-Admin : /admin, /admin/page-requests,
@@ -18,7 +18,8 @@ src/
 │   ├── user/                        UserLayout, Sidebar, MobileHeader, BottomNav, navigation…
 │   └── super-admin/                 AdminShell, AdminTabs, Pagination, AdminSearch, EmptyState…
 ├── modules/                     Métier, un module par fonctionnalité
-│   ├── auth/                        Compte, connexion, inscription, profil
+│   ├── authentication/              Connexion, inscription, sessions, adresse, mot de passe (ADR 0018)
+│   ├── profiles/                    Profil (nom, photo, langue), recherche de personnes
 │   ├── events/                      Événements : fil, fiche, filtres, publication
 │   ├── pages/                       Pages, demandes de page, « Mes pages », accès
 │   ├── audience/                    Vues uniques par jour
@@ -26,10 +27,11 @@ src/
 │   ├── metrics/                     Métriques produit
 │   ├── medias/                      Photos : compression et envoi direct au stockage (ADR 0014 du backend)
 │   └── admin/                       Supervision (réservé au Super-Admin)
+├── proxy.ts                     Renouvelle la session avant le rendu (ADR 0018)
 └── shared/                      Transverse, sans métier
     ├── ui/                          Composants shadcn/ui (non modifiés)
     ├── components/                  Composants génériques : Logo, PageTitle, FormField, ProfileAvatar…
-    ├── api/                         Client HTTP, jeton de session, erreurs
+    ├── api/                         Client HTTP, cookies de session, erreurs
     ├── config/                      Variables d'environnement validées (env, clientEnv)
     ├── i18n/                        Catalogues FR/EN, dates, langue
     ├── hooks/                       Hooks transverses

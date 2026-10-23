@@ -35,7 +35,7 @@
     "maxLength2000": "2,000 characters max",
     "invalidEmail": "Invalid email address",
     "emailTaken": "An account already exists with this email",
-    "passwordTooShort": "At least 8 characters",
+    "passwordTooShort": "At least 10 characters",
     "invalidCredentials": "Incorrect email or password",
     "nameTaken": "This name is already taken",
     "reasonTooShort": "At least 10 characters",
@@ -58,7 +58,14 @@
     "unknown": "Something went wrong",
     "uploadFailed": "The photo could not be uploaded, try again",
     "tooManyUploads": "Too many photos uploaded, try again in an hour",
-    "mediaNotFound": "Photo not found, choose it again"
+    "mediaNotFound": "Photo not found, choose it again",
+    "passwordTooLong": "200 characters maximum",
+    "invalidToken": "This link is no longer valid: ask for a new one",
+    "accountSuspended": "This account is suspended",
+    "tooManyAttempts": "Too many attempts, try again in a few minutes",
+    "emailNotVerified": "Confirm your e-mail address first",
+    "invalidLanguage": "Unknown language",
+    "administratorNotSuspendable": "An admin account cannot be suspended"
   },
   "nav": {
     "home": "Home",
@@ -92,7 +99,34 @@
     "demoAccounts": "Demo accounts (password: demo1234)",
     "myProfile": "My profile",
     "profileSaved": "Profile saved",
-    "personalProfile": "Personal profile"
+    "personalProfile": "Personal profile",
+    "forgotPassword": "Forgot your password?",
+    "forgotPasswordTitle": "Forgot your password",
+    "forgotPasswordSubtitle": "Enter your address: if it has an account, you will get a link to choose a new password.",
+    "sendResetLink": "Send the link",
+    "resetLinkSent": "If this address has an account, a link has just been sent to it",
+    "backToLogin": "Back to sign in",
+    "resetPasswordTitle": "New password",
+    "newPassword": "New password",
+    "saveNewPassword": "Save the password",
+    "askNewLink": "Ask for a new link",
+    "passwordResetDone": "Password changed: sign in",
+    "passwordHelp": "At least {min} characters",
+    "verifyEmailTitle": "Confirm your address",
+    "verifyEmailSubtitle": "One click confirms that this address is yours.",
+    "confirmEmail": "Confirm my address",
+    "emailVerified": "E-mail address confirmed",
+    "verifyEmailBanner": "Confirm your address {email} to request a page, publish and receive notifications: open the link sent by e-mail.",
+    "resendVerification": "Send the link again",
+    "verificationSent": "Link sent: check your inbox",
+    "devices": {
+      "title": "Signed-in devices",
+      "thisDevice": "This device",
+      "lastUsed": "Used {when}",
+      "signOut": "Sign out",
+      "signOutOthers": "Sign out all other devices",
+      "unknown": "Unknown device"
+    }
   },
   "pages": {
     "types": {
@@ -322,7 +356,16 @@
       "empty": "No accounts yet",
       "search": "Name or email",
       "createdOn": "Created on",
-      "admin": "Admin"
+      "admin": "Admin",
+      "status": "Status",
+      "suspendedBadge": "Suspended",
+      "unverified": "Not confirmed",
+      "suspend": "Suspend",
+      "suspendFor": "For {days, plural, one {# day} other {# days}}",
+      "suspendIndefinitely": "With no end date",
+      "reactivate": "Reactivate",
+      "suspended": "Account suspended",
+      "reactivated": "Account reactivated"
     },
     "pages": {
       "empty": "No pages created yet",

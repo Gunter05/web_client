@@ -1,5 +1,5 @@
 import "server-only";
-import { getCurrentAccount } from "@/modules/auth/server";
+import { getCurrentAccount } from "@/modules/authentication/server";
 
 /**
  * Garde serveur de l'espace Administration (US-07) : le rôle est porté par le

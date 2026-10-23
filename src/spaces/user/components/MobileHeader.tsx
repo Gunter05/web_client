@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { NotificationBell } from "@/modules/notifications";
 import { LanguageSwitcher } from "@/shared/components/LanguageSwitcher";
+import { changeLanguageAction } from "@/modules/profiles/application/profiles.actions";
 import { ThemeSwitcher } from "@/shared/components/ThemeSwitcher";
 import { Logo } from "@/shared/components/layout/Logo";
 import { buttonVariants } from "@/shared/ui/button";
@@ -24,7 +25,7 @@ async function MobileHeaderActions() {
   ) : (
     <>
       <ThemeSwitcher />
-      <LanguageSwitcher />
+      <LanguageSwitcher change={changeLanguageAction} />
       <Link href="/login" className={buttonVariants({ size: "sm" })}>
         {t("nav.login")}
       </Link>
@@ -33,7 +34,7 @@ async function MobileHeaderActions() {
 }
 
 /**
- * En-tête sur téléphone : logo, puis notifications et menu du compte (ou
+ * En-tête sur téléphone : logo (sans le nom, faute de place), puis notifications et menu du compte (ou
  * thème, langue et connexion pour un visiteur).
  */
 export function MobileHeader() {

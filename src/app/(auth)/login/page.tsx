@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
-import { DemoAccounts, LoginForm } from "@/modules/auth";
-import { getCurrentAccount } from "@/modules/auth/server";
-import { loginAction } from "@/modules/auth/application/auth.actions";
-import { AuthCard } from "@/modules/auth";
+import { DemoAccounts, LoginForm } from "@/modules/authentication";
+import { getCurrentAccount } from "@/modules/authentication/server";
+import { loginAction } from "@/modules/authentication/application/authentication.actions";
+import { AuthCard } from "@/modules/authentication";
 import { Suspense } from "react";
 import { ContentSkeleton } from "@/shared/components/layout/ContentSkeleton";
+import { UrlToast } from "@/shared/components/UrlToast";
 
 async function Login({ searchParams }: PageProps<"/login">) {
   const { returnTo } = await searchParams;
@@ -29,6 +30,12 @@ async function Login({ searchParams }: PageProps<"/login">) {
         </>
       }
     >
+      <UrlToast
+        messages={{
+          passwordReset: t("auth.passwordResetDone"),
+          emailVerified: t("auth.emailVerified"),
+        }}
+      />
       <LoginForm action={loginAction} returnTo={target} />
       <DemoAccounts />
     </AuthCard>

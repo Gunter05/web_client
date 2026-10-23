@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, TikTok_Sans } from "next/font/google";
 import { clientEnv } from "@/shared/config/env.client";
 import { WebVitals } from "@/shared/components/WebVitals";
 import { THEME_SCRIPT } from "@/shared/lib/theme";
@@ -8,18 +8,15 @@ import { PUBLIC_IMAGE_HOST } from "@/modules/events";
 import { Providers } from "./providers";
 import "./globals.css";
 
-import { Poppins } from "next/font/google";
-
-// Configuration de la police
-const poppins = Poppins({
-  subsets: ["latin"], // Charge uniquement les caractères latins (plus léger)
-  weight: ["400", "600", "700"], // Choisissez les poids dont vous avez besoin
-  variable: "--font-poppins", // Crée une variable CSS réutilisable
-});
-
-const geistSans = Geist({
+/**
+ * Police de toute l'interface (titres et texte). Next.js n'a pas les mesures
+ * de TikTok Sans pour ajuster une police de repli : on prend celle du système.
+ */
+const tiktokSans = TikTok_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
+  adjustFontFallback: false,
+  fallback: ["system-ui", "Arial", "sans-serif"],
 });
 
 const geistMono = Geist_Mono({
@@ -58,7 +55,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="fr"
       // La classe `dark` est posée par le script du thème avant React.
       suppressHydrationWarning
-      className={`${poppins.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${tiktokSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
         {/* Thème appliqué avant le premier affichage (pas de flash clair). */}

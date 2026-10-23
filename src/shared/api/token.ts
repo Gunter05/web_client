@@ -1,28 +1,40 @@
 import "server-only";
 import { cookies } from "next/headers";
 import { env } from "@/shared/config/env";
+import {
+  ACCESS_COOKIE,
+  LEGACY_COOKIE,
+  REFRESH_COOKIE,
+  type SessionTokens,
+  sessionCookieOptions,
+} from "@/shared/api/session-cookies";
 
 /**
- * Jeton de session (JWT émis par l'API, ADR 0009 du backend), gardé dans un
- * cookie httpOnly : le JavaScript de la page ne peut pas le lire.
+ * Session de la personne connectée (ADR 0018) : jeton d'accès (15 min) et
+ * jeton de renouvellement (60 jours), émis par l'API et gardés dans des
+ * cookies httpOnly — le JavaScript de la page ne peut pas les lire. Le
+ * renouvellement se fait dans `src/proxy.ts`, avant le rendu des pages.
  */
-const NAME = "contineng_jeton";
-const THIRTY_DAYS = 60 * 60 * 24 * 30;
-
 export async function readToken(): Promise<string | undefined> {
-  return (await cookies()).get(NAME)?.value;
+  return (await cookies()).get(ACCESS_COOKIE)?.value;
 }
 
-export async function writeToken(token: string): Promise<void> {
-  (await cookies()).set(NAME, token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: env.NODE_ENV === "production",
-    path: "/",
-    maxAge: THIRTY_DAYS,
-  });
+export async function readRefreshToken(): Promise<string | undefined> {
+  return (await cookies()).get(REFRESH_COOKIE)?.value;
 }
 
-export async function clearToken(): Promise<void> {
-  (await cookies()).delete(NAME);
+export async function writeSession(tokens: SessionTokens): Promise<void> {
+  const store = await cookies();
+  const secure = env.NODE_ENV === "production";
+  for (const [name, value, options] of sessionCookieOptions(tokens, secure)) {
+    store.set(name, value, options);
+  }
+  store.delete(LEGACY_COOKIE);
+}
+
+export async function clearSession(): Promise<void> {
+  const store = await cookies();
+  store.delete(ACCESS_COOKIE);
+  store.delete(REFRESH_COOKIE);
+  store.delete(LEGACY_COOKIE);
 }
