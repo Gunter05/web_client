@@ -4,11 +4,12 @@ import { ImageIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
-import { FormField } from "@/shared/components/FormField";
+import { FIELD_CLASS, FormField } from "@/shared/components/FormField";
 import { useFormAction } from "@/shared/hooks/useFormAction";
 import { useMounted } from "@/shared/hooks/useMounted";
 import { useErrorMessages } from "@/shared/i18n/errors";
 import type { FormAction, FormState } from "@/shared/lib/form";
+import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { Input } from "@/shared/ui/input";
@@ -22,6 +23,9 @@ import {
   CapsuleMark,
   chipStyle,
 } from "@/modules/events/presentation/components/CategoryChips";
+
+/** Section du formulaire : carte opaque. */
+const SECTION = "rounded-card bg-card p-4 shadow-card sm:p-5";
 
 /** ISO UTC → valeur d'un champ datetime-local dans l'heure de l'appareil (D7). */
 function toLocal(iso: string | null): string {
@@ -83,13 +87,13 @@ export function EventForm({
   const c = state.fieldErrors ?? {};
 
   // Les dates dépendent du fuseau de l'appareil : rendu côté navigateur uniquement.
-  if (!mounted) return <Skeleton className="h-[640px] w-full rounded-xl" />;
+  if (!mounted) return <Skeleton className="h-[640px] w-full rounded-card" />;
 
   return (
-    <form action={send} onSubmit={onSubmit} className="grid gap-6" noValidate>
+    <form action={send} onSubmit={onSubmit} className="grid gap-3" noValidate>
       {event && <input type="hidden" name="id" value={event.id} />}
 
-      <div className="flex items-center gap-3 rounded-xl border bg-muted/40 p-3">
+      <div className={cn(SECTION, "flex items-center gap-3")}>
         <ProfileAvatar name={page.name} photo={page.photoUrl} size="sm" />
         <div className="text-sm">
           <p className="text-xs text-muted-foreground">
@@ -100,6 +104,7 @@ export function EventForm({
       </div>
 
       <FormField
+        className={SECTION}
         id="photo"
         label={t("common.optionalPhoto")}
         error={errors(photo.error ?? c.photo ?? c.photoUrl)}
@@ -111,7 +116,7 @@ export function EventForm({
       >
         <input type="hidden" name="photoUrl" value={photo.url ?? ""} />
         <div className="flex items-center gap-4">
-          <div className="relative size-24 shrink-0 overflow-hidden rounded-lg border bg-muted">
+          <div className="relative size-24 shrink-0 overflow-hidden rounded-media bg-muted">
             {/* eslint-disable-next-line @next/next/no-img-element -- aperçu local */}
             <img
               src={(!remove && preview) || DEFAULT_IMAGE}
@@ -156,71 +161,77 @@ export function EventForm({
         </div>
       </FormField>
 
-      <FormField id="name" label={t("events.name")} error={errors(c.name)}>
-        <Input
-          id="name"
-          name="name"
-          maxLength={100}
-          defaultValue={event?.name}
-          aria-invalid={!!c.name}
-        />
-      </FormField>
+      <div className={cn(SECTION, "grid gap-5")}>
+        <FormField id="name" label={t("events.name")} error={errors(c.name)}>
+          <Input
+            className={FIELD_CLASS}
+            id="name"
+            name="name"
+            maxLength={100}
+            defaultValue={event?.name}
+            aria-invalid={!!c.name}
+          />
+        </FormField>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <FormField
-          id="startsAtLocal"
-          label={t("events.startsAt")}
-          error={errors(c.startsAt)}
-        >
-          <Input
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FormField
             id="startsAtLocal"
-            name="startsAtLocal"
-            type="datetime-local"
-            defaultValue={toLocal(event?.startsAt ?? null)}
-            aria-invalid={!!c.startsAt}
-          />
-        </FormField>
+            label={t("events.startsAt")}
+            error={errors(c.startsAt)}
+          >
+            <Input
+              className={FIELD_CLASS}
+              id="startsAtLocal"
+              name="startsAtLocal"
+              type="datetime-local"
+              defaultValue={toLocal(event?.startsAt ?? null)}
+              aria-invalid={!!c.startsAt}
+            />
+          </FormField>
+          <FormField
+            id="endsAtLocal"
+            label={
+              <>
+                {t("events.endsAt")}{" "}
+                <span className="font-normal text-muted-foreground">
+                  ({t("common.optional")})
+                </span>
+              </>
+            }
+            error={errors(c.endsAt)}
+          >
+            <Input
+              className={FIELD_CLASS}
+              id="endsAtLocal"
+              name="endsAtLocal"
+              type="datetime-local"
+              defaultValue={toLocal(event?.endsAt ?? null)}
+              aria-invalid={!!c.endsAt}
+            />
+          </FormField>
+          <p className="text-xs text-muted-foreground sm:col-span-2">
+            {t("events.timeZone", { timeZone: zoneName(locale) })}
+          </p>
+        </div>
+
         <FormField
-          id="endsAtLocal"
-          label={
-            <>
-              {t("events.endsAt")}{" "}
-              <span className="font-normal text-muted-foreground">
-                ({t("common.optional")})
-              </span>
-            </>
-          }
-          error={errors(c.endsAt)}
+          id="location"
+          label={t("events.location")}
+          error={errors(c.location)}
         >
           <Input
-            id="endsAtLocal"
-            name="endsAtLocal"
-            type="datetime-local"
-            defaultValue={toLocal(event?.endsAt ?? null)}
-            aria-invalid={!!c.endsAt}
+            className={FIELD_CLASS}
+            id="location"
+            name="location"
+            maxLength={150}
+            defaultValue={event?.location}
+            aria-invalid={!!c.location}
           />
         </FormField>
-        <p className="text-xs text-muted-foreground sm:col-span-2">
-          {t("events.timeZone", { timeZone: zoneName(locale) })}
-        </p>
       </div>
 
-      <FormField
-        id="location"
-        label={t("events.location")}
-        error={errors(c.location)}
-      >
-        <Input
-          id="location"
-          name="location"
-          maxLength={150}
-          defaultValue={event?.location}
-          aria-invalid={!!c.location}
-        />
-      </FormField>
-
-      <fieldset className="grid gap-2">
-        <legend className="mb-2 text-sm font-medium">
+      <fieldset className={cn(SECTION, "grid gap-2")}>
+        <legend className="float-left mb-3 text-sm font-medium">
           {t("events.categories")}
         </legend>
         <div className="flex flex-wrap gap-2">
@@ -246,6 +257,7 @@ export function EventForm({
       </fieldset>
 
       <FormField
+        className={SECTION}
         id="description"
         label={
           <>
@@ -266,6 +278,7 @@ export function EventForm({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           aria-invalid={!!c.description}
+          className="min-h-32 rounded-field border-transparent bg-muted px-4 py-3 text-base md:text-base dark:bg-muted"
         />
       </FormField>
 
@@ -278,14 +291,20 @@ export function EventForm({
         </p>
       )}
 
-      <Button
-        type="submit"
-        size="lg"
-        disabled={enCours || photo.uploading}
-        className="sm:justify-self-start"
-      >
-        {event ? t("common.save") : t("events.publish")}
-      </Button>
+      {/* Barre d'action flottante, au-dessus de la barre d'onglets. */}
+      <div className="sticky bottom-[calc(6rem+env(safe-area-inset-bottom))] z-20 md:bottom-4">
+        <div className="ct-glass flex rounded-full p-1.5">
+          <Button
+            type="submit"
+            variant="glass-primary"
+            size="pill"
+            disabled={enCours || photo.uploading}
+            className="h-12 flex-1 text-base sm:flex-none sm:px-8"
+          >
+            {event ? t("common.save") : t("events.publish")}
+          </Button>
+        </div>
+      </div>
     </form>
   );
 }

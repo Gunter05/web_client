@@ -29,6 +29,7 @@ export { FilterBar } from "@/modules/events/presentation/components/FilterBar";
 export { SearchBar } from "@/modules/events/presentation/components/SearchBar";
 export { FilterChips } from "@/modules/events/presentation/components/FilterChips";
 export {
+  CopyLinkButton,
   ShareButton,
   ShareIconButton,
 } from "@/modules/events/presentation/components/ShareButton";

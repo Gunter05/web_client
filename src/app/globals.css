@@ -125,8 +125,13 @@
   --ct-focus-ring: 0 0 0 4px rgb(91 192 222 / 0.3);
 }
 
-/* Pont vers les variables shadcn : les composants de src/shared/ui suivent la palette. */
-:root {
+/*
+ * Pont vers les variables shadcn : les composants de src/shared/ui suivent la
+ * palette. Redéclaré sur .dark pour qu'une zone toujours sombre (connexion)
+ * reprenne les valeurs sombres, même quand le reste de la page est clair.
+ */
+:root,
+.dark {
   --background: var(--ct-bg);
   --foreground: var(--ct-text);
   --card: var(--ct-surface);
