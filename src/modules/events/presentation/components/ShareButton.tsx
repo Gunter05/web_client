@@ -4,7 +4,7 @@ import { CopyIcon, SendIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/shared/components/Button";
 
 type Share = {
   /** Adresse de la fiche ; par défaut, construite depuis l'origine du site. */
@@ -46,7 +46,7 @@ export function ShareButton({
   const shareEvent = useShare(share);
   return (
     <Button
-      variant="glass-primary"
+      variant="primary"
       size="pill"
       onClick={shareEvent}
       className={className}
@@ -56,7 +56,7 @@ export function ShareButton({
   );
 }
 
-/** « Copier le lien » de la fiche, voisin de « Partager » dans un même groupe de verre. */
+/** « Copier le lien » de la fiche, voisin de « Partager » dans un même groupe opaque. */
 export function CopyLinkButton({
   path,
   className,

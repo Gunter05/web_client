@@ -13,7 +13,7 @@ import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { cn } from "@/shared/lib/utils";
 import { useMounted } from "@/shared/hooks/useMounted";
 import { Badge } from "@/shared/ui/badge";
-import { buttonVariants } from "@/shared/ui/button";
+import { buttonVariants } from "@/shared/components/Button";
 import type { EventView } from "@/modules/events/domain/event-view.types";
 import { DateTile } from "@/modules/events/presentation/components/DateTile";
 

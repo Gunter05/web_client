@@ -17,7 +17,7 @@ import { UrlToast } from "@/shared/components/UrlToast";
 import { env } from "@/shared/config/env";
 import { clientEnv } from "@/shared/config/env.client";
 import { formatEventDate } from "@/shared/i18n/dates";
-import { buttonVariants } from "@/shared/ui/button";
+import { buttonVariants } from "@/shared/components/Button";
 import {
   trackShareClickAction,
   trackEventViewAction,

@@ -6,7 +6,7 @@ import { FormField } from "@/shared/components/FormField";
 import { useFormAction } from "@/shared/hooks/useFormAction";
 import { useErrorMessages } from "@/shared/i18n/errors";
 import type { FormAction, FormState } from "@/shared/lib/form";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/shared/components/Button";
 import {
   Dialog,
   DialogContent,

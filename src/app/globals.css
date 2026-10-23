@@ -317,31 +317,27 @@
 }
 
 /* =====================================================================
-   Liquid Glass (design/contineng-glass.css)
-   Le verre est réservé à la couche de navigation et de contrôle : barres,
-   filtres, boutons flottants, feuilles, menus, pastilles sur image. Cartes,
-   images et textes restent opaques. 3 surfaces de verre visibles au plus.
+   Liquid Glass allégé (design/contineng-glass.css, section 0)
+   VERRE uniquement pour ce qui flotte au-dessus du contenu :
+     - la barre d'onglets mobile, seule surface de verre persistante ;
+     - les cercles retour et partage posés sur une photo ;
+     - les feuilles modales, menus et popovers, temporaires.
+   Jamais de backdrop-filter dans une liste qui défile.
 
-   Ces règles sont volontairement hors des couches Tailwind : un matériau
-   l'emporte ainsi sur les fonds des composants shadcn (bg-popover…) qu'il
-   habille, sans les modifier.
+   Les matériaux sont hors des couches Tailwind : ils l'emportent ainsi sur
+   les fonds des composants shadcn (bg-popover…) qu'ils habillent.
    ===================================================================== */
 :root {
   --glass-blur: 22px;
-  --glass-blur-sm: 12px;
   --glass-blur-lg: 30px;
   --glass-saturate: 180%;
 
   --glass-light: rgb(255 255 255 / 0.58);
-  /* Texte posé sur un contenu chargé (photos) : verre plus opaque. */
+  /* Texte posé sur le verre (libellés d'onglets, menus) : plus opaque, AA. */
   --glass-scrim: rgb(255 255 255 / 0.82);
   --glass-sheet: rgb(246 247 249 / 0.86);
   --glass-dark: rgb(24 26 30 / 0.72);
   --glass-dark-scrim: rgb(24 26 30 / 0.88);
-  --glass-tint-red: rgb(205 4 4 / 0.94);
-  --glass-tint-red-press: rgb(170 3 3 / 0.96);
-  --glass-tint-ink: rgb(10 10 10 / 0.8);
-  --glass-track: rgb(118 128 140 / 0.16);
 
   --glass-specular: linear-gradient(
     180deg,
@@ -352,11 +348,6 @@
     180deg,
     rgb(255 255 255 / 0.12),
     rgb(255 255 255 / 0) 46%
-  );
-  --glass-specular-tint: linear-gradient(
-    180deg,
-    rgb(255 255 255 / 0.22),
-    rgb(255 255 255 / 0) 50%
   );
   --glass-edge-light:
     inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 0 0 1px rgb(255 255 255 / 0.5);
@@ -395,12 +386,6 @@
 .ct-glass.ct-glass--scrim {
   background: var(--glass-specular), var(--glass-scrim);
 }
-/* Posé sur une image d'une liste : flou réduit (performance). */
-.ct-glass.ct-glass--sm {
-  -webkit-backdrop-filter: blur(var(--glass-blur-sm))
-    saturate(var(--glass-saturate));
-  backdrop-filter: blur(var(--glass-blur-sm)) saturate(var(--glass-saturate));
-}
 .ct-glass--dark,
 .dark .ct-glass {
   background: var(--glass-specular-dark), var(--glass-dark);
@@ -412,79 +397,83 @@
 .dark .ct-glass.ct-glass--scrim {
   background: var(--glass-specular-dark), var(--glass-dark-scrim);
 }
-.dark .ct-glass.ct-glass--sm {
-  -webkit-backdrop-filter: blur(var(--glass-blur-sm)) saturate(160%);
-  backdrop-filter: blur(var(--glass-blur-sm)) saturate(160%);
-}
-.ct-glass--red {
-  background: var(--glass-specular-tint), var(--glass-tint-red);
-  -webkit-backdrop-filter: blur(16px) saturate(var(--glass-saturate));
-  backdrop-filter: blur(16px) saturate(var(--glass-saturate));
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.45),
-    inset 0 0 0 1px rgb(255 255 255 / 0.16),
-    0 8px 22px rgb(196 3 3 / 0.32);
-  color: #fff;
-}
-.ct-glass--red:active:not(:disabled) {
-  background: var(--glass-specular-tint), var(--glass-tint-red-press);
-}
-.ct-glass--red:disabled,
-.ct-glass--red[aria-disabled="true"] {
-  background: #ebeef2;
-  box-shadow: none;
-  color: #6b7380;
-}
-.ct-glass--ink {
+
+/* Feuille modale (téléphone), tiroirs et grands popovers */
+.ct-sheet {
+  --muted-foreground: #434b57;
   background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 50%),
-    var(--glass-tint-ink);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  backdrop-filter: blur(16px) saturate(160%);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.25),
-    inset 0 0 0 1px rgb(255 255 255 / 0.08),
-    0 6px 16px rgb(10 10 10 / 0.2);
-  color: #fff;
-}
-.dark .ct-glass--ink {
-  background: var(--glass-specular), rgb(255 255 255 / 0.92);
+    linear-gradient(180deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 30%),
+    var(--glass-sheet);
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg))
+    saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur-lg)) saturate(var(--glass-saturate));
+  box-shadow: var(--glass-edge-light), var(--glass-shadow-sheet);
+  border-radius: var(--glass-r-sheet);
   color: #0a0a0a;
 }
-
-/*
- * Pastille de catégorie sur image : --chip = couleur de la catégorie.
- * 97 % sans reflet (et non 90 % avec) : le texte blanc garde 4,5:1 même
- * sur une photo blanche.
- */
-.ct-glass-chip {
-  background: color-mix(in srgb, var(--chip) 97%, transparent);
-  -webkit-backdrop-filter: blur(var(--glass-blur-sm))
-    saturate(var(--glass-saturate));
-  backdrop-filter: blur(var(--glass-blur-sm)) saturate(var(--glass-saturate));
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.4),
-    inset 0 0 0 1px rgb(255 255 255 / 0.18),
-    0 2px 8px rgb(0 0 0 / 0.18);
-  color: #fff;
+.dark .ct-sheet {
+  --muted-foreground: #b9c0ca;
+  background: var(--glass-specular-dark), var(--glass-dark-scrim);
+  box-shadow: var(--glass-edge-dark), var(--glass-shadow-dark);
+  color: #f5f6f8;
 }
-@supports not (background: color-mix(in srgb, red 50%, transparent)) {
-  .ct-glass-chip {
-    background: var(--chip);
+
+/* Menus et popovers : morphing depuis le déclencheur (transform-origin de base-ui). */
+.ct-menu {
+  border-radius: var(--glass-r-menu);
+  transform-origin: var(--transform-origin, top left);
+  animation: var(--animate-morph-in);
+}
+.ct-menu[data-closed] {
+  animation: var(--animate-morph-out);
+}
+/* Sans border-radius : le dépassement du ressort le ferait passer sous zéro. */
+@keyframes ct-morph-in {
+  from {
+    opacity: 0;
+    transform: scale(0.35, 0.25);
+    filter: blur(4px);
   }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes ct-morph-out {
+  to {
+    opacity: 0;
+    transform: scale(0.6, 0.5);
+  }
+}
+@keyframes ct-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Appui « liquide » : scale(.95, .93) et ressort */
+.ct-press {
+  transition: transform var(--glass-dur-press) var(--glass-spring);
+}
+.ct-press:active:not(:disabled) {
+  transform: scale(0.95, 0.93);
 }
 
 /* ---------- Composants ----------
    Mise en page en couche « components » : les utilitaires Tailwind
-   (md:hidden, rounded-*…) peuvent la surcharger ; les matériaux, eux,
-   restent hors couche. */
+   (md:hidden, rounded-*…) peuvent la surcharger. */
 @layer components {
-  .ct-glass-chip {
+  /* Pastille de catégorie : pleine, --chip = couleur de la catégorie. */
+  .ct-chip {
     height: 28px;
     padding: 0 12px;
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
+    background: var(--chip);
+    color: #fff;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.18);
     font-size: 13px;
     font-weight: 600;
     line-height: 1;
@@ -546,6 +535,7 @@
     color: var(--ct-blue-ink);
     font-weight: 600;
   }
+  /* #1A7A9A n'atteint que 4,3:1 sur sa pilule : libellé un ton plus foncé. */
   .ct-tab[aria-current="page"] .ct-tab__label {
     color: var(--ct-blue-label);
   }
@@ -556,14 +546,6 @@
     box-shadow:
       inset 0 1px 0 rgb(255 255 255 / 0.18),
       inset 0 0 0 1px rgb(91 192 222 / 0.28);
-  }
-
-  /* Barre de navigation collante : coins bas arrondis. */
-  .ct-navbar {
-    position: sticky;
-    top: 0;
-    z-index: 30;
-    border-radius: 0 0 24px 24px;
   }
 
   .ct-search {
@@ -577,7 +559,7 @@
     border-radius: 999px;
   }
 
-  /* Contrôle segmenté : rail et curseur qui glisse sous le segment actif. */
+  /* Contrôle segmenté opaque : rail et curseur blanc qui glisse sous le segment actif. */
   .ct-segmented {
     position: relative;
     isolation: isolate;
@@ -586,10 +568,10 @@
     grid-auto-columns: minmax(0, 1fr);
     padding: 3px;
     border-radius: 999px;
-    background: var(--glass-track);
+    background: #e9ecf1;
   }
   .dark .ct-segmented {
-    background: rgb(255 255 255 / 0.12);
+    background: #1f2228;
   }
   .ct-segmented__thumb {
     position: absolute;
@@ -601,7 +583,9 @@
     transform: translateX(calc(var(--index) * 100%));
     border-radius: 999px;
     background: #fff;
-    box-shadow: var(--glass-edge-light), var(--glass-shadow);
+    box-shadow:
+      0 1px 2px rgb(10 10 10 / 0.08),
+      0 3px 8px rgb(10 10 10 / 0.1);
     transition:
       transform var(--glass-dur-press) var(--glass-spring),
       scale var(--glass-dur-press) var(--glass-spring);
@@ -610,8 +594,8 @@
     scale: 1.06 1.12;
   }
   .dark .ct-segmented__thumb {
-    background: rgb(255 255 255 / 0.2);
-    box-shadow: var(--glass-edge-dark);
+    background: #3a3f47;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.4);
   }
 
   .ct-sheet__handle {
@@ -626,80 +610,16 @@
   }
 }
 
-/* Anneau de focus de la recherche, par-dessus l'ombre du verre */
+/* Anneau de focus de la recherche (#1A7A9A) et halo */
 .ct-search:focus-within {
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.9),
-    inset 0 0 0 1.5px rgb(26 122 154 / 0.75),
-    0 0 0 4px rgb(47 160 193 / 0.25),
-    var(--glass-shadow);
+    inset 0 0 0 1.5px #1a7a9a,
+    0 0 0 4px rgb(47 160 193 / 0.25);
 }
 .dark .ct-search:focus-within {
   box-shadow:
     inset 0 0 0 1.5px #5bc0de,
-    0 0 0 4px rgb(91 192 222 / 0.3),
-    var(--glass-shadow-dark);
-}
-
-/* Feuille modale (téléphone) */
-.ct-sheet {
-  --muted-foreground: #434b57;
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 30%),
-    var(--glass-sheet);
-  -webkit-backdrop-filter: blur(var(--glass-blur-lg))
-    saturate(var(--glass-saturate));
-  backdrop-filter: blur(var(--glass-blur-lg)) saturate(var(--glass-saturate));
-  box-shadow: var(--glass-edge-light), var(--glass-shadow-sheet);
-  border-radius: var(--glass-r-sheet);
-  color: #0a0a0a;
-}
-.dark .ct-sheet {
-  --muted-foreground: #b9c0ca;
-  background: var(--glass-specular-dark), var(--glass-dark-scrim);
-  box-shadow: var(--glass-edge-dark), var(--glass-shadow-dark);
-  color: #f5f6f8;
-}
-/* Menus et popovers de verre : morphing depuis le déclencheur (transform-origin de base-ui). */
-.ct-menu {
-  border-radius: var(--glass-r-menu);
-  transform-origin: var(--transform-origin, top left);
-  animation: var(--animate-morph-in);
-}
-.ct-menu[data-closed] {
-  animation: var(--animate-morph-out);
-}
-/* Sans border-radius : le dépassement du ressort le ferait passer sous zéro. */
-@keyframes ct-morph-in {
-  from {
-    opacity: 0;
-    transform: scale(0.35, 0.25);
-    filter: blur(4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
-}
-@keyframes ct-morph-out {
-  to {
-    opacity: 0;
-    transform: scale(0.6, 0.5);
-  }
-}
-@keyframes ct-fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
-/* Appui « liquide » */
-.ct-press {
-  transition: transform var(--glass-dur-press) var(--glass-spring);
-}
-.ct-press:active:not(:disabled) {
-  transform: scale(0.95, 0.93);
+    0 0 0 4px rgb(91 192 222 / 0.3);
 }
 
 /* ---------- Replis et accessibilité ---------- */
@@ -717,12 +637,6 @@
   .dark .ct-sheet {
     background: var(--glass-fallback-dark);
   }
-  .ct-glass--ink {
-    background: #0a0a0a;
-  }
-  .ct-glass-chip {
-    background: var(--chip);
-  }
 }
 @media (prefers-reduced-transparency: reduce) {
   .ct-glass,
@@ -731,10 +645,7 @@
   .ct-glass--dark,
   .dark .ct-glass,
   .dark .ct-glass.ct-glass--scrim,
-  .dark .ct-sheet,
-  .ct-glass--red,
-  .ct-glass--ink,
-  .ct-glass-chip {
+  .dark .ct-sheet {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
@@ -748,18 +659,6 @@
   .dark .ct-glass.ct-glass--scrim,
   .dark .ct-sheet {
     background: var(--glass-fallback-dark);
-  }
-  .ct-glass--red:not(:disabled) {
-    background: #cd0404;
-  }
-  .ct-glass--ink {
-    background: #0a0a0a;
-  }
-  .dark .ct-glass--ink {
-    background: #fff;
-  }
-  .ct-glass-chip {
-    background: var(--chip);
   }
 }
 @media (prefers-contrast: more) {
@@ -780,8 +679,8 @@
     backdrop-filter: none;
     box-shadow: inset 0 0 0 1.5px #fff;
   }
-  .ct-glass-chip {
-    background: var(--chip);
+  .ct-solid {
+    box-shadow: inset 0 0 0 1.5px currentColor;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -801,16 +700,4 @@
   .ct-menu[data-closed] {
     animation: var(--animate-fade-in);
   }
-}
-
-/*
- * Barre posée sur une photo : seuls les cercles flottent. En dernier et plus
- * spécifique, pour l'emporter sur le thème sombre et sur les replis.
- */
-.ct-glass.ct-navbar.is-over-image,
-.dark .ct-glass.ct-navbar.is-over-image {
-  background: transparent;
-  box-shadow: none;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
 }

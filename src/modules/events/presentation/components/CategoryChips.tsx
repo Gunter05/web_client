@@ -6,8 +6,8 @@ import { categoryColor } from "@/modules/events/domain/category-color";
 import type { Category } from "@/modules/events/domain/event";
 
 /**
- * Catégories en pastilles de verre teintées de leur couleur, à poser sur une
- * image (flou de 12 px seulement : elles vivent dans des listes).
+ * Catégories en pastilles pleines de leur couleur (texte blanc ≥ 4,5:1), à
+ * poser sur une image. Opaques : aucun flou dans les listes.
  */
 export function CategoryChips({
   categories,
@@ -21,7 +21,7 @@ export function CategoryChips({
   return (
     <ul className={cn("flex flex-wrap gap-1.5", className)}>
       {categories.map((c) => (
-        <li key={c} className="ct-glass-chip" style={chipStyle(c)}>
+        <li key={c} className="ct-chip" style={chipStyle(c)}>
           {t(c)}
         </li>
       ))}

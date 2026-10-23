@@ -6,7 +6,7 @@ export const SEGMENT_CLASS =
   "relative grid min-h-11 place-items-center rounded-full px-3 text-sm font-semibold whitespace-nowrap text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 aria-[current=true]:text-foreground aria-pressed:text-foreground";
 
 /**
- * Contrôle segmenté de verre : un rail et un curseur qui glisse sous le
+ * Contrôle segmenté opaque : un rail et un curseur blanc qui glisse sous le
  * segment actif (`index`, -1 = aucun). Les segments portent eux-mêmes leur
  * rôle (aria-pressed ou aria-current) : ce cadre n'est qu'un groupe.
  */

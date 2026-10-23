@@ -5,7 +5,7 @@ import { NotificationBell } from "@/modules/notifications";
 import { LanguageSwitcher } from "@/shared/components/LanguageSwitcher";
 import { ThemeSwitcher } from "@/shared/components/ThemeSwitcher";
 import { Logo } from "@/shared/components/layout/Logo";
-import { buttonVariants } from "@/shared/ui/button";
+import { buttonVariants } from "@/shared/components/Button";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { AccountMenu } from "@/spaces/user/components/AccountMenu";
 import { MobileHeaderFrame } from "@/spaces/user/components/MobileHeaderFrame";
@@ -33,7 +33,7 @@ async function MobileHeaderActions() {
       <Link
         href="/login"
         className={buttonVariants({
-          variant: "glass-primary",
+          variant: "ink",
           size: "pill",
           className: "px-4 text-sm",
         })}
@@ -45,7 +45,7 @@ async function MobileHeaderActions() {
 }
 
 /**
- * En-tête sur téléphone : bande de verre collante, logo, puis notifications
+ * En-tête sur téléphone : barre opaque collante, logo, puis notifications
  * et menu du compte (ou thème, langue et connexion pour un visiteur).
  */
 export function MobileHeader() {

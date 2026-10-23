@@ -21,9 +21,9 @@ export const DEFAULT_IMAGE = "/demo/defaut.svg";
 
 /**
  * Carte d'événement façon publication Instagram (US-01), opaque : en-tête avec
- * la page et la date de publication, grande image avec les catégories et la
- * tuile de date en verre posées dessus, puis nom, date et heure, lieu et
- * partage. Aucun flou sur la carte elle-même (performance du fil).
+ * la page et la date de publication, grande image avec les pastilles de
+ * catégorie et la tuile de date (opaques) posées dessus, puis nom, date et
+ * heure, lieu et partage. Aucun flou dans le fil.
  */
 export function EventCard({
   event,
@@ -79,7 +79,7 @@ export function EventCard({
         />
       </header>
 
-      {/* Image opaque ; catégories et date en verre posées dessus. */}
+      {/* Catégories en haut à gauche, tuile de date en bas à gauche. */}
       <div className="relative overflow-hidden rounded-media bg-muted">
         <Link
           href={`/e/${event.id}`}
@@ -109,7 +109,7 @@ export function EventCard({
         />
         <DateTile
           iso={event.startsAt}
-          glass
+          onImage
           className="pointer-events-none absolute bottom-2.5 left-2.5"
         />
       </div>

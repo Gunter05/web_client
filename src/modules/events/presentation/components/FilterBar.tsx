@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { type ReactNode, useTransition } from "react";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/shared/components/Button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import type { PageSummary } from "@/modules/events/domain/event-view.types";
@@ -116,7 +116,7 @@ export function FilterBar({
       </Filter>
       {!isDefault(filters) && (
         <Button
-          variant="glass"
+          variant="surface"
           size="pill"
           className="shrink-0 px-4 text-sm"
           onClick={() =>
@@ -150,7 +150,7 @@ function Filter({
       <PopoverTrigger
         render={
           <Button
-            variant={active ? "glass-ink" : "glass"}
+            variant={active ? "ink" : "surface"}
             size="pill"
             className="shrink-0 gap-1.5 pr-3.5 pl-4 text-sm"
           />
@@ -166,7 +166,7 @@ function Filter({
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className="ct-glass ct-menu w-64 gap-0 p-1.5"
+        className="ct-glass ct-glass--scrim ct-menu w-64 gap-0 p-1.5"
       >
         <ul className="grid">{children}</ul>
       </PopoverContent>

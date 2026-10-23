@@ -5,7 +5,7 @@ import { FormField } from "@/shared/components/FormField";
 import { useFormAction } from "@/shared/hooks/useFormAction";
 import { useErrorMessages } from "@/shared/i18n/errors";
 import type { FormAction, FormState } from "@/shared/lib/form";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/shared/components/Button";
 import { Input } from "@/shared/ui/input";
 import { AUTH_FIELD_CLASS } from "@/modules/auth/presentation/components/AuthCard";
 
@@ -59,7 +59,7 @@ export function RegisterForm({
       </FormField>
       <Button
         type="submit"
-        variant="glass-primary"
+        variant="primary"
         size="pill"
         disabled={enCours}
         className="mt-1 h-[52px] w-full text-base"

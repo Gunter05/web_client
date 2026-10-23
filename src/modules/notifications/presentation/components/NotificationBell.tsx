@@ -3,7 +3,7 @@
 import { BellIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/shared/components/Button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { NotificationList } from "@/modules/notifications/presentation/components/NotificationList";
 import { UnreadBadge } from "@/modules/notifications/presentation/components/UnreadBadge";

@@ -10,7 +10,7 @@ import { useMounted } from "@/shared/hooks/useMounted";
 import { useErrorMessages } from "@/shared/i18n/errors";
 import type { FormAction, FormState } from "@/shared/lib/form";
 import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/shared/components/Button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { Input } from "@/shared/ui/input";
 import { Skeleton } from "@/shared/ui/skeleton";
@@ -291,15 +291,18 @@ export function EventForm({
         </p>
       )}
 
-      {/* Barre d'action flottante, au-dessus de la barre d'onglets. */}
-      <div className="sticky bottom-[calc(6rem+env(safe-area-inset-bottom))] z-20 md:bottom-4">
-        <div className="ct-glass flex rounded-full p-1.5">
+      {/*
+       * Barre d'action opaque fixée au-dessus de la barre d'onglets, qui reste
+       * compacte (54 px) sur ce formulaire.
+       */}
+      <div className="sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] z-20 md:bottom-4">
+        <div className="ct-solid flex rounded-full p-1.5">
           <Button
             type="submit"
-            variant="glass-primary"
-            size="pill"
+            variant="primary"
+            size="xl"
             disabled={enCours || photo.uploading}
-            className="h-12 flex-1 text-base sm:flex-none sm:px-8"
+            className="flex-1 sm:flex-none sm:px-8"
           >
             {event ? t("common.save") : t("events.publish")}
           </Button>

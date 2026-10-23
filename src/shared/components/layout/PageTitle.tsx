@@ -2,7 +2,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { cn } from "@/shared/lib/utils";
-import { buttonVariants } from "@/shared/ui/button";
+import { buttonVariants } from "@/shared/components/Button";
 
 export function PageTitle({
   title,
@@ -21,7 +21,7 @@ export function PageTitle({
           href={returnTo}
           aria-label={t("back")}
           className={cn(
-            buttonVariants({ variant: "glass", size: "circle" }),
+            buttonVariants({ variant: "secondary", size: "circle" }),
             "shrink-0",
           )}
         >

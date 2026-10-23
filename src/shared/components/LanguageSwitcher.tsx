@@ -8,7 +8,7 @@ import { GlassSheet } from "@/shared/components/GlassSheet";
 import { changeLocale } from "@/shared/i18n/actions";
 import { LOCALES, type Locale } from "@/shared/i18n/locales";
 import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/shared/components/Button";
 
 /** Choix FR/EN dans une feuille de verre, mémorisé dans un cookie (D2). */
 export function LanguageSwitcher({ className }: { className?: string }) {
@@ -22,7 +22,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
   return (
     <>
       <Button
-        variant="glass"
+        variant="secondary"
         size="circle"
         disabled={enCours}
         className={cn("sm:w-auto sm:px-4", className)}

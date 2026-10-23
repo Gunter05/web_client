@@ -91,8 +91,8 @@ export function SidebarFrame({
       >
         <aside
           className={cn(
-            // Verre clair flottant, à 12 px des bords de la fenêtre.
-            "ct-glass ct-glass--scrim fixed inset-y-3 left-3 z-40 hidden [scrollbar-width:none] flex-col overflow-x-hidden overflow-y-auto rounded-[28px] px-3 pt-5 pb-4 transition-[width] duration-200 ease-out md:flex",
+            // Carte opaque flottante, à 12 px des bords de la fenêtre.
+            "ct-solid fixed inset-y-3 left-3 z-40 hidden [scrollbar-width:none] flex-col overflow-x-hidden overflow-y-auto rounded-[28px] px-3 pt-5 pb-4 transition-[width] duration-200 ease-out md:flex",
             collapsed ? "w-[72px]" : "w-60",
           )}
         >

@@ -7,6 +7,9 @@ import { cn } from "@/shared/lib/utils";
 /** Défilement minimal (px) avant de changer d'état : pas de clignotement. */
 const THRESHOLD = 8;
 
+/** Formulaires d'événement : la barre reste compacte sous la barre d'action. */
+const ALWAYS_COMPACT = /^\/(events\/new|e\/[^/]+\/edit)$/;
+
 /**
  * Capsule de verre flottante de la barre d'onglets. Elle se compacte (icônes
  * seules, centrée) quand on descend dans la page et revient quand on remonte.
@@ -25,7 +28,8 @@ export function TabBar({
   const path = usePathname();
   // Rattaché à la page : un changement de page rend la barre entière.
   const [state, setState] = useState({ path, compact: false });
-  const compact = state.path === path && state.compact;
+  const compact =
+    ALWAYS_COMPACT.test(path) || (state.path === path && state.compact);
 
   useEffect(() => {
     let last = window.scrollY;

@@ -16,7 +16,7 @@ const ICONS = {
 
 const THEMES = Object.keys(ICONS) as Theme[];
 
-/** Sélecteur Système / Sombre / Clair, en contrôle segmenté à curseur de verre. */
+/** Sélecteur Système / Sombre / Clair, en contrôle segmenté opaque. */
 export function ThemeSwitcher({ className }: { className?: string }) {
   const t = useTranslations("theme");
   const { theme, setTheme } = useTheme();
