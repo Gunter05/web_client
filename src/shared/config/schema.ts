@@ -25,6 +25,17 @@ export const clientSchema = z.object({
     .enum(["development", "production", "test"])
     .default("development"),
   NEXT_PUBLIC_SITE_URL: z.url(),
+  /**
+   * Projet Firebase (notifications push, ADR 0017). Valeurs publiques, données
+   * par la console Firebase (configuration de l'application Web, clé VAPID des
+   * certificats Web Push). Si l'une manque, les push sont désactivés.
+   */
+  NEXT_PUBLIC_FIREBASE_API_KEY: z.string().default(""),
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: z.string().default(""),
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID: z.string().default(""),
+  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: z.string().default(""),
+  NEXT_PUBLIC_FIREBASE_APP_ID: z.string().default(""),
+  NEXT_PUBLIC_FIREBASE_VAPID_KEY: z.string().default(""),
 });
 
 export function validate<T extends z.ZodType>(

@@ -10,6 +10,7 @@ import {
   updateProfile,
 } from "@/modules/auth/server";
 import { photoUrlField } from "@/modules/medias";
+import { forgetPushDevice } from "@/modules/notifications/server";
 import { textField, type FormState, parseForm } from "@/shared/lib/form";
 import { catchApiError } from "@/shared/api/errors";
 
@@ -60,6 +61,8 @@ export async function registerAction(
 }
 
 export async function logoutAction(): Promise<void> {
+  // Les push suivent le compte connecté : cet appareil ne doit plus en recevoir.
+  await forgetPushDevice();
   await logout();
   redirect("/");
 }
