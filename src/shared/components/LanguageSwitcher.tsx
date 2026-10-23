@@ -7,8 +7,18 @@ import { useTransition } from "react";
 import { changeLocale } from "@/shared/i18n/actions";
 import { Button } from "@/shared/ui/button";
 
-/** Bascule FR/EN depuis l'en-tête, mémorisée dans un cookie (D2). */
-export function LanguageSwitcher({ className }: { className?: string }) {
+/**
+ * Bascule FR/EN depuis l'en-tête, mémorisée dans un cookie (D2). Un espace
+ * peut fournir sa propre action (`change`) pour garder aussi la langue dans
+ * le profil de la personne connectée.
+ */
+export function LanguageSwitcher({
+  className,
+  change = changeLocale,
+}: {
+  className?: string;
+  change?: (locale: string) => Promise<void>;
+}) {
   const locale = useLocale();
   const t = useTranslations("common");
   const router = useRouter();
@@ -23,7 +33,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
       lang={autre}
       onClick={() =>
         startTransition(async () => {
-          await changeLocale(autre);
+          await change(autre);
           router.refresh();
         })
       }

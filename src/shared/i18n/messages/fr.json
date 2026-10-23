@@ -35,7 +35,7 @@
     "maxLength2000": "2 000 caractères maximum",
     "invalidEmail": "Adresse e-mail invalide",
     "emailTaken": "Un compte existe déjà avec cet e-mail",
-    "passwordTooShort": "8 caractères minimum",
+    "passwordTooShort": "10 caractères minimum",
     "invalidCredentials": "E-mail ou mot de passe incorrect",
     "nameTaken": "Ce nom est déjà utilisé",
     "reasonTooShort": "10 caractères minimum",
@@ -58,7 +58,14 @@
     "unknown": "Une erreur est survenue",
     "uploadFailed": "L'envoi de la photo a échoué, réessayez",
     "tooManyUploads": "Trop de photos envoyées, réessayez dans une heure",
-    "mediaNotFound": "Photo introuvable, choisissez-la à nouveau"
+    "mediaNotFound": "Photo introuvable, choisissez-la à nouveau",
+    "passwordTooLong": "200 caractères maximum",
+    "invalidToken": "Ce lien n'est plus valable : demandez-en un nouveau",
+    "accountSuspended": "Ce compte est suspendu",
+    "tooManyAttempts": "Trop de tentatives, réessayez dans quelques minutes",
+    "emailNotVerified": "Confirmez d'abord votre adresse e-mail",
+    "invalidLanguage": "Langue inconnue",
+    "administratorNotSuspendable": "Un compte admin ne peut pas être suspendu"
   },
   "nav": {
     "home": "Accueil",
@@ -92,7 +99,34 @@
     "demoAccounts": "Comptes de démonstration (mot de passe : demo1234)",
     "myProfile": "Mon profil",
     "profileSaved": "Profil enregistré",
-    "personalProfile": "Profil personnel"
+    "personalProfile": "Profil personnel",
+    "forgotPassword": "Mot de passe oublié ?",
+    "forgotPasswordTitle": "Mot de passe oublié",
+    "forgotPasswordSubtitle": "Indiquez votre adresse : si elle a un compte, vous recevrez un lien pour choisir un nouveau mot de passe.",
+    "sendResetLink": "Envoyer le lien",
+    "resetLinkSent": "Si cette adresse a un compte, un lien vient de lui être envoyé",
+    "backToLogin": "Retour à la connexion",
+    "resetPasswordTitle": "Nouveau mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "saveNewPassword": "Enregistrer le mot de passe",
+    "askNewLink": "Demander un nouveau lien",
+    "passwordResetDone": "Mot de passe changé : connectez-vous",
+    "passwordHelp": "{min} caractères minimum",
+    "verifyEmailTitle": "Confirmer votre adresse",
+    "verifyEmailSubtitle": "Un clic suffit pour confirmer que cette adresse est bien la vôtre.",
+    "confirmEmail": "Confirmer mon adresse",
+    "emailVerified": "Adresse e-mail confirmée",
+    "verifyEmailBanner": "Confirmez votre adresse {email} pour demander une page, publier et recevoir des notifications : ouvrez le lien reçu par e-mail.",
+    "resendVerification": "Renvoyer le lien",
+    "verificationSent": "Lien envoyé : vérifiez votre boîte de réception",
+    "devices": {
+      "title": "Appareils connectés",
+      "thisDevice": "Cet appareil",
+      "lastUsed": "Utilisé {when}",
+      "signOut": "Déconnecter",
+      "signOutOthers": "Déconnecter tous les autres appareils",
+      "unknown": "Appareil inconnu"
+    }
   },
   "pages": {
     "types": {
@@ -322,7 +356,16 @@
       "empty": "Aucun compte pour le moment",
       "search": "Nom ou e-mail",
       "createdOn": "Créé le",
-      "admin": "Admin"
+      "admin": "Admin",
+      "status": "Statut",
+      "suspendedBadge": "Suspendu",
+      "unverified": "Non confirmé",
+      "suspend": "Suspendre",
+      "suspendFor": "Pendant {days, plural, one {# jour} other {# jours}}",
+      "suspendIndefinitely": "Sans limite de durée",
+      "reactivate": "Réactiver",
+      "suspended": "Compte suspendu",
+      "reactivated": "Compte réactivé"
     },
     "pages": {
       "empty": "Aucune page créée pour le moment",

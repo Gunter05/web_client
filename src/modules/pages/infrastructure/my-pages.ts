@@ -1,6 +1,6 @@
 import "server-only";
 import { cache } from "react";
-import { getCurrentAccount } from "@/modules/auth/server";
+import { getCurrentAccount } from "@/modules/authentication/server";
 import { pagesApi } from "@/modules/pages/infrastructure/pages.api";
 import type { MemberPage } from "@/modules/pages/domain/page.types";
 

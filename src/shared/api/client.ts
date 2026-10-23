@@ -1,4 +1,5 @@
 import "server-only";
+import { headers as requestHeaders } from "next/headers";
 import { env } from "@/shared/config/env";
 import { readToken } from "@/shared/api/token";
 
@@ -22,6 +23,11 @@ type Options = {
   form?: FormData;
   /** Requête anonyme même si un jeton existe (ex. connexion). */
   anonymous?: boolean;
+  /**
+   * Transmet le navigateur et l'adresse de la personne (connexion,
+   * inscription) : l'API les affiche dans la liste des appareils connectés.
+   */
+  forwardClient?: boolean;
 };
 
 function defaultCode(status: number): string {
@@ -40,6 +46,13 @@ export async function api<T>(path: string, options: Options = {}): Promise<T> {
   const headers: Record<string, string> = { Accept: "application/json" };
   const token = options.anonymous ? undefined : await readToken();
   if (token) headers.Authorization = `Bearer ${token}`;
+  if (options.forwardClient) {
+    const incoming = await requestHeaders();
+    const userAgent = incoming.get("user-agent");
+    const ip = incoming.get("x-forwarded-for")?.split(",")[0]?.trim();
+    if (userAgent) headers["X-Client-User-Agent"] = userAgent;
+    if (ip) headers["X-Client-IP"] = ip;
+  }
   let body: BodyInit | undefined;
   if (options.form) body = options.form;
   else if (options.body !== undefined) {
@@ -72,9 +85,9 @@ export async function api<T>(path: string, options: Options = {}): Promise<T> {
 }
 
 /**
- * Codes d'erreur des modules de l'API encore en français (comptes,
- * administration, audience) → clés `errors.*` du front. Les modules passés
- * en anglais (events, pages, medias) renvoient déjà des codes anglais.
+ * Codes d'erreur des modules de l'API encore en français (administration,
+ * audience, mesure) → clés `errors.*` du front. Les modules passés en
+ * anglais renvoient déjà des codes anglais.
  */
 const FRENCH_ERROR_CODES: Record<string, string> = {
   obligatoire: "required",

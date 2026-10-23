@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { cache } from "react";
-import { logoutAction } from "@/modules/auth/application/auth.actions";
+import { logoutAction } from "@/modules/authentication/application/authentication.actions";
 import {
   countNotificationsAction,
   listNotificationsAction,

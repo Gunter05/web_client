@@ -6,6 +6,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-brand: var(--brand);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
@@ -49,6 +50,8 @@
 }
 
 :root {
+  /* Rouge du logo (public/brand) : onglet actif de la navigation. */
+  --brand: #ef0000;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
