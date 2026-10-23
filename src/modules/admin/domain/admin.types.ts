@@ -3,6 +3,10 @@ export type AdminAccount = {
   id: string;
   name: string;
   email: string;
+  isAdmin: boolean;
+  emailVerified: boolean;
+  /** Fin de la suspension ; `null` si le compte n'est pas suspendu. */
+  suspendedUntil: string | null;
   createdAt: string;
 };
 

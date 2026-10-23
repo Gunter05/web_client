@@ -15,6 +15,9 @@ type AccountResponse = {
   id: string;
   nom: string;
   email: string;
+  role: "user" | "admin";
+  emailConfirme: boolean;
+  suspenduJusqua: string | null;
   creeLe: string;
 };
 type PageResponse = {
@@ -54,6 +57,9 @@ const toAccount = (a: AccountResponse): AdminAccount => ({
   id: a.id,
   name: a.nom,
   email: a.email,
+  isAdmin: a.role === "admin",
+  emailVerified: a.emailConfirme,
+  suspendedUntil: a.suspenduJusqua,
   createdAt: a.creeLe,
 });
 const toPage = (p: PageResponse): AdminPage => ({

@@ -3,7 +3,7 @@ import {
   registerPushDeviceAction,
   unregisterPushDeviceAction,
 } from "@/modules/notifications/application/notifications.actions";
-import { getCurrentAccount } from "@/modules/auth/server";
+import { getCurrentAccount } from "@/modules/authentication/server";
 
 const pushActions = {
   register: registerPushDeviceAction,

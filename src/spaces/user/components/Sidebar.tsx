@@ -1,4 +1,4 @@
-import { logoutAction } from "@/modules/auth/application/auth.actions";
+import { logoutAction } from "@/modules/authentication/application/authentication.actions";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { MoreMenu } from "@/spaces/user/components/MoreMenu";
 import { NavLink } from "@/spaces/user/components/NavLink";

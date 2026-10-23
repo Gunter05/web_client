@@ -1,16 +1,24 @@
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
-import { ProfileForm } from "@/modules/auth";
+import { Suspense } from "react";
+import { SessionList } from "@/modules/authentication";
+import {
+  getCurrentAccount,
+  listSessions,
+} from "@/modules/authentication/server";
+import {
+  revokeOtherSessionsAction,
+  revokeSessionAction,
+} from "@/modules/authentication/application/authentication.actions";
 import { PushToggle } from "@/modules/notifications";
 import {
   registerPushDeviceAction,
   unregisterPushDeviceAction,
 } from "@/modules/notifications/application/notifications.actions";
-import { getCurrentAccount } from "@/modules/auth/server";
+import { ProfileForm } from "@/modules/profiles";
+import { updateProfileAction } from "@/modules/profiles/application/profiles.actions";
 import { UrlToast } from "@/shared/components/UrlToast";
-import { updateProfileAction } from "@/modules/auth/application/auth.actions";
 import { PageTitle } from "@/shared/components/layout/PageTitle";
-import { Suspense } from "react";
 import { ContentSkeleton } from "@/shared/components/layout/ContentSkeleton";
 
 const pushActions = {
@@ -18,14 +26,23 @@ const pushActions = {
   unregister: unregisterPushDeviceAction,
 };
 
-/** Profil personnel : nom, photo et notifications push de cet appareil. */
+/**
+ * Profil personnel : nom et photo, notifications push de cet appareil et
+ * appareils connectés au compte.
+ */
 async function Profile() {
   const account = await getCurrentAccount();
   if (!account) redirect("/login?returnTo=/profile");
   const t = await getTranslations("auth");
+  const sessions = await listSessions();
   return (
     <div className="mx-auto grid max-w-xl gap-8 px-4 pt-6 md:pt-10">
-      <UrlToast messages={{ profileSaved: t("profileSaved") }} />
+      <UrlToast
+        messages={{
+          profileSaved: t("profileSaved"),
+          emailVerified: t("emailVerified"),
+        }}
+      />
       <PageTitle title={t("myProfile")} subtitle={account.email} />
       <ProfileForm
         key={`${account.name}-${account.photoUrl}`}
@@ -34,6 +51,11 @@ async function Profile() {
         photo={account.photoUrl}
       />
       <PushToggle actions={pushActions} />
+      <SessionList
+        sessions={sessions}
+        revoke={revokeSessionAction}
+        revokeOthers={revokeOtherSessionsAction}
+      />
     </div>
   );
 }

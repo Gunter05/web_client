@@ -1,7 +1,7 @@
 import { XCircleIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
-import { getCurrentAccount } from "@/modules/auth/server";
+import { getCurrentAccount } from "@/modules/authentication/server";
 import { PendingPageRequest, PageRequestForm } from "@/modules/pages";
 import { getLatestPageRequest } from "@/modules/pages/server";
 import { UrlToast } from "@/shared/components/UrlToast";

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
-import { RegisterForm } from "@/modules/auth";
-import { getCurrentAccount } from "@/modules/auth/server";
-import { registerAction } from "@/modules/auth/application/auth.actions";
-import { AuthCard } from "@/modules/auth";
+import { RegisterForm } from "@/modules/authentication";
+import { getCurrentAccount } from "@/modules/authentication/server";
+import { registerAction } from "@/modules/authentication/application/authentication.actions";
+import { AuthCard } from "@/modules/authentication";
 import { Suspense } from "react";
 import { ContentSkeleton } from "@/shared/components/layout/ContentSkeleton";
 

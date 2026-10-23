@@ -4,15 +4,16 @@ import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { type ReactNode, Suspense } from "react";
 import { AdminTabs } from "@/spaces/super-admin/components/AdminTabs";
-import { getCurrentAccount } from "@/modules/auth/server";
+import { getCurrentAccount } from "@/modules/authentication/server";
 import { NotificationBell, PushSync } from "@/modules/notifications";
 import { countUnread } from "@/modules/notifications/server";
 import { getPendingPageRequests } from "@/modules/pages/server";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { LanguageSwitcher } from "@/shared/components/LanguageSwitcher";
+import { changeLanguageAction } from "@/modules/profiles/application/profiles.actions";
 import { Button, buttonVariants } from "@/shared/ui/button";
 import { Skeleton } from "@/shared/ui/skeleton";
-import { logoutAction } from "@/modules/auth/application/auth.actions";
+import { logoutAction } from "@/modules/authentication/application/authentication.actions";
 import {
   countNotificationsAction,
   listNotificationsAction,
@@ -88,7 +89,7 @@ async function AdminHeader() {
           >
             {t("admin.viewSite")}
           </Link>
-          <LanguageSwitcher />
+          <LanguageSwitcher change={changeLanguageAction} />
           {admin && (
             <>
               <NotificationBell

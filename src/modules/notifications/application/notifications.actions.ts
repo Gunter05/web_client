@@ -42,8 +42,11 @@ export async function registerPushDeviceAction(
     .object({ fid: installationId, language: z.enum(LOCALES) })
     .safeParse({ fid, language });
   if (!f.success || !(await readToken())) return false;
-  await registerPushDevice(f.data.fid, f.data.language);
-  return true;
+  // Refus possible : adresse e-mail non confirmée (403 emailNotVerified).
+  return registerPushDevice(f.data.fid, f.data.language).then(
+    () => true,
+    () => false,
+  );
 }
 
 /** Ce navigateur ne reçoit plus les push du compte connecté. */

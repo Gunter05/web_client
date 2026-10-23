@@ -80,7 +80,11 @@ export function EventCard({
         href={`/e/${event.id}`}
         onClick={open}
         className="group block"
-        aria-label={event.name}
+        // Le nom accessible doit contenir le texte visible (WCAG 2.5.3) :
+        // « Annulé » est écrit sur la photo d'un événement annulé.
+        aria-label={
+          annule ? `${t("statuses.cancelled")} : ${event.name}` : event.name
+        }
       >
         <div className="relative overflow-hidden bg-muted">
           {/* Largeur du fil, place réservée aux proportions de la photo */}
