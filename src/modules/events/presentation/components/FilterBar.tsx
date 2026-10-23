@@ -186,7 +186,12 @@ function Option({
   return (
     <li>
       <label className="flex min-h-11 cursor-pointer items-center gap-2.5 rounded-xl px-2.5 text-sm font-medium hover:bg-foreground/7">
-        <Checkbox checked={checked} onCheckedChange={onChange} />
+        {/* Bordure renforcée : contraste ≥ 3:1 sur le verre, clair ou sombre. */}
+        <Checkbox
+          checked={checked}
+          onCheckedChange={onChange}
+          className="border-foreground/50 dark:border-foreground/50"
+        />
         {children}
       </label>
     </li>

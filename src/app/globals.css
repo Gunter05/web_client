@@ -668,6 +668,16 @@
     background: var(--glass-fallback-dark);
   }
 }
+/* Voile flouté des modales shadcn (feuille, dialogue) : opaque, sans flou. */
+@media (prefers-reduced-transparency: reduce) {
+  [data-slot="sheet-overlay"],
+  [data-slot="dialog-overlay"],
+  [data-slot="alert-dialog-overlay"] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgb(0 0 0 / 0.4);
+  }
+}
 @media (prefers-contrast: more) {
   .ct-glass,
   .ct-glass.ct-glass--scrim,
