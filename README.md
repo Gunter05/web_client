@@ -43,11 +43,12 @@ Les hooks Git (Husky) tournent tout seuls : avant chaque commit, `lint-staged` f
 
 Elles sont décrites et validées par Zod dans `src/shared/config/schema.ts`. Une variable manquante fait échouer le build en la nommant.
 
-| Variable               | Côté    | Obligatoire | Rôle                        |
-| ---------------------- | ------- | ----------- | --------------------------- |
-| `NEXT_PUBLIC_SITE_URL` | public  | oui         | Adresse publique du site    |
-| `API_URL`              | serveur | non         | URL de l'API (défaut :8080) |
-| `FUSEAU_APERCU`        | serveur | non         | Fuseau de l'aperçu WhatsApp |
+| Variable                 | Côté    | Obligatoire | Rôle                                                                                |
+| ------------------------ | ------- | ----------- | ----------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`   | public  | oui         | Adresse publique du site                                                            |
+| `API_URL`                | serveur | non         | URL de l'API (défaut :8080)                                                         |
+| `FUSEAU_APERCU`          | serveur | non         | Fuseau de l'aperçu WhatsApp                                                         |
+| `NEXT_PUBLIC_FIREBASE_*` | public  | non         | Projet Firebase des notifications push (ADR 0017) ; push désactivés si l'une manque |
 
 - En local : `.env.local` (jamais commité).
 - En CI : bloc `env` de `.github/workflows/ci.yml`.

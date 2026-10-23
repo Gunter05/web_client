@@ -3,6 +3,7 @@ import { Logo } from "@/shared/components/layout/Logo";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { BottomNav } from "@/spaces/user/components/BottomNav";
 import { MobileHeader } from "@/spaces/user/components/MobileHeader";
+import { PushSyncForAccount } from "@/spaces/user/components/PushSyncForAccount";
 import { Sidebar } from "@/spaces/user/components/Sidebar";
 import { SidebarFrame } from "@/spaces/user/components/SidebarFrame";
 
@@ -27,6 +28,9 @@ export function UserLayout({ children }: { children: ReactNode }) {
       <main className="pb-20 md:pb-10">{children}</main>
       <Suspense>
         <BottomNav />
+      </Suspense>
+      <Suspense>
+        <PushSyncForAccount />
       </Suspense>
     </SidebarFrame>
   );

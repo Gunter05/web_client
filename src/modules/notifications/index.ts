@@ -9,3 +9,6 @@ export {
   type NotificationActions,
   useNotifications,
 } from "@/modules/notifications/presentation/hooks/useNotifications";
+export { PushSync } from "@/modules/notifications/presentation/components/PushSync";
+export { PushToggle } from "@/modules/notifications/presentation/components/PushToggle";
+export type { PushActions } from "@/modules/notifications/presentation/hooks/usePushNotifications";

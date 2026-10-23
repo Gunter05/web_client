@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { type ReactNode, Suspense } from "react";
 import { AdminTabs } from "@/spaces/super-admin/components/AdminTabs";
 import { getCurrentAccount } from "@/modules/auth/server";
-import { NotificationBell } from "@/modules/notifications";
+import { NotificationBell, PushSync } from "@/modules/notifications";
 import { countUnread } from "@/modules/notifications/server";
 import { getPendingPageRequests } from "@/modules/pages/server";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
@@ -17,6 +17,8 @@ import {
   countNotificationsAction,
   listNotificationsAction,
   markNotificationsReadAction,
+  registerPushDeviceAction,
+  unregisterPushDeviceAction,
 } from "@/modules/notifications/application/notifications.actions";
 import { getCurrentAdmin } from "@/modules/admin/server";
 import { AdminSkeleton } from "@/spaces/super-admin/components/AdminSkeleton";
@@ -28,7 +30,20 @@ import { AdminSkeleton } from "@/spaces/super-admin/components/AdminSkeleton";
 async function AdminGuard({ children }: { children: ReactNode }) {
   if (!(await getCurrentAccount())) redirect("/login?returnTo=/admin");
   const admin = await getCurrentAdmin();
-  if (admin) return children;
+  if (admin) {
+    return (
+      <>
+        {children}
+        {/* Les admins sont prévenus des nouvelles demandes de page (US-03) */}
+        <PushSync
+          actions={{
+            register: registerPushDeviceAction,
+            unregister: unregisterPushDeviceAction,
+          }}
+        />
+      </>
+    );
+  }
   const t = await getTranslations();
   return (
     <div className="flex flex-col items-center gap-4 py-20 text-center">

@@ -19,11 +19,13 @@ const storageOrigins = serverEnv.MEDIAS_STORAGE_ORIGINS.split(/[\s,]+/)
 // Une CSP stricte à nonce rendrait toutes les pages dynamiques (voir ADR 0008).
 const contentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  // SDK Firebase chargé par le service worker des notifications push (ADR 0017)
+  "script-src 'self' 'unsafe-inline' https://www.gstatic.com",
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: https://images.unsplash.com ${storageOrigins}`.trim(),
   "font-src 'self'",
-  `connect-src 'self' ${storageOrigins}`.trim(),
+  // Firebase Installations et Cloud Messaging : enregistrement des push (ADR 0017)
+  `connect-src 'self' https://*.googleapis.com ${storageOrigins}`.trim(),
   "object-src 'none'",
   // Manifeste de l'application installable (PWA), servi par le site
   "manifest-src 'self'",
