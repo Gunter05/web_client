@@ -18,6 +18,7 @@ import {
   suspendAccount,
   verifyEmail,
 } from "@/modules/authentication/server";
+import { internalPath } from "@/modules/authentication/domain/return-path";
 import { forgetPushDevice } from "@/modules/notifications/server";
 import { catchApiError, apiErrorCode } from "@/shared/api/errors";
 import { currentLocale } from "@/shared/i18n/request";
@@ -27,13 +28,6 @@ import {
   type FormState,
   parseForm,
 } from "@/shared/lib/form";
-
-/** N'accepte qu'un chemin interne, pour éviter les redirections ouvertes. */
-function internalPath(returnTo: string): string {
-  return returnTo.startsWith("/") && !returnTo.startsWith("//")
-    ? returnTo
-    : "/";
-}
 
 export async function loginAction(
   _: FormState,

@@ -40,6 +40,15 @@ export const authenticationApi = {
         forwardClient: true,
       }),
     ),
+  /** Connexion (ou inscription) avec un jeton d'identité Google (ADR 0019). */
+  signInWithGoogle: (idToken: string, nonce: string, language: string) =>
+    withTranslatedErrors(() =>
+      api<TokensResponse>("/api/v1/auth/google", {
+        body: { idToken, nonce, language },
+        anonymous: true,
+        forwardClient: true,
+      }),
+    ),
   refresh: (refreshToken: string) =>
     api<TokensResponse>("/api/v1/auth/sessions/refresh", {
       body: { refreshToken },

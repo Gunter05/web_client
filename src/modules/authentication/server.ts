@@ -7,6 +7,7 @@ import {
   readToken,
   writeSession,
 } from "@/shared/api/token";
+import type { SessionTokens } from "@/shared/api/session-cookies";
 import { changeLocale } from "@/shared/i18n/actions";
 import { getMyProfile } from "@/modules/profiles/server";
 import type {
@@ -62,10 +63,21 @@ export async function register(d: RegistrationData): Promise<void> {
 
 /** Connexion ; l'interface prend ensuite la langue du profil. */
 export async function login(email: string, password: string): Promise<void> {
-  await writeSession(await authenticationApi.signIn(email, password));
+  await completeSignIn(await authenticationApi.signIn(email, password));
+}
+
+/**
+ * Garde la session ouverte par l'API (mot de passe ou Google), puis
+ * l'interface prend la langue du profil.
+ */
+export async function completeSignIn(tokens: SessionTokens): Promise<void> {
+  await writeSession(tokens);
   const profile = await getMyProfile().catch(() => null);
   if (profile) await changeLocale(profile.language);
 }
+
+/** Le bouton « Continuer avec Google » n'est affiché que si le client OAuth est configuré. */
+export { isGoogleConfigured as isGoogleSignInEnabled } from "@/modules/authentication/infrastructure/google";
 
 /** Déconnexion de cet appareil : la session est révoquée côté API. */
 export async function logout(): Promise<void> {
