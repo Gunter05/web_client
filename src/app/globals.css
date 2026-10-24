@@ -60,7 +60,7 @@
    * #e60000 plutôt que #ef0000 (4,49:1) pour un contraste ≥ 4,5:1 sur blanc
    * (WCAG 1.4.3).
    */
-  --brand: #e60000;
+  --brand: #ee3c3c;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -100,7 +100,7 @@
 
 .dark {
   /* Rouge de marque éclairci : contraste ≥ 4,5:1 sur les fonds sombres. */
-  --brand: #ff3b3b;
+  --brand: #ee3c3c;
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -108,7 +108,7 @@
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
   /* #e60000 et non le rouge éclairci : texte blanc lisible (≥ 4,5:1). */
-  --primary: #e60000;
+  --primary: #ee3c3c;
   --primary-foreground: oklch(1 0 0);
   --ink: oklch(0.922 0 0);
   --ink-foreground: oklch(0.205 0 0);
