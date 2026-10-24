@@ -187,11 +187,27 @@
       "title": "Mes pages",
       "intro": "Les pages au nom desquelles vous publiez.",
       "empty": "Vous n’êtes membre d’aucune page pour l’instant.",
-      "events": "Événements",
+      "events": "Publications",
       "access": "Accès",
       "publish": "Publier un événement",
       "notFound": "Cette page ne fait pas partie de vos pages.",
-      "back": "Mes pages"
+      "back": "Mes pages",
+      "manage": "Gérer la page",
+      "viewPublic": "Voir la page publique"
+    },
+    "edit": {
+      "title": "Modifier la page",
+      "action": "Modifier la page",
+      "photo": "Photo de la page",
+      "bio": "Bio",
+      "linkKept": "Le lien /p/{slug} ne change pas, même avec un nouveau nom.",
+      "saved": "Page modifiée",
+      "ownerOnly": "Seul le propriétaire de la page peut la modifier."
+    },
+    "stats": {
+      "events": "{n, plural, one {publication} other {publications}}",
+      "members": "{n, plural, one {membre} other {membres}}",
+      "views": "{n, plural, one {vue} other {vues}}"
     }
   },
   "events": {

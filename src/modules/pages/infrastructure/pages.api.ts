@@ -5,6 +5,7 @@ import type {
   Member,
   Page,
   PageRequest,
+  PageProfileBody,
   PageRequestBody,
   Role,
 } from "@/modules/pages/domain/page.types";
@@ -24,6 +25,14 @@ export const pagesApi = {
   myPages: () =>
     withTranslatedErrors(() =>
       api<{ page: Page; role: Role }[]>("/api/v1/me/pages"),
+    ),
+  /** Modifier la page (propriétaire seulement) ; le slug ne change pas. */
+  update: (pageId: string, body: PageProfileBody) =>
+    withTranslatedErrors(() =>
+      api<Page>(`/api/v1/pages/${encodeURIComponent(pageId)}`, {
+        method: "PUT",
+        body,
+      }),
     ),
   members: (pageId: string) =>
     withTranslatedErrors(() =>

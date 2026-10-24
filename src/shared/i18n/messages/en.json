@@ -187,11 +187,27 @@
       "title": "My pages",
       "intro": "The pages you publish on behalf of.",
       "empty": "You are not a member of any page yet.",
-      "events": "Events",
+      "events": "Posts",
       "access": "Access",
       "publish": "Publish an event",
       "notFound": "This page is not one of your pages.",
-      "back": "My pages"
+      "back": "My pages",
+      "manage": "Manage page",
+      "viewPublic": "View public page"
+    },
+    "edit": {
+      "title": "Edit page",
+      "action": "Edit page",
+      "photo": "Page photo",
+      "bio": "Bio",
+      "linkKept": "The link /p/{slug} stays the same, even with a new name.",
+      "saved": "Page updated",
+      "ownerOnly": "Only the page owner can edit it."
+    },
+    "stats": {
+      "events": "{n, plural, one {post} other {posts}}",
+      "members": "{n, plural, one {member} other {members}}",
+      "views": "{n, plural, one {view} other {views}}"
     }
   },
   "events": {

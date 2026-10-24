@@ -13,6 +13,7 @@ export { PageProfileHeader } from "@/modules/pages/presentation/components/PageP
 export { PageRequestForm } from "@/modules/pages/presentation/components/PageRequestForm";
 export { MemberPageList } from "@/modules/pages/presentation/components/MemberPageList";
 export { MyPageTabs } from "@/modules/pages/presentation/components/MyPageTabs";
+export { PageEditForm } from "@/modules/pages/presentation/components/PageEditForm";
 export {
   AccessManager,
   type MemberRow,

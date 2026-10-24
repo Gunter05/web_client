@@ -6,6 +6,7 @@ export type {
   Member,
   Page,
   PageRequest,
+  PageProfileBody,
   PageRequestBody,
   Role,
 } from "@/modules/pages/domain/page.types";
@@ -21,6 +22,9 @@ export {
   getMyPageById,
   getMyPages,
 } from "@/modules/pages/infrastructure/my-pages";
+
+// ——— Modifier la page, réservé au propriétaire ———
+export const updatePage = pagesApi.update;
 
 // ——— Accès (US-06), réservé aux membres de la page ———
 export const getMembers = (pageId: string) => pagesApi.members(pageId);
