@@ -2,6 +2,7 @@ import "server-only";
 import { api, apiOrNull } from "@/shared/api/client";
 import type { PaginatedResult } from "@/modules/admin/domain/pagination.types";
 import type {
+  AdminActivity,
   AdminAccount,
   AdminEvent,
   AdminMember,
@@ -10,6 +11,18 @@ import type {
 } from "@/modules/admin/domain/admin.types";
 
 // ——— Contrat du module `administration` de l'API (encore en français) ———
+
+type PeriodResponse = { visiteurs: number; application: number };
+type ActivityResponse = {
+  jour: PeriodResponse;
+  semaine: PeriodResponse;
+  mois: PeriodResponse;
+  installations: { semaine: number; mois: number; total: number };
+};
+const toPeriod = (p: PeriodResponse) => ({
+  visitors: p.visiteurs,
+  installedApp: p.application,
+});
 
 type AccountResponse = {
   id: string;
@@ -102,6 +115,20 @@ const query = (q: string, page: number) =>
  * module n'est pas encore passé en anglais : ses champs sont convertis ici.
  */
 export const administrationApi = {
+  /** Activité des visiteurs anonymes (admins seulement). */
+  activity: async (): Promise<AdminActivity> => {
+    const a = await api<ActivityResponse>("/api/v1/admin/activite");
+    return {
+      today: toPeriod(a.jour),
+      week: toPeriod(a.semaine),
+      month: toPeriod(a.mois),
+      installs: {
+        week: a.installations.semaine,
+        month: a.installations.mois,
+        total: a.installations.total,
+      },
+    };
+  },
   accounts: async (q: string, page: number) =>
     mapPage(
       await api<PaginatedResult<AccountResponse>>(

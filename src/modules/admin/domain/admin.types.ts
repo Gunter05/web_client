@@ -46,3 +46,15 @@ export type AdminPageDetails = {
   members: AdminMember[];
   events: AdminEvent[];
 };
+
+/** Visiteurs uniques d'une période, dont ceux de l'application installée. */
+export type ActivityPeriod = { visitors: number; installedApp: number };
+
+/** Activité des visiteurs anonymes : jour, 7 et 30 derniers jours (UTC). */
+export type AdminActivity = {
+  today: ActivityPeriod;
+  week: ActivityPeriod;
+  month: ActivityPeriod;
+  /** Installations signalées : Chrome et Android seulement, chiffre sous-estimé. */
+  installs: { week: number; month: number; total: number };
+};

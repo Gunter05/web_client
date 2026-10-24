@@ -360,7 +360,8 @@
       "pageRequests": "Page requests",
       "accounts": "Accounts",
       "pages": "Pages",
-      "events": "Events"
+      "events": "Events",
+      "activity": "Activity"
     },
     "pageRequests": {
       "empty": "No pending requests",
@@ -410,7 +411,19 @@
       "createdOn": "Created on"
     },
     "noResults": "No results for this search",
-    "viewSite": "View public site"
+    "viewSite": "View public site",
+    "activity": {
+      "intro": "Anonymous visitors, no account needed: a visitor counts once a day, however many pages they view.",
+      "today": "Today",
+      "week": "Last 7 days",
+      "month": "Last 30 days",
+      "visitors": "{n, plural, one {visitor} other {visitors}}",
+      "installedApp": "including {n} using the installed app",
+      "installs": "App installs",
+      "installsDetail": "{week} in 7 days · {month} in 30 days",
+      "installsHelp": "Reported by Chrome and Android only: the real number is higher. The number of people using the installed app (above) is more reliable.",
+      "timezone": "Days are counted in UTC."
+    }
   },
   "metadata": {
     "description": "All your school's events: matches, parties, talks. No account needed."

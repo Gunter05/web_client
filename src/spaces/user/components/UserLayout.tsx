@@ -1,4 +1,9 @@
 import { type ReactNode, Suspense } from "react";
+import { VisitTracker } from "@/modules/audience";
+import {
+  trackInstallAction,
+  trackVisitAction,
+} from "@/modules/audience/application/audience.actions";
 import { Logo } from "@/shared/components/layout/Logo";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { BottomNav } from "@/spaces/user/components/BottomNav";
@@ -42,6 +47,8 @@ export function UserLayout({ children }: { children: ReactNode }) {
       <Suspense>
         <PushSyncForAccount />
       </Suspense>
+      {/* Activité des visiteurs, sans compte : une visite par jour, application installée */}
+      <VisitTracker visit={trackVisitAction} install={trackInstallAction} />
     </SidebarFrame>
   );
 }
