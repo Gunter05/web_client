@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { pinEvent, unpinEvent } from "@/modules/events/server";
+import { deleteEvent, pinEvent, unpinEvent } from "@/modules/events/server";
 import { acceptPageRequest, rejectPageRequest } from "@/modules/pages/server";
 import { getCurrentAdmin } from "@/modules/admin/server";
 import {
@@ -74,6 +74,21 @@ export async function unpinEventAction(
   if (!id.success) return { error: "invalidInput" };
   if (!(await getCurrentAdmin())) return { error: "accessDenied" };
   const error = await apiErrorCode(() => unpinEvent(id.data));
+  revalidatePath("/", "layout");
+  return error ? { error } : {};
+}
+
+/**
+ * Suppression définitive d'un événement (ADR 0021 du backend) : l'API vérifie
+ * aussi le rôle admin et supprime ses données et sa photo.
+ */
+export async function deleteEventAction(
+  eventId: string,
+): Promise<{ error?: string }> {
+  const id = idField.safeParse(eventId);
+  if (!id.success) return { error: "invalidInput" };
+  if (!(await getCurrentAdmin())) return { error: "accessDenied" };
+  const error = await apiErrorCode(() => deleteEvent(id.data));
   revalidatePath("/", "layout");
   return error ? { error } : {};
 }

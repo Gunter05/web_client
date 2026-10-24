@@ -32,3 +32,4 @@ export const cancelEvent = (pageId: string, id: string, reason: string) =>
 // ——— Épinglage éditorial (admins, ADR 0020 du backend) ———
 export const pinEvent = eventsApi.pin;
 export const unpinEvent = eventsApi.unpin;
+export const deleteEvent = eventsApi.remove;

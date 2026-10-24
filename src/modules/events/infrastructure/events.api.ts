@@ -70,4 +70,14 @@ export const eventsApi = {
         method: "DELETE",
       }),
     ),
+  /**
+   * Suppression définitive par un admin (ADR 0021 du backend) : l'événement,
+   * ses données et sa photo dans le stockage.
+   */
+  remove: (id: string) =>
+    withTranslatedErrors(() =>
+      api<void>(`/api/v1/admin/events/${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      }),
+    ),
 };

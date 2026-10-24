@@ -421,7 +421,12 @@
       "pinned": "Événement épinglé en tête du fil",
       "unpinned": "Épinglage retiré",
       "feedColumn": "En tête du fil",
-      "help": "Un événement épinglé passe en tête du fil, sans mention visible. 2 au plus en même temps."
+      "help": "Un événement épinglé passe en tête du fil, sans mention visible. 2 au plus en même temps.",
+      "delete": "Supprimer",
+      "deleteTitle": "Supprimer « {name} » ?",
+      "deleteDescription": "L'événement, ses vues, ses statistiques et sa photo sont supprimés définitivement. Cette action est irréversible.",
+      "deleteConfirm": "Supprimer définitivement",
+      "deleted": "Événement supprimé"
     },
     "noResults": "Aucun résultat pour cette recherche",
     "viewSite": "Voir le site public",
