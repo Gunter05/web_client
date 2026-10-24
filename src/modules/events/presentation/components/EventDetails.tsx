@@ -23,6 +23,10 @@ import {
  * gauche la photo, la page organisatrice et les catégories ; à droite le nom,
  * la date, le lieu, les actions, puis la description et le lieu. Sur
  * téléphone, tout s'empile. Les actions et les vues dépendent des droits.
+ *
+ * L'affiche a une largeur fixe sur ordinateur (360 px) et toute la largeur
+ * sur téléphone ; sa hauteur suit ses proportions, sans dépasser 80 % de
+ * l'écran (une affiche très haute est alors montrée en entier, réduite).
  */
 export function EventDetails({
   event,
@@ -36,16 +40,19 @@ export function EventDetails({
   const t = useTranslations();
   const cancelled = event.status === "cancelled";
   return (
-    <div className="mx-auto grid max-w-[960px] gap-8 px-4 md:grid-cols-[330px_minmax(0,1fr)] md:gap-10">
-      <aside className="grid content-start gap-6">
-        {/* Toute la largeur, place réservée aux proportions de la photo */}
-        <ProgressiveImage
-          src={eventImage(event)}
-          {...layoutProps(event)}
-          priority
-          className="rounded-xl"
-          imageClassName={cn(cancelled && "grayscale")}
-        />
+    <div className="mx-auto grid max-w-[1000px] grid-cols-1 gap-8 px-4 md:grid-cols-[360px_minmax(0,1fr)] md:gap-10">
+      {/* Colonnes bornées : ni l'affiche ni un long nom de page ne débordent sur le texte */}
+      <aside className="grid min-w-0 grid-cols-1 content-start gap-6">
+        <div className="w-full overflow-hidden rounded-xl bg-muted">
+          <ProgressiveImage
+            src={eventImage(event)}
+            {...layoutProps(event)}
+            priority
+            fit="contain"
+            className="max-h-[80svh] w-full"
+            imageClassName={cn(cancelled && "grayscale")}
+          />
+        </div>
         <EventPresenter event={event} />
         <div className="flex flex-wrap gap-1.5">
           {event.categories.map((c) => (
@@ -60,11 +67,11 @@ export function EventDetails({
         {views}
       </aside>
 
-      <div className="grid content-start gap-6">
+      <div className="grid min-w-0 grid-cols-1 content-start gap-6">
         <div className="grid gap-3">
           <h1
             className={cn(
-              "text-3xl leading-tight font-bold md:text-4xl",
+              "text-3xl leading-tight font-bold break-words md:text-4xl",
               cancelled && "text-muted-foreground line-through",
             )}
           >
