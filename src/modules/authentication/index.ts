@@ -6,6 +6,7 @@ export type {
 export { PASSWORD_MIN_LENGTH } from "@/modules/authentication/domain/authentication.types";
 export { AuthCard } from "@/modules/authentication/presentation/components/AuthCard";
 export { DemoAccounts } from "@/modules/authentication/presentation/components/DemoAccounts";
+export { GoogleSignInButton } from "@/modules/authentication/presentation/components/GoogleSignInButton";
 export { LoginForm } from "@/modules/authentication/presentation/components/LoginForm";
 export { RegisterForm } from "@/modules/authentication/presentation/components/RegisterForm";
 export { ForgotPasswordForm } from "@/modules/authentication/presentation/components/ForgotPasswordForm";

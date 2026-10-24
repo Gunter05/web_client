@@ -65,7 +65,10 @@
     "tooManyAttempts": "Trop de tentatives, réessayez dans quelques minutes",
     "emailNotVerified": "Confirmez d'abord votre adresse e-mail",
     "invalidLanguage": "Langue inconnue",
-    "administratorNotSuspendable": "Un compte admin ne peut pas être suspendu"
+    "administratorNotSuspendable": "Un compte admin ne peut pas être suspendu",
+    "googleFailed": "La connexion avec Google n'a pas abouti : réessayez.",
+    "googleEmailNotVerified": "Google n'a pas confirmé l'adresse de ce compte : utilisez un autre compte ou l'adresse et le mot de passe.",
+    "googleSignInUnavailable": "La connexion avec Google n'est pas disponible pour le moment."
   },
   "nav": {
     "home": "Accueil",
@@ -126,7 +129,9 @@
       "signOut": "Déconnecter",
       "signOutOthers": "Déconnecter tous les autres appareils",
       "unknown": "Appareil inconnu"
-    }
+    },
+    "or": "ou",
+    "continueWithGoogle": "Continuer avec Google"
   },
   "pages": {
     "types": {

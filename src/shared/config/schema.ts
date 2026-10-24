@@ -18,6 +18,13 @@ export const serverSchema = z.object({
    * le domaine R2. Vide : stockage sur disque, tout passe par l'API.
    */
   MEDIAS_STORAGE_ORIGINS: z.string().default(""),
+  /**
+   * Client OAuth « Application Web » de Google Cloud (ADR 0019 du backend).
+   * Le secret ne quitte jamais le serveur. Si l'un manque, le bouton
+   * « Continuer avec Google » n'est pas affiché.
+   */
+  GOOGLE_CLIENT_ID: z.string().default(""),
+  GOOGLE_CLIENT_SECRET: z.string().default(""),
 });
 
 export const clientSchema = z.object({

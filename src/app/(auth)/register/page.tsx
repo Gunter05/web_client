@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
-import { RegisterForm } from "@/modules/authentication";
-import { getCurrentAccount } from "@/modules/authentication/server";
+import { GoogleSignInButton, RegisterForm } from "@/modules/authentication";
+import {
+  getCurrentAccount,
+  isGoogleSignInEnabled,
+} from "@/modules/authentication/server";
 import { registerAction } from "@/modules/authentication/application/authentication.actions";
 import { AuthCard } from "@/modules/authentication";
 import { Suspense } from "react";
@@ -29,6 +32,7 @@ async function Register({ searchParams }: PageProps<"/register">) {
       }
     >
       <RegisterForm action={registerAction} returnTo={target} />
+      {isGoogleSignInEnabled() && <GoogleSignInButton returnTo={target} />}
     </AuthCard>
   );
 }

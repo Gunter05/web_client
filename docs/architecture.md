@@ -7,7 +7,8 @@ Frontend Next.js (App Router) qui consomme l'API Spring de Le Contineng. Aucune 
 ```
 src/
 ├── app/                         Routage uniquement
-│   ├── (auth)/                      /login, /register, /forgot-password, /reset-password, /verify-email
+│   ├── (auth)/                      /login, /register, /forgot-password, /reset-password, /verify-email,
+│   │                                /auth/google et /auth/google/callback (connexion Google)
 │   ├── (user)/                      Espace utilisateur : /, /search, /e/{id}, /e/{id}/edit,
 │   │                                /events/new, /p/{slug}, /my-pages…, /page-request, /profile
 │   ├── (super-admin)/admin/         Espace Super-Admin : /admin, /admin/page-requests,

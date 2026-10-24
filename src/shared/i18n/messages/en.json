@@ -65,7 +65,10 @@
     "tooManyAttempts": "Too many attempts, try again in a few minutes",
     "emailNotVerified": "Confirm your e-mail address first",
     "invalidLanguage": "Unknown language",
-    "administratorNotSuspendable": "An admin account cannot be suspended"
+    "administratorNotSuspendable": "An admin account cannot be suspended",
+    "googleFailed": "Signing in with Google did not work: please try again.",
+    "googleEmailNotVerified": "Google has not confirmed the address of this account: use another account, or your e-mail and password.",
+    "googleSignInUnavailable": "Signing in with Google is not available at the moment."
   },
   "nav": {
     "home": "Home",
@@ -126,7 +129,9 @@
       "signOut": "Sign out",
       "signOutOthers": "Sign out all other devices",
       "unknown": "Unknown device"
-    }
+    },
+    "or": "or",
+    "continueWithGoogle": "Continue with Google"
   },
   "pages": {
     "types": {
