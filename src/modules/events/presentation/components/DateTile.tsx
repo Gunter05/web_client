@@ -28,14 +28,15 @@ export function DateTile({
       dateTime={iso}
       aria-hidden
       className={cn(
-        "grid w-14 overflow-hidden rounded-lg border bg-card text-center leading-none",
+        // Le jour occupe la hauteur restante : la tuile peut s'étirer sur le texte voisin
+        "grid w-14 grid-rows-[auto_1fr] overflow-hidden rounded-lg border bg-card text-center leading-none",
         className,
       )}
     >
       <span className="bg-primary py-1 text-[11px] font-bold tracking-wider text-primary-foreground">
         {mounted ? month : " "}
       </span>
-      <span className="py-1.5 text-2xl font-bold tabular-nums">
+      <span className="grid place-items-center py-1.5 text-2xl font-bold tabular-nums">
         {mounted ? day : " "}
       </span>
     </time>
