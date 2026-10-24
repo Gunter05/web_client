@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/shared/lib/utils";
 import { Dialog, DialogContent } from "@/shared/ui/dialog";
 
@@ -84,6 +84,12 @@ export function RouteModal({
   // démontage suivi d'un remontage immédiat (mode strict de React en
   // développement) ne fait pas clignoter le modal.
   const [open, setOpen] = useState(true);
+  // Quitter l'adresse du modal (lien suivi, connexion réussie…) le ferme : le
+  // slot @auth n'a pas de page « vide » pour chaque adresse (une route
+  // attrape-tout ferait répondre 200 aux adresses inconnues au lieu de 404).
+  const pathname = usePathname();
+  const [ownPathname] = useState(pathname);
+  const shown = open && pathname === ownPathname;
   const closing = useRef<number>(undefined);
   const closedByUser = useRef(false);
   function goBack() {
@@ -106,7 +112,7 @@ export function RouteModal({
   }, []);
   return (
     <Dialog
-      open={open}
+      open={shown}
       onOpenChange={(next) => {
         if (next) return;
         // Fermé par la personne (✕, Échap, clic à côté) : l'animation de
