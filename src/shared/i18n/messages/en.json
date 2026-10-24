@@ -421,7 +421,12 @@
       "pinned": "Event pinned at the top of the feed",
       "unpinned": "Pin removed",
       "feedColumn": "Top of feed",
-      "help": "A pinned event goes to the top of the feed, with no visible label. 2 at most at once."
+      "help": "A pinned event goes to the top of the feed, with no visible label. 2 at most at once.",
+      "delete": "Delete",
+      "deleteTitle": "Delete “{name}”?",
+      "deleteDescription": "The event, its views, its statistics and its photo are deleted for good. This cannot be undone.",
+      "deleteConfirm": "Delete for good",
+      "deleted": "Event deleted"
     },
     "noResults": "No results for this search",
     "viewSite": "View public site",

@@ -15,10 +15,11 @@ import { ShortDate } from "@/spaces/super-admin";
 import { getCurrentAdmin } from "@/modules/admin/server";
 import { PIN_DAYS, readSearchParams } from "@/modules/admin";
 import {
+  deleteEventAction,
   pinEventAction,
   unpinEventAction,
 } from "@/modules/admin/application/admin.actions";
-import { PinControl } from "@/spaces/super-admin";
+import { DeleteEventControl, PinControl } from "@/spaces/super-admin";
 import { Suspense } from "react";
 import { AdminSkeleton } from "@/spaces/super-admin";
 
@@ -53,6 +54,9 @@ async function AdminEventList({ searchParams }: PageProps<"/admin/events">) {
                   {t("admin.events.createdOn")}
                 </TableHead>
                 <TableHead>{t("admin.events.feedColumn")}</TableHead>
+                <TableHead>
+                  <span className="sr-only">{t("admin.events.delete")}</span>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -95,6 +99,12 @@ async function AdminEventList({ searchParams }: PageProps<"/admin/events">) {
                         unpin={unpinEventAction.bind(null, e.id)}
                       />
                     )}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DeleteEventControl
+                      name={e.name}
+                      remove={deleteEventAction.bind(null, e.id)}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

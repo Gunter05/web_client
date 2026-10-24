@@ -74,6 +74,7 @@ export const SlidersHorizontalIcon = icon(P.SlidersHorizontalIcon);
 export const SquaresFourIcon = icon(P.SquaresFourIcon);
 export const SunIcon = icon(P.SunIcon);
 export const TranslateIcon = icon(P.TranslateIcon);
+export const TrashIcon = icon(P.TrashIcon);
 export const TrayIcon = icon(P.TrayIcon);
 export const UserIcon = icon(P.UserIcon);
 export const UserPlusIcon = icon(P.UserPlusIcon);
