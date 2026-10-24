@@ -48,14 +48,21 @@ function redirectUri(request: NextRequest): string {
   return `${request.nextUrl.origin}${FLOW_PATH}/callback`;
 }
 
-function failed(code = "googleFailed"): never {
+/** Retour sur /login avec le message ; la raison est journalisée (logs Vercel). */
+function failed(reason: string, code = "googleFailed"): never {
+  console.warn(`[google-sign-in] échec : ${reason}`);
   redirect(`/login?error=${code}`);
 }
 
 export async function startGoogleSignIn(request: NextRequest): Promise<never> {
   // À chaque requête : un state neuf, et la configuration lue au démarrage, pas au build
   await connection();
-  if (!isGoogleConfigured()) failed("googleSignInUnavailable");
+  if (!isGoogleConfigured()) {
+    failed(
+      "GOOGLE_CLIENT_ID ou GOOGLE_CLIENT_SECRET absent",
+      "googleSignInUnavailable",
+    );
+  }
   const flow = {
     state: randomSecret(),
     nonce: randomSecret(),
@@ -91,15 +98,18 @@ export async function finishGoogleSignIn(request: NextRequest): Promise<never> {
     Object.fromEntries(request.nextUrl.searchParams),
   );
   // Refus de la personne chez Google, retour sans cookie ou state différent (CSRF)
-  if (!flow || !callback.success || callback.data.state !== flow.state) {
-    failed();
-  }
+  const googleError = request.nextUrl.searchParams.get("error");
+  if (googleError) failed(`Google a renvoyé l'erreur « ${googleError} »`);
+  if (!flow)
+    failed("cookie du flux absent ou illisible (délai de 10 min dépassé ?)");
+  if (!callback.success) failed("paramètres de retour invalides");
+  if (callback.data.state !== flow.state) failed("state différent (CSRF ?)");
   const idToken = await exchangeGoogleCode({
     code: callback.data.code,
     redirectUri: redirectUri(request),
     verifier: flow.verifier,
   }).catch(() => null);
-  if (!idToken) failed();
+  if (!idToken) failed("pas de jeton d'identité (échange du code refusé)");
   try {
     await completeSignIn(
       await authenticationApi.signInWithGoogle(
@@ -110,9 +120,13 @@ export async function finishGoogleSignIn(request: NextRequest): Promise<never> {
     );
   } catch (error) {
     if (error instanceof ApiError && KNOWN_ERRORS.has(error.code)) {
-      failed(error.code);
+      failed(`refus de l'API (${error.code})`, error.code);
     }
-    failed();
+    failed(
+      error instanceof ApiError
+        ? `refus de l'API (${error.status} ${error.code}) : jeton refusé, vérifier GOOGLE_CLIENT_ID de l'API`
+        : `API injoignable : ${String(error)}`,
+    );
   }
   redirect(flow.returnTo);
 }
