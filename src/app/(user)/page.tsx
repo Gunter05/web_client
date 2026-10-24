@@ -6,10 +6,7 @@ import {
   EventFeed,
   readUrlFilters,
 } from "@/modules/events";
-import {
-  trackEventViewAction,
-  trackShareClickAction,
-} from "@/modules/audience/application/audience.actions";
+import { trackEventViewAction } from "@/modules/audience/application/audience.actions";
 import { loadEventsAction } from "@/modules/events/application/events.actions";
 import { listEventsFromUrl, getFilterPages } from "@/modules/events/server";
 import { Suspense } from "react";
@@ -45,7 +42,6 @@ async function Home({ searchParams }: PageProps<"/">) {
           initialNext={nextOffset}
           filters={filters}
           load={loadEventsAction}
-          onShare={trackShareClickAction}
           onView={trackEventViewAction}
         />
       )}

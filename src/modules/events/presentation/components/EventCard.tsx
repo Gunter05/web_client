@@ -1,56 +1,62 @@
-import {
-  eventImage,
-  eventImageLayout,
-} from "@/modules/events/domain/event-image";
-import { ProgressiveImage } from "@/shared/components/ProgressiveImage";
-import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
-import { cn } from "@/shared/lib/utils";
-import { MapPinIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import type React from "react";
+import {
+  eventImage,
+  eventImageLayout,
+  feedImageRatio,
+} from "@/modules/events/domain/event-image";
 import type { EventView } from "@/modules/events/domain/event-view.types";
 import { EventBadges } from "@/modules/events/presentation/components/EventBadges";
-import { ShareIconButton } from "@/modules/events/presentation/components/ShareButton";
-import { EventDate } from "@/modules/events/presentation/components/EventDate";
-import { PublicationDate } from "@/modules/events/presentation/components/PublicationDate";
 import { DateTile } from "@/modules/events/presentation/components/DateTile";
+import { EventTime } from "@/modules/events/presentation/components/EventTime";
+import { PublicationDate } from "@/modules/events/presentation/components/PublicationDate";
+import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
+import { ProgressiveImage } from "@/shared/components/ProgressiveImage";
+import { cn } from "@/shared/lib/utils";
 
 export const DEFAULT_IMAGE = "/demo/defaut.svg";
 
 /**
- * Carte d'événement façon publication Instagram (US-01) : en-tête avec la
- * page et la date de publication, grande image, tuile de date posée sur son
- * coin, puis nom, date et heure, lieu, catégories et badges de statut.
+ * Carte d'événement du fil (US-01), sobre : qui publie et quand, l'affiche
+ * avec la tuile de date posée sur son coin (la signature du site), puis le
+ * strict nécessaire à côté de la tuile : le nom sur une ligne, puis le
+ * statut, l'heure et le lieu. Catégories, description et Partager sont dans
+ * la fiche.
+ *
+ * L'affiche garde ses proportions entre 4:5 et 1,91:1 et ne dépasse jamais
+ * 70 % de la hauteur de l'écran : une affiche très haute est recadrée au
+ * centre ; la fiche complète la montre en entier.
  */
 export function EventCard({
   event,
   priority = false,
-  onShare,
   onOpen,
 }: {
   event: EventView;
   priority?: boolean;
   /**
-   * Ouvre l'aperçu au lieu de naviguer. Le lien vers /e/{id} reste en place
-   * pour l'ouverture dans un nouvel onglet (Ctrl/Cmd + clic, clic molette).
+   * Ouvre l'aperçu au lieu de naviguer, sur grand écran seulement. Le lien
+   * vers /e/{id} reste en place : nouvel onglet (Ctrl/Cmd + clic, clic
+   * molette) et, sur mobile, vraie page avec retour natif.
    */
   onOpen?: (eventId: string) => void;
-  /** Mesure du clic sur « Partager », fournie par la route (métrique Viralité). */
-  onShare?: (eventId: string) => Promise<void>;
 }) {
   const t = useTranslations();
-  const annule = event.status === "cancelled";
+  const cancelled = event.status === "cancelled";
+  const layout = eventImageLayout(event);
   const open = onOpen
     ? (e: React.MouseEvent) => {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+        // Sur mobile, le lien ouvre la vraie page : le retour du téléphone y ramène au fil
+        if (opensAsPage()) return;
         e.preventDefault();
         onOpen(event.id);
       }
     : undefined;
   return (
-    <article className="overflow-hidden border-b pb-4 sm:rounded-xl sm:border-none">
-      <header className="flex items-center gap-3 px-3 py-2.5 sm:px-0">
+    <article className="grid min-w-0 grid-cols-1 gap-2.5 border-b pb-6 sm:border-none sm:pb-0">
+      <header className="flex items-center gap-2.5 px-4 sm:px-0">
         <Link
           href={`/p/${event.organizer.slug}`}
           className="flex min-w-0 items-center gap-2.5"
@@ -58,96 +64,104 @@ export function EventCard({
           <ProfileAvatar
             name={event.organizer.name}
             photo={event.organizer.photoUrl}
-            size="md"
+            size="sm"
           />
-          <span className="grid min-w-0">
-            <span className="truncate text-sm font-semibold">
-              {event.organizer.name}
-            </span>
-            <PublicationDate
-              iso={event.createdAt}
-              className="text-xs text-muted-foreground"
-            />
+          <span className="truncate text-sm font-semibold">
+            {event.organizer.name}
           </span>
         </Link>
-        <EventBadges
-          status={event.status}
-          period={event.period}
-          className="ml-auto justify-end"
+        <span aria-hidden className="text-muted-foreground">
+          ·
+        </span>
+        <PublicationDate
+          iso={event.createdAt}
+          className="truncate text-sm text-muted-foreground"
         />
       </header>
+
       <Link
         href={`/e/${event.id}`}
         onClick={open}
-        className="group block"
+        className="block sm:overflow-hidden sm:rounded-lg"
         // Le nom accessible doit contenir le texte visible (WCAG 2.5.3) :
         // « Annulé » est écrit sur la photo d'un événement annulé.
         aria-label={
-          annule ? `${t("statuses.cancelled")} : ${event.name}` : event.name
+          cancelled ? `${t("statuses.cancelled")} : ${event.name}` : event.name
         }
       >
-        <div className="relative overflow-hidden bg-muted">
-          {/* Largeur du fil, place réservée aux proportions de la photo */}
+        <div
+          className="relative max-h-[70svh] w-full bg-muted"
+          style={{ aspectRatio: feedImageRatio(layout) }}
+        >
           <ProgressiveImage
             src={eventImage(event)}
-            {...layoutProps(event)}
+            fill
+            placeholder={layout?.placeholder}
             priority={priority}
-            className="rounded-sm"
-            imageClassName={cn(
-              "transition-transform duration-500 group-hover:scale-[1.02]",
-              annule && "grayscale",
-            )}
+            imageClassName={cn(cancelled && "opacity-60 grayscale")}
           />
-          {annule && (
-            <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 -rotate-6 bg-destructive py-2 text-center text-lg font-bold tracking-widest text-white uppercase">
-              {t("statuses.cancelled")}
+          {cancelled && (
+            <span className="absolute inset-0 grid place-items-center">
+              <span className="rounded-md bg-destructive px-3 py-1 text-sm font-semibold tracking-wide text-white uppercase">
+                {t("statuses.cancelled")}
+              </span>
             </span>
           )}
         </div>
       </Link>
 
-      {/* Tuile de date posée sur l'image, actions à droite (comme Instagram). */}
-      <div className="flex items-start justify-between px-3 sm:px-0">
-        <DateTile iso={event.startsAt} className="relative -mt-7 shrink-0" />
-        <ShareIconButton
-          path={`/e/${event.id}`}
-          title={event.name}
-          text={event.name}
-          onShare={onShare ? () => onShare(event.id) : undefined}
-          className="mt-1 -mr-2"
-        />
-      </div>
-
-      <div className="grid gap-1 px-3 pt-2 sm:px-0">
-        <h2
-          className={cn(
-            "text-xl leading-snug font-semibold",
-            annule && "text-muted-foreground line-through",
-          )}
-        >
-          <Link
-            href={`/e/${event.id}`}
-            onClick={open}
-            className="hover:underline"
-          >
-            {event.name}
-          </Link>
-        </h2>
-        <EventDate
+      {/* Tuile posée sur le coin de l'affiche, étirée jusqu'au bas du texte voisin */}
+      <div className="flex items-stretch gap-3 px-4 sm:px-0">
+        <DateTile
           iso={event.startsAt}
-          className="text-sm first-letter:uppercase"
+          className={cn(
+            "relative -mt-9 shrink-0 self-stretch",
+            cancelled && "opacity-70 grayscale",
+          )}
         />
-        <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <MapPinIcon className="size-4 shrink-0" />
-          <span className="truncate">{event.location}</span>
-        </p>
-        <p className="flex flex-wrap gap-x-2 text-sm text-foreground">
-          {event.categories.map((c) => (
-            <span key={c}>#{t(`categories.${c}`).replaceAll(" ", "")}</span>
-          ))}
-        </p>
+        <div className="grid min-w-0 flex-1">
+          <h2
+            className={cn(
+              "truncate text-base leading-snug font-semibold",
+              cancelled && "text-muted-foreground line-through",
+            )}
+          >
+            <Link
+              href={`/e/${event.id}`}
+              onClick={open}
+              className="hover:underline"
+            >
+              {event.name}
+            </Link>
+          </h2>
+          {/* Le statut d'abord : c'est ici que l'on décide si l'on peut venir */}
+          <p className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
+            <EventBadges
+              status={event.status}
+              period={event.period}
+              compact
+              className="shrink-0 flex-nowrap empty:hidden"
+            />
+            <EventTime iso={event.startsAt} className="shrink-0" />
+            <span aria-hidden>·</span>
+            <span className="truncate">{event.location}</span>
+          </p>
+        </div>
       </div>
     </article>
+  );
+}
+
+/**
+ * Écran étroit (sous `sm`, 640 px), où l'aperçu prendrait tout l'écran : la
+ * fiche s'ouvre alors comme une page, pour que le bouton retour du téléphone
+ * et le geste de retour fonctionnent comme partout ailleurs.
+ */
+export const PAGE_QUERY = "(max-width: 639.98px)";
+
+function opensAsPage(): boolean {
+  return (
+    typeof window !== "undefined" && !!window.matchMedia?.(PAGE_QUERY).matches
   );
 }
 

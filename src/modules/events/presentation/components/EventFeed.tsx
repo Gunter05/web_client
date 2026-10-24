@@ -23,14 +23,12 @@ export function EventFeed({
   initialNext,
   filters,
   load,
-  onShare,
   onView,
 }: {
   initialEvents: EventView[];
   initialNext: number | null;
   filters: UrlFilters;
   load: LoadEvents;
-  onShare?: (eventId: string) => Promise<void>;
   onView?: (eventId: string, fromShareLink: boolean) => Promise<void>;
 }) {
   const t = useTranslations("events");
@@ -59,15 +57,9 @@ export function EventFeed({
   }, [next, filters, enCours, load]);
 
   return (
-    <div className="grid gap-0 sm:gap-6">
+    <div className="grid gap-6 sm:gap-10">
       {events.map((e, i) => (
-        <EventCard
-          key={e.id}
-          event={e}
-          priority={i < 2}
-          onShare={onShare}
-          onOpen={setOpenId}
-        />
+        <EventCard key={e.id} event={e} priority={i < 2} onOpen={setOpenId} />
       ))}
       <div ref={sentinel} aria-hidden />
       <EventSheet

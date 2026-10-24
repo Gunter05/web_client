@@ -64,3 +64,20 @@ export function eventImageLayout(
   if (event.photoUrl) return event.photo ?? null;
   return { width: IDEAL_WIDTH, height: IDEAL_HEIGHT, placeholder: null };
 }
+
+/** Le plus vertical admis dans le fil : 4:5, comme une publication. */
+export const FEED_MIN_RATIO = 4 / 5;
+/** Le plus horizontal admis dans le fil : 1,91:1, au-delà l'image devient un bandeau. */
+export const FEED_MAX_RATIO = 1.91;
+
+/**
+ * Proportions (largeur / hauteur) du cadre d'une image dans le fil : celles de
+ * la photo, ramenées entre 4:5 et 1,91:1. Une affiche plus haute est recadrée
+ * au centre au lieu de s'étaler sur plusieurs écrans ; une photo aux
+ * dimensions inconnues prend un cadre carré.
+ */
+export function feedImageRatio(layout: PhotoLayout | null): number {
+  if (!layout || layout.width <= 0 || layout.height <= 0) return 1;
+  const ratio = layout.width / layout.height;
+  return Math.min(FEED_MAX_RATIO, Math.max(FEED_MIN_RATIO, ratio));
+}

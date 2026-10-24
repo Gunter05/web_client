@@ -11,6 +11,7 @@ import {
   EventDetails,
 } from "@/modules/events";
 import { getEventById } from "@/modules/events/server";
+import { BackBar } from "@/shared/components/layout/BackBar";
 import { UrlToast } from "@/shared/components/UrlToast";
 import { env } from "@/shared/config/env";
 import { clientEnv } from "@/shared/config/env.client";
@@ -92,6 +93,8 @@ async function EventPage({ params }: PageProps<"/e/[id]">) {
 
   return (
     <div className="pb-10 md:px-6 md:pt-8">
+      {/* Plein écran sur téléphone : pas d'en-tête du site, ce retour à la place */}
+      <BackBar title={event.name} />
       <UrlToast
         messages={{
           published: t("events.published"),

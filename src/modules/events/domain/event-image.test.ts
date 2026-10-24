@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { eventImage, eventImageLayout, PUBLIC_IMAGE_HOST } from "./event-image";
+import {
+  eventImage,
+  eventImageLayout,
+  FEED_MAX_RATIO,
+  FEED_MIN_RATIO,
+  feedImageRatio,
+  PUBLIC_IMAGE_HOST,
+} from "./event-image";
 
 describe("eventImage", () => {
   it("garde la photo de l'événement quand elle existe", () => {
@@ -44,5 +51,27 @@ describe("eventImageLayout", () => {
       height: 1350,
       placeholder: null,
     });
+  });
+});
+
+describe("feedImageRatio", () => {
+  const layout = (width: number, height: number) => ({
+    width,
+    height,
+    placeholder: null,
+  });
+
+  it("garde les proportions d'une photo entre 4:5 et 1,91:1", () => {
+    expect(feedImageRatio(layout(1080, 1350))).toBeCloseTo(0.8);
+    expect(feedImageRatio(layout(1600, 900))).toBeCloseTo(16 / 9);
+  });
+
+  it("recadre une affiche trop haute ou un bandeau trop large", () => {
+    expect(feedImageRatio(layout(1000, 4000))).toBe(FEED_MIN_RATIO);
+    expect(feedImageRatio(layout(3000, 500))).toBe(FEED_MAX_RATIO);
+  });
+
+  it("prend un cadre carré quand les dimensions sont inconnues", () => {
+    expect(feedImageRatio(null)).toBe(1);
   });
 });
