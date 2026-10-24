@@ -1,11 +1,11 @@
 "use client";
 
 import {
-  BanIcon,
-  ChevronRightIcon,
-  ExternalLinkIcon,
+  ArrowSquareOutIcon,
+  CaretRightIcon,
   MapPinIcon,
-} from "lucide-react";
+  ProhibitIcon,
+} from "@/shared/components/icons";
 import { useFormatter, useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -76,7 +76,7 @@ export function EventCancellation({ event }: { event: EventView }) {
         {t("statuses.cancelled")}
       </p>
       <p className="flex items-start gap-2 px-4 pt-2 pb-4 text-sm">
-        <BanIcon className="mt-0.5 size-4 shrink-0" />
+        <ProhibitIcon className="mt-0.5 size-4 shrink-0" />
         <span>
           <span className="text-muted-foreground">{t("events.reason")} </span>
           {event.cancellation.reason}
@@ -128,7 +128,7 @@ export function EventAboutAndPlace({
             className: "justify-self-start",
           })}
         >
-          {t("events.sheet.openMaps")} <ExternalLinkIcon />
+          {t("events.sheet.openMaps")} <ArrowSquareOutIcon />
         </a>
       </InfoSection>
     </>
@@ -157,7 +157,7 @@ export function EventPresenter({ event }: { event: EventView }) {
             @{event.organizer.slug}
           </span>
         </span>
-        <ChevronRightIcon className="size-5 text-muted-foreground" />
+        <CaretRightIcon className="size-5 text-muted-foreground" />
       </Link>
     </InfoSection>
   );

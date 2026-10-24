@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchIcon, XIcon } from "lucide-react";
+import { MagnifyingGlassIcon, XIcon } from "@/shared/components/icons";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState, useTransition } from "react";
@@ -37,7 +37,7 @@ export function SearchBar({ value }: { value: string }) {
 
   return (
     <div role="search" className="relative">
-      <SearchIcon
+      <MagnifyingGlassIcon
         aria-hidden
         className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground"
       />

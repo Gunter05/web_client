@@ -1,6 +1,6 @@
 "use client";
 
-import { XIcon } from "lucide-react";
+import { XIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { type ReactNode, type RefObject, useEffect, useRef } from "react";

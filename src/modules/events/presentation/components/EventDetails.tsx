@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangleIcon } from "lucide-react";
+import { WarningIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { cn } from "@/shared/lib/utils";
@@ -119,7 +119,7 @@ function LatestUpdate({
   return (
     <section className="grid gap-2 rounded-lg border border-avertissement/40 bg-avertissement-fond p-3 text-sm">
       <p className="flex items-center gap-2 font-semibold text-avertissement">
-        <AlertTriangleIcon className="size-4" />
+        <WarningIcon className="size-4" />
         <span>
           {t("latestUpdate")} <EventDate iso={at} />
         </span>

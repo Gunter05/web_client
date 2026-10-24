@@ -1,6 +1,6 @@
 "use client";
 
-import { BellOffIcon, BellRingIcon } from "lucide-react";
+import { BellRingingIcon, BellSlashIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import { Button } from "@/shared/ui/button";
 import {
@@ -20,9 +20,9 @@ export function PushToggle({ actions }: { actions: PushActions }) {
     <section className="grid gap-3 rounded-xl border p-4">
       <div className="flex items-start gap-3">
         {state === "on" ? (
-          <BellRingIcon className="mt-0.5 size-5 shrink-0" />
+          <BellRingingIcon className="mt-0.5 size-5 shrink-0" />
         ) : (
-          <BellOffIcon className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
+          <BellSlashIcon className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
         )}
         <div className="grid gap-1">
           <h2 className="font-semibold">{t("title")}</h2>

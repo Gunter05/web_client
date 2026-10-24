@@ -1,4 +1,4 @@
-import { ChevronRightIcon } from "lucide-react";
+import { CaretRightIcon } from "@/shared/components/icons";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
@@ -32,7 +32,7 @@ export function MemberPageList({
                 @{page.slug} · {t(page.role)}
               </span>
             </span>
-            <ChevronRightIcon className="size-5 text-muted-foreground" />
+            <CaretRightIcon className="size-5 text-muted-foreground" />
           </Link>
         </li>
       ))}

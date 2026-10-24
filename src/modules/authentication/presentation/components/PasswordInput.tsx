@@ -1,6 +1,6 @@
 "use client";
 
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { EyeIcon, EyeSlashIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import { type ComponentProps, useState } from "react";
 import { cn } from "@/shared/lib/utils";
@@ -36,7 +36,7 @@ export function PasswordInput(
               "motion-safe:animate-in motion-safe:duration-200 motion-safe:fade-in-0 motion-safe:zoom-in-50",
           )}
         >
-          {visible ? <EyeIcon /> : <EyeOffIcon />}
+          {visible ? <EyeIcon /> : <EyeSlashIcon />}
         </span>
       </button>
     </div>

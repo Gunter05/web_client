@@ -1,6 +1,9 @@
 "use client";
 
-import { ChevronDownIcon, RotateCcwIcon } from "lucide-react";
+import {
+  ArrowCounterClockwiseIcon,
+  CaretDownIcon,
+} from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import { type ReactNode, useTransition } from "react";
@@ -127,7 +130,7 @@ export function FilterBar({
             })
           }
         >
-          <RotateCcwIcon /> {t("filters.reset")}
+          <ArrowCounterClockwiseIcon /> {t("filters.reset")}
         </Button>
       )}
     </div>
@@ -166,7 +169,7 @@ function Filter({
             {count}
           </span>
         )}
-        <ChevronDownIcon />
+        <CaretDownIcon />
       </PopoverTrigger>
       <PopoverContent align="start" className="w-64 gap-0 p-1">
         <ul className="grid">{children}</ul>

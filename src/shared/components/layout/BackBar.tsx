@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon } from "@/shared/components/icons";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 

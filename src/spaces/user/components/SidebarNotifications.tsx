@@ -1,6 +1,6 @@
 "use client";
 
-import { BellIcon } from "lucide-react";
+import { BellIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
 import {
@@ -44,7 +44,7 @@ export function SidebarNotifications({
         className={drawerTriggerClass(open)}
       >
         <span className="relative">
-          <BellIcon />
+          <BellIcon weight={open ? "fill" : "regular"} />
           <UnreadBadge count={unread} />
         </span>
         <span className={SIDEBAR_LABEL}>{t("title")}</span>

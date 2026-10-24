@@ -3,7 +3,7 @@ import { PageRequestDecision } from "@/modules/pages";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { Badge } from "@/shared/ui/badge";
 import { buttonVariants } from "@/shared/ui/button";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon } from "@/shared/components/icons";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";

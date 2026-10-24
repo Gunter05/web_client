@@ -1,4 +1,4 @@
-import { CalendarXIcon, PencilIcon } from "lucide-react";
+import { CalendarXIcon, PencilSimpleIcon } from "@/shared/components/icons";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -131,7 +131,7 @@ async function EventPage({ params }: PageProps<"/e/[id]">) {
                   href={`/e/${event.id}/edit`}
                   className={buttonVariants({ variant: "outline" })}
                 >
-                  <PencilIcon /> {t("events.edit")}
+                  <PencilSimpleIcon /> {t("events.edit")}
                 </Link>
                 <CancelEventDialog
                   eventId={event.id}

@@ -1,4 +1,4 @@
-import { EyeIcon } from "lucide-react";
+import { EyeIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 
 /** « [n] vues », affiché aux seuls membres de la page organisatrice (US-39). */

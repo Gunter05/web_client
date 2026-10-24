@@ -1,6 +1,6 @@
 "use client";
 
-import { MailWarningIcon } from "lucide-react";
+import { EnvelopeSimpleIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { useErrorMessages } from "@/shared/i18n/errors";
@@ -26,7 +26,7 @@ export function EmailVerificationBanner({
       role="status"
       className="mx-4 mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm md:mx-auto md:max-w-3xl"
     >
-      <MailWarningIcon className="size-5 shrink-0 text-amber-600" />
+      <EnvelopeSimpleIcon className="size-5 shrink-0 text-amber-600" />
       <p className="min-w-0 flex-1">
         {t("verifyEmailBanner", { email })}
         {result && (

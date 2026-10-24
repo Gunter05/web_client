@@ -1,4 +1,4 @@
-import { DownloadIcon } from "lucide-react";
+import { DownloadSimpleIcon } from "@/shared/components/icons";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { getActivity, getCurrentAdmin } from "@/modules/admin/server";
@@ -40,7 +40,7 @@ async function AdminActivity() {
       </ul>
       <div className="grid gap-2 rounded-xl border bg-card p-4">
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
-          <DownloadIcon className="size-4" /> {t("activity.installs")}
+          <DownloadSimpleIcon className="size-4" /> {t("activity.installs")}
         </p>
         <p className="text-3xl font-semibold tabular-nums">
           {activity.installs.total}

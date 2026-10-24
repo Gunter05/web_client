@@ -1,6 +1,6 @@
 "use client";
 
-import { ImageIcon } from "lucide-react";
+import { ImageIcon } from "@/shared/components/icons";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";

@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/shared/ui/table";
 import { UrlToast } from "@/shared/components/UrlToast";
-import { ChevronRightIcon } from "lucide-react";
+import { CaretRightIcon } from "@/shared/components/icons";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { ShortDate } from "@/spaces/super-admin";
@@ -74,7 +74,7 @@ async function PageRequestList() {
                       <ShortDate iso={d.submittedAt} />
                     </TableCell>
                     <TableCell className="w-8">
-                      <ChevronRightIcon className="size-4 text-muted-foreground" />
+                      <CaretRightIcon className="size-4 text-muted-foreground" />
                     </TableCell>
                   </TableRow>
                 );

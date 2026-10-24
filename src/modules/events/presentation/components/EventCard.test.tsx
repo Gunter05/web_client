@@ -49,7 +49,13 @@ describe("CarteEvenement (US-01)", () => {
     })) {
       expect(link).toHaveAttribute("href", "/e/gala26xx");
     }
-    expect(screen.queryByRole("button", { name: "Partager" })).toBeNull();
+  });
+
+  it("propose Partager sur la ligne de la tuile, comme un réseau social", () => {
+    renderCard({ ...event, status: "published", cancellation: null });
+    expect(
+      screen.getByRole("button", { name: "Partager" }),
+    ).toBeInTheDocument();
   });
 
   it("signale l'annulation par un texte, pas seulement une couleur (US-15)", () => {

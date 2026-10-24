@@ -1,6 +1,6 @@
 "use client";
 
-import { LanguagesIcon } from "lucide-react";
+import { TranslateIcon } from "@/shared/components/icons";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -39,7 +39,7 @@ export function LanguageSwitcher({
         })
       }
     >
-      <LanguagesIcon />
+      <TranslateIcon />
       {/* Sur petit écran, le code de langue suffit (pas de débordement). */}
       <span className="sm:hidden">{autre.toUpperCase()}</span>
       <span className="hidden sm:inline">
