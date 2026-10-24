@@ -49,7 +49,10 @@ export async function googleAuthorizationUrl(flow: {
   return url.toString();
 }
 
-/** Échange le code reçu contre le jeton d'identité ; `null` si Google refuse. */
+/**
+ * Échange le code reçu contre le jeton d'identité ; `null` si Google refuse
+ * (la raison donnée par Google est journalisée, jamais le secret).
+ */
 export async function exchangeGoogleCode(flow: {
   code: string;
   redirectUri: string;
@@ -68,7 +71,18 @@ export async function exchangeGoogleCode(flow: {
     }),
     cache: "no-store",
   });
-  if (!response.ok) return null;
+  if (!response.ok) {
+    const refusal = (await response.json().catch(() => ({}))) as {
+      error?: string;
+      error_description?: string;
+    };
+    console.warn(
+      `[google-sign-in] échange du code refusé (${response.status}) :`,
+      refusal.error,
+      refusal.error_description,
+    );
+    return null;
+  }
   const body = (await response.json()) as { id_token?: unknown };
   return typeof body.id_token === "string" ? body.id_token : null;
 }
