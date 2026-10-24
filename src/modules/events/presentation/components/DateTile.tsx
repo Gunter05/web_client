@@ -33,7 +33,7 @@ export function DateTile({
         className,
       )}
     >
-      <span className="bg-primary py-1 text-[11px] font-bold tracking-wider text-primary-foreground">
+      <span className="bg-ink py-1 text-[11px] font-bold tracking-wider text-ink-foreground">
         {mounted ? month : " "}
       </span>
       <span className="grid place-items-center py-1.5 text-2xl font-bold tabular-nums">

@@ -46,7 +46,7 @@ export const viewport: Viewport = {
 };
 
 /** Document racine : polices, mesures Web Vitals et providers globaux. */
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children, auth }: LayoutProps<"/">) {
   return (
     <html
       lang="fr"
@@ -65,7 +65,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col">
         {/* Mesures affichées en développement seulement : rien à envoyer au navigateur en prod */}
         {env.NODE_ENV === "development" && <WebVitals />}
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          {/* Connexion, inscription… en modal (routes interceptées de @auth) */}
+          {auth}
+        </Providers>
         <Analytics />
         <SpeedInsights />
       </body>

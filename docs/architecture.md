@@ -11,11 +11,14 @@ src/
 │   │                                /auth/google et /auth/google/callback (connexion Google)
 │   ├── (user)/                      Espace utilisateur : /, /search, /e/{id}, /e/{id}/edit,
 │   │                                /events/new, /p/{slug}, /my-pages…, /page-request, /profile
+│   ├── @auth/                       Mêmes écrans en modal (plein écran sur mobile) quand ils sont
+│   │                                ouverts depuis l'application : routes interceptées (.)login…
 │   ├── (super-admin)/admin/         Espace Super-Admin : /admin, /admin/page-requests,
 │   │                                /admin/accounts, /admin/pages, /admin/events
 │   ├── demo/[name]/route.ts         Images de démonstration
 │   └── layout.tsx, providers.tsx, error.tsx, not-found.tsx, globals.css
 ├── spaces/                      Composants propres à un espace
+│   ├── auth/                        Écrans d'authentification (LoginView…), en page ou en modal
 │   ├── user/                        UserLayout, Sidebar, MobileHeader, BottomNav, navigation…
 │   └── super-admin/                 AdminShell, AdminTabs, Pagination, AdminSearch, EmptyState…
 ├── modules/                     Métier, un module par fonctionnalité
