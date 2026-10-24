@@ -2,7 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
+import { pinEvent, unpinEvent } from "@/modules/events/server";
 import { acceptPageRequest, rejectPageRequest } from "@/modules/pages/server";
+import { getCurrentAdmin } from "@/modules/admin/server";
 import {
   idField,
   textField,
@@ -38,4 +41,39 @@ export async function rejectPageRequestAction(
   if (!result.ok) return result.state;
   revalidatePath("/", "layout");
   redirect("/admin/page-requests?msg=rejected");
+}
+
+/**
+ * Épingle un événement en tête du fil pour quelques jours (ADR 0020 du
+ * backend). Non visible des visiteurs ; 2 épinglés au plus.
+ */
+export async function pinEventAction(
+  eventId: string,
+  days: number,
+): Promise<{ error?: string }> {
+  const input = z
+    .object({
+      eventId: idField,
+      days: z.number().int().min(1).max(30),
+    })
+    .safeParse({ eventId, days });
+  if (!input.success) return { error: "invalidInput" };
+  if (!(await getCurrentAdmin())) return { error: "accessDenied" };
+  const until = new Date(Date.now() + input.data.days * 86_400_000);
+  const error = await apiErrorCode(() =>
+    pinEvent(input.data.eventId, until.toISOString()),
+  );
+  revalidatePath("/", "layout");
+  return error ? { error } : {};
+}
+
+export async function unpinEventAction(
+  eventId: string,
+): Promise<{ error?: string }> {
+  const id = idField.safeParse(eventId);
+  if (!id.success) return { error: "invalidInput" };
+  if (!(await getCurrentAdmin())) return { error: "accessDenied" };
+  const error = await apiErrorCode(() => unpinEvent(id.data));
+  revalidatePath("/", "layout");
+  return error ? { error } : {};
 }

@@ -74,7 +74,10 @@
     "photoSourceTooLarge": "This image is too heavy (over 30 MB): choose a lighter photo.",
     "photoUnreadable": "This device cannot read this image (iPhone HEIC format or damaged file?). Try another photo or a screenshot.",
     "photoContentRejected": "The server refused this file: its content is not a real JPEG, PNG or WebP image, even if its name ends with .png or .jpg. Try another photo.",
-    "photoStorageRefused": "The photo storage refused the upload. Try again in a moment; if it keeps happening, tell an administrator."
+    "photoStorageRefused": "The photo storage refused the upload. Try again in a moment; if it keeps happening, tell an administrator.",
+    "pinLimitReached": "Two events are already pinned: remove one first.",
+    "eventNotPinnable": "A past or cancelled event cannot be pinned.",
+    "invalidPinDuration": "The pin must last between 1 and 30 days."
   },
   "nav": {
     "home": "Home",
@@ -408,7 +411,16 @@
     "events": {
       "empty": "No events published yet",
       "search": "Event name",
-      "createdOn": "Created on"
+      "createdOn": "Created on",
+      "pin": "Pin",
+      "unpin": "Remove",
+      "pinFor": "Pin for",
+      "days": "{n, plural, one {# day} other {# days}}",
+      "pinnedUntil": "On top until {date}",
+      "pinned": "Event pinned at the top of the feed",
+      "unpinned": "Pin removed",
+      "feedColumn": "Top of feed",
+      "help": "A pinned event goes to the top of the feed, with no visible label. 2 at most at once."
     },
     "noResults": "No results for this search",
     "viewSite": "View public site",
