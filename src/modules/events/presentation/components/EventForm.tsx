@@ -122,7 +122,7 @@ export function EventForm({
             <Input
               id="photo"
               type="file"
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/*"
               aria-invalid={!!(photo.error ?? c.photo)}
               onChange={(e) => {
                 const f = e.target.files?.[0];

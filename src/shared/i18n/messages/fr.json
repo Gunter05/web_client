@@ -20,7 +20,7 @@
     "optionalPhoto": "Photo (facultative)",
     "choosePhoto": "Choisir une image",
     "removePhoto": "Retirer la photo",
-    "photoFormats": "JPEG, PNG ou WebP, 5 Mo max.",
+    "photoFormats": "JPEG, PNG ou WebP. Les grandes photos sont réduites automatiquement.",
     "optional": "facultatif",
     "characters": "{n}/{max}",
     "photoUploading": "Envoi de la photo…"
@@ -43,8 +43,8 @@
     "endsBeforeStart": "La fin doit être après le début",
     "invalidDate": "Date invalide",
     "categoryRequired": "Choisissez au moins une catégorie",
-    "invalidPhoto": "Format accepté : JPEG, PNG ou WebP",
-    "photoTooLarge": "L'image dépasse 5 Mo",
+    "invalidPhoto": "Format non accepté : choisissez une image JPEG, PNG ou WebP.",
+    "photoTooLarge": "L'image dépasse 5 Mo, même une fois réduite : choisissez une photo plus légère.",
     "accessDenied": "Accès refusé",
     "loginRequired": "Connectez-vous pour continuer",
     "notFound": "Élément introuvable",
@@ -56,7 +56,7 @@
     "eventNotEditable": "Un événement passé ou annulé ne peut plus être modifié",
     "invalidInput": "Corrigez les champs signalés",
     "unknown": "Une erreur est survenue",
-    "uploadFailed": "L'envoi de la photo a échoué, réessayez",
+    "uploadFailed": "L'envoi de la photo a été interrompu : vérifiez votre connexion internet et réessayez.",
     "tooManyUploads": "Trop de photos envoyées, réessayez dans une heure",
     "mediaNotFound": "Photo introuvable, choisissez-la à nouveau",
     "passwordTooLong": "200 caractères maximum",
@@ -68,7 +68,13 @@
     "administratorNotSuspendable": "Un compte admin ne peut pas être suspendu",
     "googleFailed": "La connexion avec Google n'a pas abouti : réessayez.",
     "googleEmailNotVerified": "Google n'a pas confirmé l'adresse de ce compte : utilisez un autre compte ou l'adresse et le mot de passe.",
-    "googleSignInUnavailable": "La connexion avec Google n'est pas disponible pour le moment."
+    "googleSignInUnavailable": "La connexion avec Google n'est pas disponible pour le moment.",
+    "photoEmpty": "Ce fichier est vide : choisissez une autre photo.",
+    "photoNotAnImage": "Ce fichier n'est pas une image : choisissez une photo (JPEG, PNG ou WebP).",
+    "photoSourceTooLarge": "Cette image est trop lourde (plus de 30 Mo) : choisissez une photo plus légère.",
+    "photoUnreadable": "Cet appareil n'arrive pas à lire cette image (format HEIC d'iPhone ou fichier abîmé ?). Essayez une autre photo ou une capture d'écran.",
+    "photoContentRejected": "Le serveur a refusé ce fichier : son contenu n'est pas une vraie image JPEG, PNG ou WebP, même si son nom se termine par .png ou .jpg. Essayez une autre photo.",
+    "photoStorageRefused": "Le stockage des photos a refusé l'envoi. Réessayez dans un instant ; si cela continue, prévenez un administrateur."
   },
   "nav": {
     "home": "Accueil",
@@ -187,11 +193,27 @@
       "title": "Mes pages",
       "intro": "Les pages au nom desquelles vous publiez.",
       "empty": "Vous n’êtes membre d’aucune page pour l’instant.",
-      "events": "Événements",
+      "events": "Publications",
       "access": "Accès",
       "publish": "Publier un événement",
       "notFound": "Cette page ne fait pas partie de vos pages.",
-      "back": "Mes pages"
+      "back": "Mes pages",
+      "manage": "Gérer la page",
+      "viewPublic": "Voir la page publique"
+    },
+    "edit": {
+      "title": "Modifier la page",
+      "action": "Modifier la page",
+      "photo": "Photo de la page",
+      "bio": "Bio",
+      "linkKept": "Le lien /p/{slug} ne change pas, même avec un nouveau nom.",
+      "saved": "Page modifiée",
+      "ownerOnly": "Seul le propriétaire de la page peut la modifier."
+    },
+    "stats": {
+      "events": "{n, plural, one {publication} other {publications}}",
+      "members": "{n, plural, one {membre} other {membres}}",
+      "views": "{n, plural, one {vue} other {vues}}"
     }
   },
   "events": {

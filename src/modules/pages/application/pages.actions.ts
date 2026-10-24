@@ -7,6 +7,9 @@ import { getCurrentAccount } from "@/modules/authentication/server";
 import { searchProfiles } from "@/modules/profiles/server";
 import type { SearchResult } from "@/modules/pages";
 import {
+  getMyPageById,
+  getPageBySlug,
+  updatePage,
   submitPageRequest,
   grantAccess,
   getMembers,
@@ -42,6 +45,47 @@ export async function requestPageAction(
   const result = await catchApiError(() => submitPageRequest(f));
   if (!result.ok) return result.state;
   redirect("/page-request?msg=sent");
+}
+
+/**
+ * Modifier la page : réservé au propriétaire (l'API le revérifie). Sans
+ * nouvelle photo ni « retirer la photo », la photo actuelle est gardée.
+ */
+export async function updatePageAction(
+  pageId: string,
+  _: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const id = idField.safeParse(pageId);
+  if (!id.success) return { error: "invalidInput" };
+  if (!(await getCurrentAccount())) return { error: "loginRequired" };
+  const page = await getMyPageById(id.data);
+  if (page?.role !== "owner") return { error: "accessDenied" };
+  const f = parseForm(
+    {
+      name: textField(200),
+      description: textField(2000),
+      type: textField(50),
+      photoUrl: photoUrlField,
+      removePhoto: z.string().max(1).optional(),
+    },
+    formData,
+  );
+  if (!f) return { error: "invalidInput" };
+  const current = await getPageBySlug(page.slug);
+  const result = await catchApiError(() =>
+    updatePage(id.data, {
+      name: f.name,
+      description: f.description,
+      type: f.type,
+      photoUrl:
+        f.photoUrl ?? (f.removePhoto ? null : (current?.page.photoUrl ?? null)),
+    }),
+  );
+  if (!result.ok) return result.state;
+  revalidatePath("/my-pages", "layout");
+  revalidatePath(`/p/${page.slug}`);
+  redirect(`/my-pages/${page.slug}?msg=pageUpdated`);
 }
 
 export async function withdrawPageRequestAction(

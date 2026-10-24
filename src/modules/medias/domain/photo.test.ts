@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { checkPhoto, fitWithin, isMediaUrl, MAX_PHOTO_SIZE } from "./photo";
+import {
+  checkPhoto,
+  checkSource,
+  fitWithin,
+  isMediaUrl,
+  MAX_PHOTO_SIZE,
+  MAX_SOURCE_SIZE,
+} from "./photo";
 
 describe("checkPhoto", () => {
   it("accepte JPEG, PNG et WebP jusqu'à 5 Mo", () => {
@@ -11,9 +18,27 @@ describe("checkPhoto", () => {
     expect(checkPhoto({ type: "image/svg+xml", size: 10 })).toBe(
       "invalidPhoto",
     );
-    expect(checkPhoto({ type: "image/png", size: 0 })).toBe("photoTooLarge");
+    expect(checkPhoto({ type: "image/png", size: 0 })).toBe("photoEmpty");
     expect(checkPhoto({ type: "image/png", size: MAX_PHOTO_SIZE + 1 })).toBe(
       "photoTooLarge",
+    );
+  });
+});
+
+describe("checkSource", () => {
+  it("accepte toute image avant réduction, même lourde, HEIC ou sans type", () => {
+    expect(checkSource({ type: "image/jpeg", size: 8_000_000 })).toBeNull();
+    expect(checkSource({ type: "image/heic", size: 3_000_000 })).toBeNull();
+    expect(checkSource({ type: "", size: 1000 })).toBeNull();
+  });
+
+  it("explique pourquoi un fichier est refusé", () => {
+    expect(checkSource({ type: "image/png", size: 0 })).toBe("photoEmpty");
+    expect(checkSource({ type: "application/pdf", size: 10 })).toBe(
+      "photoNotAnImage",
+    );
+    expect(checkSource({ type: "image/png", size: MAX_SOURCE_SIZE + 1 })).toBe(
+      "photoSourceTooLarge",
     );
   });
 });

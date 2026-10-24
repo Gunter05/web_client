@@ -1,41 +1,51 @@
+"use client";
+
+import { Grid3x3Icon, type LucideIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { cn } from "@/shared/lib/utils";
 import type { Role } from "@/modules/pages/domain/page.types";
 
+type Tab = {
+  key: "events" | "access";
+  href: string;
+  Icon: LucideIcon;
+};
+
 /**
- * Onglets d'une page dans « Mes pages » : ses événements (avec les vues,
- * US-39) et, pour le propriétaire seulement, la gestion des accès (US-06).
+ * Onglets d'une de mes pages, sous l'en-tête : ses publications et, pour le
+ * propriétaire seulement, les accès (US-06). L'onglet
+ * actif est souligné, au-dessus de la ligne de séparation.
  */
-export function MyPageTabs({
-  slug,
-  role,
-  active,
-}: {
-  slug: string;
-  role: Role;
-  active: "events" | "access";
-}) {
+export function MyPageTabs({ slug, role }: { slug: string; role: Role }) {
   const t = useTranslations("pages.myPages");
-  const tabs: { key: "events" | "access"; href: string }[] = [
-    { key: "events", href: `/my-pages/${slug}` },
+  const path = usePathname();
+  const base = `/my-pages/${slug}`;
+  const tabs: Tab[] = [
+    { key: "events", href: base, Icon: Grid3x3Icon },
     ...(role === "owner"
-      ? [{ key: "access" as const, href: `/my-pages/${slug}/access` }]
+      ? [{ key: "access" as const, href: `${base}/access`, Icon: UsersIcon }]
       : []),
   ];
   return (
-    <nav className="flex gap-6 border-b" aria-label={t("title")}>
-      {tabs.map((o) => (
+    <nav
+      className="flex justify-center gap-10 border-b sm:gap-16"
+      aria-label={t("title")}
+    >
+      {tabs.map(({ key, href, Icon }) => (
         <Link
-          key={o.key}
-          href={o.href}
-          aria-current={o.key === active ? "page" : undefined}
+          key={key}
+          href={href}
+          aria-current={path === href ? "page" : undefined}
           className={cn(
-            "-mb-px border-b-2 border-transparent pb-2 text-sm font-semibold text-muted-foreground",
-            o.key === active && "border-foreground text-foreground",
+            "-mb-px flex items-center gap-1.5 border-b-2 border-transparent py-3 text-xs font-semibold tracking-widest text-muted-foreground uppercase hover:text-foreground",
+            path === href && "border-foreground text-foreground",
           )}
         >
-          {t(o.key)}
+          <Icon className="size-4 sm:size-3.5" />
+          <span className="hidden sm:inline">{t(key)}</span>
+          <span className="sr-only sm:hidden">{t(key)}</span>
         </Link>
       ))}
     </nav>

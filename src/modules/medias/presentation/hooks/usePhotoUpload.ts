@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { checkPhoto } from "@/modules/medias/domain/photo";
+import { checkSource } from "@/modules/medias/domain/photo";
 import {
   confirmPhotoUploadAction,
   reservePhotoUploadAction,
   uploadPhotoAction,
 } from "@/modules/medias/application/medias.actions";
 import {
+  PhotoPreparationError,
   type PreparedPhoto,
   preparePhoto,
 } from "@/modules/medias/presentation/compress-photo";
@@ -20,15 +21,18 @@ type State =
 
 /**
  * Envoi d'une photo dès qu'elle est choisie (ADR 0014 du backend) :
- * compression dans le navigateur (avec dimensions et aperçu flou), puis envoi direct au stockage (réservation,
- * envoi, confirmation), ou par l'API si le stockage ne le permet pas. Le
- * formulaire ne transmet ensuite que l'adresse de la photo (`photoUrl`).
+ * conversion et réduction dans le navigateur (avec dimensions et aperçu flou),
+ * puis envoi direct au stockage (réservation, envoi, confirmation), ou par
+ * l'API si le stockage ne le permet pas. Le formulaire ne transmet ensuite que
+ * l'adresse de la photo (`photoUrl`). Chaque échec a son propre message :
+ * fichier vide, pas une image, illisible, trop lourd, connexion coupée, refus
+ * du serveur.
  */
 export function usePhotoUpload() {
   const [state, setState] = useState<State>({ status: "idle" });
 
   async function upload(file: File): Promise<void> {
-    const invalid = checkPhoto(file);
+    const invalid = checkSource(file);
     if (invalid) {
       setState({ status: "error", error: invalid });
       return;
@@ -42,8 +46,12 @@ export function usePhotoUpload() {
           ? { status: "done", url: result.value }
           : { status: "error", error: result.error },
       );
-    } catch {
-      setState({ status: "error", error: "uploadFailed" });
+    } catch (error) {
+      setState({
+        status: "error",
+        error:
+          error instanceof PhotoPreparationError ? error.code : "uploadFailed",
+      });
     }
   }
 
@@ -79,8 +87,10 @@ async function send(
     method: "PUT",
     headers: target.headers,
     body: blob,
-  });
-  if (!sent.ok) return { ok: false, error: "uploadFailed" };
+  }).catch(() => null);
+  // Pas de réponse : connexion coupée ; une réponse d'erreur : stockage qui refuse
+  if (!sent) return { ok: false, error: "uploadFailed" };
+  if (!sent.ok) return { ok: false, error: "photoStorageRefused" };
   return confirmPhotoUploadAction(target.id);
 }
 

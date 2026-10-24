@@ -5,7 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { EventGrid } from "@/modules/events";
 import { getPageEvents } from "@/modules/events/server";
 import { PageProfileHeader } from "@/modules/pages";
-import { getPageBySlug } from "@/modules/pages/server";
+import { getMyPage, getPageBySlug } from "@/modules/pages/server";
 import { buttonVariants } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
 import { Suspense } from "react";
@@ -37,12 +37,32 @@ async function PublicPage({ params }: PageProps<"/p/[slug]">) {
   }
   const { page, memberCount } = detail;
   const events = await getPageEvents(page.slug);
+  // Ses membres retrouvent ici « Modifier la page » (propriétaire) et la gestion
+  const membership = await getMyPage(page.slug);
+  const secondary = buttonVariants({ variant: "secondary", size: "sm" });
   return (
     <div className="mx-auto max-w-4xl sm:px-6 md:pt-6">
       <PageProfileHeader
         page={page}
         eventCount={events.length}
         memberCount={memberCount}
+        actions={
+          membership && (
+            <>
+              {membership.role === "owner" && (
+                <Link
+                  href={`/my-pages/${page.slug}/edit`}
+                  className={secondary}
+                >
+                  {t("pages.edit.action")}
+                </Link>
+              )}
+              <Link href={`/my-pages/${page.slug}`} className={secondary}>
+                {t("pages.myPages.manage")}
+              </Link>
+            </>
+          )
+        }
       />
       <Separator />
       <h2 className="flex items-center justify-center gap-2 py-3 text-xs font-semibold tracking-widest uppercase">

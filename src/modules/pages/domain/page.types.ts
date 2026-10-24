@@ -10,7 +10,7 @@ export type OrganizationType = (typeof ORGANIZATION_TYPES)[number];
 /** Organisation qui publie. Créée seulement après validation d'un admin (US-03). */
 export type Page = {
   id: string;
-  /** Fixé à la création : la page n'est pas modifiable en V1. */
+  /** Fixé à la création, même si le nom change : les liens partagés restent valables. */
   slug: string;
   name: string;
   description: string;
@@ -53,6 +53,14 @@ export type PageRequest = {
   submittedAt: string;
   /** Renseigné dans l'espace Administration. */
   requester: { id: string; name: string; photoUrl: string | null } | null;
+};
+
+/** Corps de « Modifier la page », réservé au propriétaire. */
+export type PageProfileBody = {
+  name: string;
+  description: string;
+  type: string;
+  photoUrl: string | null;
 };
 
 /** Corps d'une demande de page envoyé à l'API (US-03). */

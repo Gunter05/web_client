@@ -7,20 +7,51 @@ export type PhotoType = (typeof PHOTO_TYPES)[number];
 
 export const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
 
+/**
+ * Poids maximal du fichier choisi, avant sa réduction dans le navigateur : une
+ * photo de téléphone de 8 Mo devient une image de quelques centaines de Ko.
+ */
+export const MAX_SOURCE_SIZE = 30 * 1024 * 1024;
+
 /** Format d'affichage d'une affiche d'événement : portrait 4:5 au plus. */
 export const PHOTO_MAX_WIDTH = 1080;
 export const PHOTO_MAX_HEIGHT = 1350;
 
-export type PhotoError = "invalidPhoto" | "photoTooLarge";
+export type PhotoError =
+  | "invalidPhoto"
+  | "photoTooLarge"
+  | "photoEmpty"
+  | "photoNotAnImage"
+  | "photoSourceTooLarge"
+  | "photoUnreadable";
 
+export function isAcceptedType(type: string): type is PhotoType {
+  return (PHOTO_TYPES as readonly string[]).includes(type);
+}
+
+/**
+ * Fichier choisi par la personne, avant sa réduction : toute image que le
+ * navigateur sait lire est convertie ensuite (HEIC, type inconnu, etc.). Un
+ * type vide est accepté : certains téléphones n'en donnent pas.
+ */
+export function checkSource(file: {
+  type: string;
+  size: number;
+}): PhotoError | null {
+  if (file.size <= 0) return "photoEmpty";
+  if (file.type && !file.type.startsWith("image/")) return "photoNotAnImage";
+  if (file.size > MAX_SOURCE_SIZE) return "photoSourceTooLarge";
+  return null;
+}
+
+/** Image prête à l'envoi (après réduction), vérifiée aussi par le serveur. */
 export function checkPhoto(file: {
   type: string;
   size: number;
 }): PhotoError | null {
-  if (!(PHOTO_TYPES as readonly string[]).includes(file.type)) {
-    return "invalidPhoto";
-  }
-  if (file.size <= 0 || file.size > MAX_PHOTO_SIZE) return "photoTooLarge";
+  if (!isAcceptedType(file.type)) return "invalidPhoto";
+  if (file.size <= 0) return "photoEmpty";
+  if (file.size > MAX_PHOTO_SIZE) return "photoTooLarge";
   return null;
 }
 
