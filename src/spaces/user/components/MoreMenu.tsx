@@ -1,17 +1,17 @@
 "use client";
 
 import {
-  ChevronRightIcon,
-  EllipsisIcon,
+  CaretRightIcon,
+  DotsThreeIcon,
   FlagIcon,
-  LanguagesIcon,
   MoonIcon,
-  LogInIcon,
-  LogOutIcon,
   ShieldIcon,
+  SignInIcon,
+  SignOutIcon,
+  TranslateIcon,
   UserIcon,
   UserPlusIcon,
-} from "lucide-react";
+} from "@/shared/components/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -58,14 +58,14 @@ export function MoreMenu({
         aria-label={t("nav.more")}
         className={drawerTriggerClass(open)}
       >
-        <EllipsisIcon />
+        <DotsThreeIcon />
         <span className={SIDEBAR_LABEL}>{t("nav.more")}</span>
       </button>
 
       <SidebarDrawer name="more" title={t("nav.more")} trigger={trigger}>
         <Group title={t("more.settings")}>
           <Row
-            icon={<LanguagesIcon />}
+            icon={<TranslateIcon />}
             onClick={() =>
               startTransition(async () => {
                 await changeLocale(other);
@@ -77,7 +77,7 @@ export function MoreMenu({
                 <span lang={other}>
                   {other === "fr" ? t("common.french") : t("common.english")}
                 </span>
-                <ChevronRightIcon className="size-4" />
+                <CaretRightIcon className="size-4" />
               </span>
             }
           >
@@ -107,7 +107,7 @@ export function MoreMenu({
             </>
           ) : (
             <>
-              <Row icon={<LogInIcon />} href="/login">
+              <Row icon={<SignInIcon />} href="/login">
                 {t("nav.login")}
               </Row>
               <Row icon={<UserPlusIcon />} href="/register">
@@ -120,7 +120,7 @@ export function MoreMenu({
         {signedIn && (
           <Group title={t("more.other")}>
             <Row
-              icon={<LogOutIcon />}
+              icon={<SignOutIcon />}
               onClick={() => startTransition(() => logout())}
             >
               {t("nav.logout")}

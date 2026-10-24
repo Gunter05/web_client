@@ -1,6 +1,6 @@
 "use client";
 
-import { Grid3x3Icon, type LucideIcon, UsersIcon } from "lucide-react";
+import { GridNineIcon, type Icon, UsersIcon } from "@/shared/components/icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -10,7 +10,7 @@ import type { Role } from "@/modules/pages/domain/page.types";
 type Tab = {
   key: "events" | "access";
   href: string;
-  Icon: LucideIcon;
+  Icon: Icon;
 };
 
 /**
@@ -23,7 +23,7 @@ export function MyPageTabs({ slug, role }: { slug: string; role: Role }) {
   const path = usePathname();
   const base = `/my-pages/${slug}`;
   const tabs: Tab[] = [
-    { key: "events", href: base, Icon: Grid3x3Icon },
+    { key: "events", href: base, Icon: GridNineIcon },
     ...(role === "owner"
       ? [{ key: "access" as const, href: `${base}/access`, Icon: UsersIcon }]
       : []),

@@ -1,4 +1,4 @@
-import { XCircleIcon } from "lucide-react";
+import { XCircleIcon } from "@/shared/components/icons";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { getCurrentAccount } from "@/modules/authentication/server";

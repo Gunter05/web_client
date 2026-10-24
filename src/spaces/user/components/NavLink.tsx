@@ -11,11 +11,14 @@ import { useSidebarPanel } from "@/spaces/user/components/sidebar-panel";
 export function NavLink({
   href,
   icon,
+  activeIcon,
   label,
   variant,
 }: {
   href: string;
   icon: ReactNode;
+  /** Icône pleine de l'onglet actif, comme sur les réseaux sociaux. */
+  activeIcon?: ReactNode;
   label: string;
   variant: "sidebar" | "bottom";
 }) {
@@ -24,6 +27,7 @@ export function NavLink({
   const onPage = href === "/" ? path === "/" : path.startsWith(href);
   // Un tiroir ouvert (notifications, « Plus ») devient l'onglet actif.
   const active = onPage && !(variant === "sidebar" && panel);
+  const shownIcon = active && activeIcon ? activeIcon : icon;
   if (variant === "bottom") {
     // Sur téléphone, connexion et inscription s'ouvrent en page entière : un
     // lien classique n'est pas intercepté en modal (src/app/@auth).
@@ -38,7 +42,7 @@ export function NavLink({
           active ? "text-brand" : "text-foreground/80",
         )}
       >
-        {icon}
+        {shownIcon}
       </Anchor>
     );
   }
@@ -52,7 +56,7 @@ export function NavLink({
         active && "font-semibold text-brand",
       )}
     >
-      {icon}
+      {shownIcon}
       <span className={SIDEBAR_LABEL}>{label}</span>
     </Link>
   );

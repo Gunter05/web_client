@@ -1,6 +1,6 @@
 "use client";
 
-import { PinIcon, PinOffIcon } from "lucide-react";
+import { PushPinIcon, PushPinSlashIcon } from "@/shared/components/icons";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -55,7 +55,7 @@ export function PinControl({
           disabled={pending}
           onClick={() => run(unpin, t("unpinned"))}
         >
-          <PinOffIcon /> {t("unpin")}
+          <PushPinSlashIcon /> {t("unpin")}
         </Button>
       </div>
     );
@@ -80,7 +80,7 @@ export function PinControl({
         disabled={pending}
         onClick={() => run(() => pin(choice), t("pinned"))}
       >
-        <PinIcon /> {t("pin")}
+        <PushPinIcon /> {t("pin")}
       </Button>
     </div>
   );

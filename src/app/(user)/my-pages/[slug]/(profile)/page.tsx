@@ -1,4 +1,4 @@
-import { Grid3x3Icon } from "lucide-react";
+import { GridNineIcon } from "@/shared/components/icons";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
@@ -18,7 +18,7 @@ async function MyPageEvents({ params }: PageProps<"/my-pages/[slug]">) {
   }
   return (
     <div className="flex flex-col items-center gap-3 py-16 text-center">
-      <Grid3x3Icon className="size-10 text-muted-foreground" />
+      <GridNineIcon className="size-10 text-muted-foreground" />
       <p className="text-sm text-muted-foreground">
         {t("pages.public.noEvents")}
       </p>

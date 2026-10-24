@@ -1,6 +1,10 @@
 "use client";
 
-import { MoonIcon, SlidersHorizontalIcon, SunIcon } from "lucide-react";
+import {
+  MoonIcon,
+  SlidersHorizontalIcon,
+  SunIcon,
+} from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useMounted } from "@/shared/hooks/useMounted";

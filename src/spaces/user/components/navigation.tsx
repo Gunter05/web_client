@@ -1,13 +1,13 @@
 import {
   FlagIcon,
-  HomeIcon,
-  LayoutGridIcon,
-  LogOutIcon,
+  HouseLineIcon,
+  MagnifyingGlassIcon,
   PlusSquareIcon,
-  SearchIcon,
   ShieldIcon,
+  SignOutIcon,
+  SquaresFourIcon,
   UserIcon,
-} from "lucide-react";
+} from "@/shared/components/icons";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { cache } from "react";
@@ -43,20 +43,32 @@ export const getNavigation = cache(async () => {
   const unread = account ? await countUnread() : 0;
 
   const links = [
-    { href: "/", icon: <HomeIcon />, label: t("nav.home") },
-    { href: "/search", icon: <SearchIcon />, label: t("nav.search") },
+    {
+      href: "/",
+      icon: <HouseLineIcon />,
+      activeIcon: <HouseLineIcon weight="fill" />,
+      label: t("nav.home"),
+    },
+    {
+      href: "/search",
+      icon: <MagnifyingGlassIcon />,
+      activeIcon: <MagnifyingGlassIcon weight="bold" />,
+      label: t("nav.search"),
+    },
     {
       // Sans compte, la connexion s'ouvre en modal (une redirection du
       // serveur afficherait la page /login entière).
       href: account ? "/events/new" : "/login?returnTo=%2Fevents%2Fnew",
       icon: <PlusSquareIcon />,
+      activeIcon: <PlusSquareIcon weight="fill" />,
       label: t("nav.create"),
     },
     ...(account
       ? [
           {
             href: "/my-pages",
-            icon: <LayoutGridIcon />,
+            icon: <SquaresFourIcon />,
+            activeIcon: <SquaresFourIcon weight="fill" />,
             label: t("nav.myPages"),
           },
         ]
@@ -87,7 +99,7 @@ export const getNavigation = cache(async () => {
           render={<button type="submit" className="w-full" />}
           nativeButton
         >
-          <LogOutIcon /> {t("nav.logout")}
+          <SignOutIcon /> {t("nav.logout")}
         </DropdownMenuItem>
       </form>
     </>

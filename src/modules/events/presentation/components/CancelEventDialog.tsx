@@ -1,6 +1,6 @@
 "use client";
 
-import { BanIcon } from "lucide-react";
+import { ProhibitIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import { FormField } from "@/shared/components/FormField";
 import { useFormAction } from "@/shared/hooks/useFormAction";
@@ -37,7 +37,7 @@ export function CancelEventDialog({
   return (
     <Dialog>
       <DialogTrigger render={<Button variant="destructive" />}>
-        <BanIcon /> {t("events.cancel")}
+        <ProhibitIcon /> {t("events.cancel")}
       </DialogTrigger>
       <DialogContent>
         <form

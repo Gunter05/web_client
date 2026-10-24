@@ -1,4 +1,4 @@
-import { FlagOffIcon, Grid3x3Icon } from "lucide-react";
+import { FlagBannerIcon, GridNineIcon } from "@/shared/components/icons";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
@@ -27,7 +27,7 @@ async function PublicPage({ params }: PageProps<"/p/[slug]">) {
   if (!detail) {
     return (
       <div className="flex flex-col items-center gap-4 px-4 py-24 text-center">
-        <FlagOffIcon className="size-12 text-muted-foreground" />
+        <FlagBannerIcon className="size-12 text-muted-foreground" />
         <h1 className="text-xl font-semibold">{t("pages.public.notFound")}</h1>
         <Link href="/" className={buttonVariants({ size: "lg" })}>
           {t("events.backToList")}
@@ -66,7 +66,7 @@ async function PublicPage({ params }: PageProps<"/p/[slug]">) {
       />
       <Separator />
       <h2 className="flex items-center justify-center gap-2 py-3 text-xs font-semibold tracking-widest uppercase">
-        <Grid3x3Icon className="size-3.5" /> {t("events.listTitle")}
+        <GridNineIcon className="size-3.5" /> {t("events.listTitle")}
       </h2>
       {events.length ? (
         <EventGrid events={events} className="lg:grid-cols-3 xl:grid-cols-3" />

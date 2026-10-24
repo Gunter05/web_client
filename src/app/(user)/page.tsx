@@ -1,4 +1,4 @@
-import { CalendarXIcon } from "lucide-react";
+import { CalendarXIcon } from "@/shared/components/icons";
 import { getTranslations } from "next-intl/server";
 import {
   FilterBar,
@@ -6,7 +6,10 @@ import {
   EventFeed,
   readUrlFilters,
 } from "@/modules/events";
-import { trackEventViewAction } from "@/modules/audience/application/audience.actions";
+import {
+  trackEventViewAction,
+  trackShareClickAction,
+} from "@/modules/audience/application/audience.actions";
 import { loadEventsAction } from "@/modules/events/application/events.actions";
 import { listEventsFromUrl, getFilterPages } from "@/modules/events/server";
 import { Suspense } from "react";
@@ -44,6 +47,7 @@ async function Home({ searchParams }: PageProps<"/">) {
           filters={filters}
           load={loadEventsAction}
           onView={trackEventViewAction}
+          onShare={trackShareClickAction}
         />
       )}
     </div>

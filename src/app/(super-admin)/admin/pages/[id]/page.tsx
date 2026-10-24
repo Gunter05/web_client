@@ -2,7 +2,7 @@ import { getPageDetails } from "@/modules/admin/server";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { Badge } from "@/shared/ui/badge";
 import { buttonVariants } from "@/shared/ui/button";
-import { ArrowLeftIcon, ExternalLinkIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowSquareOutIcon } from "@/shared/components/icons";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -46,7 +46,7 @@ async function AdminPageDetailsView({
             className: "ml-auto",
           })}
         >
-          <ExternalLinkIcon /> /p/{page.slug}
+          <ArrowSquareOutIcon /> /p/{page.slug}
         </Link>
       </div>
       <div className="grid gap-6 lg:grid-cols-[1fr_2fr]">

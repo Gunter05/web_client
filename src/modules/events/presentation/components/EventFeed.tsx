@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2Icon } from "lucide-react";
+import { CheckCircleIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { Skeleton } from "@/shared/ui/skeleton";
@@ -27,6 +27,7 @@ export function EventFeed({
   filters,
   load,
   onView,
+  onShare,
 }: {
   initialEvents: EventView[];
   initialNext: number | null;
@@ -34,6 +35,7 @@ export function EventFeed({
   filters: UrlFilters;
   load: LoadEvents;
   onView?: (eventId: string, fromShareLink: boolean) => Promise<void>;
+  onShare?: (eventId: string) => Promise<void>;
 }) {
   const t = useTranslations("events");
   const [events, setEvents] = useState(initialEvents);
@@ -63,7 +65,13 @@ export function EventFeed({
   return (
     <div className="grid gap-6 sm:gap-10">
       {events.map((e, i) => (
-        <EventCard key={e.id} event={e} priority={i < 2} onOpen={setOpenId} />
+        <EventCard
+          key={e.id}
+          event={e}
+          priority={i < 2}
+          onOpen={setOpenId}
+          onShare={onShare}
+        />
       ))}
       <div ref={sentinel} aria-hidden />
       <EventSheet
@@ -75,7 +83,7 @@ export function EventFeed({
       {enCours && <Skeleton className="aspect-square w-full sm:rounded-xl" />}
       {next === null && events.length > 0 && (
         <p className="flex flex-col items-center gap-2 py-10 text-sm text-muted-foreground">
-          <CheckCircle2Icon className="size-8" />
+          <CheckCircleIcon className="size-8" />
           {t("endOfList")}
         </p>
       )}

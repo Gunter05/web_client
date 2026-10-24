@@ -35,6 +35,7 @@ src/
 └── shared/                      Transverse, sans métier
     ├── ui/                          Composants shadcn/ui (non modifiés)
     ├── components/                  Composants génériques : Logo, PageTitle, FormField, ProfileAvatar…
+    │                                et icons.tsx, seule porte vers les icônes (Phosphor)
     ├── api/                         Client HTTP, cookies de session, erreurs
     ├── config/                      Variables d'environnement validées (env, clientEnv)
     ├── i18n/                        Catalogues FR/EN, dates, langue

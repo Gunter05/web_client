@@ -1,3 +1,4 @@
+import { ClockIcon, MapPinIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import type React from "react";
@@ -11,6 +12,7 @@ import { EventBadges } from "@/modules/events/presentation/components/EventBadge
 import { DateTile } from "@/modules/events/presentation/components/DateTile";
 import { EventTime } from "@/modules/events/presentation/components/EventTime";
 import { PublicationDate } from "@/modules/events/presentation/components/PublicationDate";
+import { ShareIconButton } from "@/modules/events/presentation/components/ShareButton";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { ProgressiveImage } from "@/shared/components/ProgressiveImage";
 import { cn } from "@/shared/lib/utils";
@@ -18,11 +20,12 @@ import { cn } from "@/shared/lib/utils";
 export const DEFAULT_IMAGE = "/demo/defaut.svg";
 
 /**
- * Carte d'événement du fil (US-01), sobre : qui publie et quand, l'affiche
- * avec la tuile de date posée sur son coin (la signature du site), puis le
- * strict nécessaire à côté de la tuile : le nom sur une ligne, puis le
- * statut, l'heure et le lieu. Catégories, description et Partager sont dans
- * la fiche.
+ * Carte d'événement du fil (US-01), sobre : qui publie et quand, l'affiche,
+ * puis une ligne d'actions façon réseau social : la petite tuile de date
+ * posée sur le coin de l'affiche (la signature du site) et, à droite, les
+ * actions (Partager). Dessous, le nom, puis l'heure et le lieu, chacun avec
+ * son icône pour être repéré d'un coup d'œil. Catégories et description sont
+ * dans la fiche.
  *
  * L'affiche garde ses proportions entre 4:5 et 1,91:1 et ne dépasse jamais
  * 70 % de la hauteur de l'écran : une affiche très haute est recadrée au
@@ -32,9 +35,12 @@ export function EventCard({
   event,
   priority = false,
   onOpen,
+  onShare,
 }: {
   event: EventView;
   priority?: boolean;
+  /** Mesure des partages (US-36). */
+  onShare?: (eventId: string) => Promise<void>;
   /**
    * Ouvre l'aperçu au lieu de naviguer, sur grand écran seulement. Le lien
    * vers /e/{id} reste en place : nouvel onglet (Ctrl/Cmd + clic, clic
@@ -56,27 +62,33 @@ export function EventCard({
     : undefined;
   return (
     <article className="grid min-w-0 grid-cols-1 gap-2.5 border-b pb-6 sm:border-none sm:pb-0">
+      {/* Avatar, puis le nom de la page et, dessous, la date de publication */}
       <header className="flex items-center gap-2.5 px-4 sm:px-0">
+        {/* Doublon du lien du nom : caché aux lecteurs d'écran et au clavier */}
         <Link
           href={`/p/${event.organizer.slug}`}
-          className="flex min-w-0 items-center gap-2.5"
+          aria-hidden
+          tabIndex={-1}
+          className="shrink-0"
         >
           <ProfileAvatar
             name={event.organizer.name}
             photo={event.organizer.photoUrl}
-            size="sm"
+            size="md"
           />
-          <span className="truncate text-sm font-semibold">
-            {event.organizer.name}
-          </span>
         </Link>
-        <span aria-hidden className="text-muted-foreground">
-          ·
-        </span>
-        <PublicationDate
-          iso={event.createdAt}
-          className="truncate text-sm text-muted-foreground"
-        />
+        <div className="grid min-w-0 leading-tight">
+          <Link
+            href={`/p/${event.organizer.slug}`}
+            className="truncate text-sm font-semibold hover:underline"
+          >
+            {event.organizer.name}
+          </Link>
+          <PublicationDate
+            iso={event.createdAt}
+            className="truncate text-xs text-muted-foreground"
+          />
+        </div>
       </header>
 
       <Link
@@ -110,43 +122,56 @@ export function EventCard({
         </div>
       </Link>
 
-      {/* Tuile posée sur le coin de l'affiche, étirée jusqu'au bas du texte voisin */}
-      <div className="flex items-stretch gap-3 px-4 sm:px-0">
+      {/* Ligne d'actions : tuile posée sur le coin de l'affiche, actions à droite,
+          alignées sur le bas de la tuile */}
+      <div className="flex items-end justify-between gap-3 px-4 sm:px-0">
         <DateTile
           iso={event.startsAt}
+          size="sm"
           className={cn(
-            "relative -mt-9 shrink-0 self-stretch",
+            "relative -mt-8 shrink-0",
             cancelled && "opacity-70 grayscale",
           )}
         />
-        <div className="grid min-w-0 flex-1">
-          <h2
-            className={cn(
-              "truncate text-base leading-snug font-semibold",
-              cancelled && "text-muted-foreground line-through",
-            )}
+        <ShareIconButton
+          path={`/e/${event.id}`}
+          title={event.name}
+          text={event.name}
+          onShare={onShare && (() => onShare(event.id))}
+          className="-mr-2 -mb-2"
+        />
+      </div>
+
+      <div className="grid gap-1 px-4 sm:px-0">
+        <h2
+          className={cn(
+            "truncate text-base leading-snug font-semibold",
+            cancelled && "text-muted-foreground line-through",
+          )}
+        >
+          <Link
+            href={`/e/${event.id}`}
+            onClick={open}
+            className="hover:underline"
           >
-            <Link
-              href={`/e/${event.id}`}
-              onClick={open}
-              className="hover:underline"
-            >
-              {event.name}
-            </Link>
-          </h2>
-          {/* Le statut d'abord : c'est ici que l'on décide si l'on peut venir */}
-          <p className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
-            <EventBadges
-              status={event.status}
-              period={event.period}
-              compact
-              className="shrink-0 flex-nowrap empty:hidden"
-            />
-            <EventTime iso={event.startsAt} className="shrink-0" />
-            <span aria-hidden>·</span>
-            <span className="truncate">{event.location}</span>
-          </p>
-        </div>
+            {event.name}
+          </Link>
+        </h2>
+        {/* Le statut d'abord : c'est ici que l'on décide si l'on peut venir */}
+        <p className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
+          <EventBadges
+            status={event.status}
+            period={event.period}
+            compact
+            className="shrink-0 flex-nowrap empty:hidden"
+          />
+          <ClockIcon aria-hidden className="size-4 shrink-0" />
+          <EventTime iso={event.startsAt} className="shrink-0" />
+        </p>
+        <p className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
+          <MapPinIcon aria-hidden className="size-4 shrink-0" />
+          <span className="truncate">{event.location}</span>
+        </p>
       </div>
     </article>
   );

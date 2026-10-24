@@ -2,12 +2,12 @@
 
 import {
   FlagIcon,
-  InboxIcon,
-  KeyRoundIcon,
+  type Icon,
+  KeyIcon,
   LockIcon,
-  type LucideIcon,
+  TrayIcon,
   XCircleIcon,
-} from "lucide-react";
+} from "@/shared/components/icons";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
@@ -23,12 +23,12 @@ import type {
   NotificationType,
 } from "@/modules/notifications/domain/notification.types";
 
-const ICONS: Record<NotificationType, LucideIcon> = {
+const ICONS: Record<NotificationType, Icon> = {
   pageCreated: FlagIcon,
   requestRejected: XCircleIcon,
-  accessGranted: KeyRoundIcon,
+  accessGranted: KeyIcon,
   accessRevoked: LockIcon,
-  newRequest: InboxIcon,
+  newRequest: TrayIcon,
 };
 
 /**

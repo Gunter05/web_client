@@ -1,4 +1,4 @@
-import { ExternalLinkIcon, PlusSquareIcon } from "lucide-react";
+import { ArrowSquareOutIcon, PlusSquareIcon } from "@/shared/components/icons";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { notFound, redirect } from "next/navigation";
@@ -67,7 +67,7 @@ async function MyPageProfile({
               aria-label={t("pages.myPages.viewPublic")}
               title={t("pages.myPages.viewPublic")}
             >
-              <ExternalLinkIcon />
+              <ArrowSquareOutIcon />
             </Link>
           </>
         }

@@ -2,11 +2,11 @@
 
 import {
   ArrowUpRightIcon,
-  ChevronDownIcon,
-  ChevronsRightIcon,
-  ChevronUpIcon,
+  CaretDoubleRightIcon,
+  CaretDownIcon,
+  CaretUpIcon,
   CopyIcon,
-} from "lucide-react";
+} from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -69,7 +69,7 @@ export function EventSheet({
                 onClick={() => onSelect(null)}
                 aria-label={t("close")}
               >
-                <ChevronsRightIcon />
+                <CaretDoubleRightIcon />
               </Button>
               <Button variant="secondary" size="sm" onClick={copyLink}>
                 <CopyIcon /> {t("copyLink")}
@@ -88,7 +88,7 @@ export function EventSheet({
                   onClick={() => previous && onSelect(previous.id)}
                   aria-label={t("previous")}
                 >
-                  <ChevronUpIcon />
+                  <CaretUpIcon />
                 </Button>
                 <Button
                   variant="secondary"
@@ -97,7 +97,7 @@ export function EventSheet({
                   onClick={() => next && onSelect(next.id)}
                   aria-label={t("next")}
                 >
-                  <ChevronDownIcon />
+                  <CaretDownIcon />
                 </Button>
               </div>
             </div>

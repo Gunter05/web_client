@@ -1,6 +1,6 @@
 "use client";
 
-import { LaptopIcon, SmartphoneIcon } from "lucide-react";
+import { DeviceMobileIcon, LaptopIcon } from "@/shared/components/icons";
 import { useFormatter, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -41,7 +41,7 @@ export function SessionList({
         {sessions.map((s) => {
           const { browser, system } = deviceName(s.userAgent);
           const mobile = /Android|iPhone|iPad/.test(system ?? "");
-          const Icon = mobile ? SmartphoneIcon : LaptopIcon;
+          const Icon = mobile ? DeviceMobileIcon : LaptopIcon;
           return (
             <li key={s.id} className="flex items-center gap-3">
               <Icon className="size-5 shrink-0 text-muted-foreground" />
