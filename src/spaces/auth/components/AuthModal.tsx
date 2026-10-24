@@ -17,7 +17,9 @@ export function AuthModal({ children }: { children: ReactNode }) {
 /** Écran d'authentification en page, quand son adresse est ouverte directement. */
 export function AuthPage({ children }: { children: ReactNode }) {
   return (
-    <div className="mx-auto w-full max-w-md">
+    // Sur téléphone, l'écran occupe toute la hauteur : le pied (« Pas encore de
+    // compte ? ») est en bas de l'écran.
+    <div className="mx-auto flex w-full max-w-md flex-1 flex-col *:flex-1 md:*:flex-none">
       <Suspense fallback={<AuthSkeleton />}>{children}</Suspense>
     </div>
   );
