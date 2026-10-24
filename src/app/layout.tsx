@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { TikTok_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { clientEnv } from "@/shared/config/env.client";
 import { WebVitals } from "@/shared/components/WebVitals";
@@ -65,6 +66,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {/* Mesures affichées en développement seulement : rien à envoyer au navigateur en prod */}
         {env.NODE_ENV === "development" && <WebVitals />}
         <Providers>{children}</Providers>
+        <Analytics />
         <SpeedInsights />
       </body>
     </html>
