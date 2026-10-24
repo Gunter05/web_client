@@ -232,7 +232,7 @@ export function EventForm({
               <span
                 className={cn(
                   "inline-flex rounded-full border px-3 py-1.5 text-sm transition-colors select-none",
-                  "peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground",
+                  "peer-checked:border-ink peer-checked:bg-ink peer-checked:text-ink-foreground",
                   "peer-focus-visible:ring-2 peer-focus-visible:ring-ring",
                 )}
               >

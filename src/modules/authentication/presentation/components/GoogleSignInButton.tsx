@@ -19,11 +19,13 @@ export function GoogleSignInButton({ returnTo = "/" }: { returnTo?: string }) {
       <a
         href={`/auth/google?returnTo=${encodeURIComponent(returnTo)}`}
         className={cn(
-          buttonVariants({ variant: "outline", size: "lg" }),
-          "w-full gap-2",
+          buttonVariants({ variant: "secondary", size: "lg" }),
+          "relative h-12 w-full rounded-full",
         )}
       >
-        <GoogleLogo />
+        <span className="absolute left-4">
+          <GoogleLogo />
+        </span>
         {t("continueWithGoogle")}
       </a>
     </div>

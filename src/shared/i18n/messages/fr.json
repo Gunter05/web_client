@@ -123,7 +123,6 @@
     "saveNewPassword": "Enregistrer le mot de passe",
     "askNewLink": "Demander un nouveau lien",
     "passwordResetDone": "Mot de passe changé : connectez-vous",
-    "passwordHelp": "{min} caractères minimum",
     "verifyEmailTitle": "Confirmer votre adresse",
     "verifyEmailSubtitle": "Un clic suffit pour confirmer que cette adresse est bien la vôtre.",
     "confirmEmail": "Confirmer mon adresse",
@@ -140,7 +139,9 @@
       "unknown": "Appareil inconnu"
     },
     "or": "ou",
-    "continueWithGoogle": "Continuer avec Google"
+    "continueWithGoogle": "Continuer avec Google",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe"
   },
   "pages": {
     "types": {

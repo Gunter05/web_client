@@ -38,6 +38,8 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-ink: var(--ink);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -53,7 +55,8 @@
 
 :root {
   /*
-   * Rouge du logo (public/brand), pour l'onglet actif de la navigation :
+   * Rouge du logo (public/brand), pour l'onglet actif de la navigation
+   * et les actions principales (--primary) :
    * #e60000 plutôt que #ef0000 (4,49:1) pour un contraste ≥ 4,5:1 sur blanc
    * (WCAG 1.4.3).
    */
@@ -64,8 +67,11 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  /* Action principale : le rouge du logo. Le noir reste disponible (ink). */
+  --primary: var(--brand);
+  --primary-foreground: oklch(1 0 0);
+  --ink: oklch(0.205 0 0);
+  --ink-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -101,8 +107,11 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  /* #e60000 et non le rouge éclairci : texte blanc lisible (≥ 4,5:1). */
+  --primary: #e60000;
+  --primary-foreground: oklch(1 0 0);
+  --ink: oklch(0.922 0 0);
+  --ink-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -185,4 +194,54 @@
   --color-avertissement-fond: var(--avertissement-fond);
   --color-danger-fond: var(--danger-fond);
   --color-danger: var(--danger);
+}
+
+/*
+ * Fond derrière les modals et les sheets : une légère teinte noire, sans flou.
+ * Hors @layer pour l'emporter sur les classes des composants shadcn/ui, laissés intacts.
+ */
+[data-slot="dialog-overlay"],
+[data-slot="alert-dialog-overlay"],
+[data-slot="sheet-overlay"] {
+  background-color: rgb(0 0 0 / 0.4);
+  backdrop-filter: none;
+  /* Même rythme que l'entrée du modal (300 ms) */
+  animation-duration: 300ms;
+}
+
+/* Relais entre deux modals de route : le fond reste en place, sans refaire son fondu */
+body:has([data-slot="dialog-content"][data-relay])
+  [data-slot="dialog-overlay"] {
+  animation: none;
+}
+
+/*
+ * Micro-animations : courtes (≤ 320 ms), douces, toujours derrière `motion-safe:`
+ * (rien ne bouge si le système demande moins d'animations). Un seul mouvement
+ * par apparition : un modal qui entre n'anime pas aussi son contenu.
+ * - animate-rise : entrée d'un élément (fondu + légère montée)
+ * - animate-shake : erreur (léger tremblement horizontal)
+ */
+@theme {
+  --ease-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-rise: rise 320ms var(--ease-soft) both;
+  --animate-shake: shake 320ms ease-in-out;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+  @keyframes shake {
+    25% {
+      transform: translateX(-4px);
+    }
+    50% {
+      transform: translateX(4px);
+    }
+    75% {
+      transform: translateX(-2px);
+    }
+  }
 }

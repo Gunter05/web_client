@@ -123,7 +123,6 @@
     "saveNewPassword": "Save the password",
     "askNewLink": "Ask for a new link",
     "passwordResetDone": "Password changed: sign in",
-    "passwordHelp": "At least {min} characters",
     "verifyEmailTitle": "Confirm your address",
     "verifyEmailSubtitle": "One click confirms that this address is yours.",
     "confirmEmail": "Confirm my address",
@@ -140,7 +139,9 @@
       "unknown": "Unknown device"
     },
     "or": "or",
-    "continueWithGoogle": "Continue with Google"
+    "continueWithGoogle": "Continue with Google",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "pages": {
     "types": {

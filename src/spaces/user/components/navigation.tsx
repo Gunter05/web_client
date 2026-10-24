@@ -46,7 +46,9 @@ export const getNavigation = cache(async () => {
     { href: "/", icon: <HomeIcon />, label: t("nav.home") },
     { href: "/search", icon: <SearchIcon />, label: t("nav.search") },
     {
-      href: "/events/new",
+      // Sans compte, la connexion s'ouvre en modal (une redirection du
+      // serveur afficherait la page /login entière).
+      href: account ? "/events/new" : "/login?returnTo=%2Fevents%2Fnew",
       icon: <PlusSquareIcon />,
       label: t("nav.create"),
     },

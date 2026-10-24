@@ -79,7 +79,7 @@ export function NotificationList({
             className={cn(
               "rounded-full px-3 py-1.5 text-sm font-semibold transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
               category === c
-                ? "bg-primary text-primary-foreground"
+                ? "bg-ink text-ink-foreground"
                 : "bg-muted hover:bg-muted/70",
             )}
           >
@@ -143,7 +143,7 @@ function Item({
   const Icon = ICONS[n.type];
   const content = (
     <>
-      <span className="grid size-11 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground">
+      <span className="grid size-11 shrink-0 place-items-center rounded-full bg-ink text-ink-foreground">
         <Icon className="size-5" />
       </span>
       <span className="grid min-w-0 flex-1 gap-0.5">
