@@ -57,10 +57,10 @@
   /*
    * Rouge du logo (public/brand), pour l'onglet actif de la navigation
    * et les actions principales (--primary) :
-   * #e60000 plutôt que #ef0000 (4,49:1) pour un contraste ≥ 4,5:1 sur blanc
-   * (WCAG 1.4.3).
+   * #d63c3c, rouge adouci : contraste de 4,59:1 avec le blanc, en texte rouge
+   * sur fond blanc comme en texte blanc sur bouton rouge (WCAG 1.4.3, ≥ 4,5:1).
    */
-  --brand: #ee3c3c;
+  --brand: #d63c3c;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -99,7 +99,7 @@
 }
 
 .dark {
-  /* Rouge de marque éclairci : contraste ≥ 4,5:1 sur les fonds sombres. */
+  /* Rouge de marque éclairci : contraste de 5,04:1 sur les fonds sombres. */
   --brand: #ee3c3c;
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -107,8 +107,8 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  /* #e60000 et non le rouge éclairci : texte blanc lisible (≥ 4,5:1). */
-  --primary: #ee3c3c;
+  /* #d63c3c et non le rouge éclairci : texte blanc lisible (4,59:1). */
+  --primary: #d63c3c;
   --primary-foreground: oklch(1 0 0);
   --ink: oklch(0.922 0 0);
   --ink-foreground: oklch(0.205 0 0);
