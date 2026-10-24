@@ -82,12 +82,21 @@ export async function uploadPhotoAction(
   );
 }
 
+/**
+ * Erreur de l'API, rendue explicite : un `invalidPhoto` venu du serveur
+ * signifie que le contenu du fichier n'est pas l'image annoncée (il a été
+ * vérifié dans le navigateur avant l'envoi).
+ */
 function unwrap<T>(
   result: Awaited<ReturnType<typeof catchApiError<T>>>,
 ): Result<T> {
   if (result.ok) return { ok: true, value: result.value };
   const { error, fieldErrors } = result.state;
-  return { ok: false, error: fieldErrors?.photo ?? error ?? "unknown" };
+  const code = fieldErrors?.photo ?? error ?? "unknown";
+  return {
+    ok: false,
+    error: code === "invalidPhoto" ? "photoContentRejected" : code,
+  };
 }
 
 function layoutFromForm(formData: FormData) {

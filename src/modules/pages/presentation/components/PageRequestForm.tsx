@@ -82,7 +82,7 @@ export function PageRequestForm({ action }: { action: FormAction }) {
         <Input
           id="photo"
           type="file"
-          accept="image/jpeg,image/png,image/webp"
+          accept="image/*"
           aria-invalid={!!photo.error}
           onChange={(e) => {
             const f = e.target.files?.[0];
