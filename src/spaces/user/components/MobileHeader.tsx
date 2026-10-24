@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Suspense } from "react";
 import { NotificationBell } from "@/modules/notifications";
 import { LanguageSwitcher } from "@/shared/components/LanguageSwitcher";
@@ -26,9 +25,11 @@ async function MobileHeaderActions() {
     <>
       <ThemeSwitcher />
       <LanguageSwitcher change={changeLanguageAction} />
-      <Link href="/login" className={buttonVariants({ size: "sm" })}>
+      {/* Lien classique : sur téléphone, la connexion s'ouvre en page entière,
+          pas en modal (src/app/@auth) */}
+      <a href="/login" className={buttonVariants({ size: "sm" })}>
         {t("nav.login")}
-      </Link>
+      </a>
     </>
   );
 }

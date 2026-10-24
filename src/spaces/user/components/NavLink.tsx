@@ -25,8 +25,11 @@ export function NavLink({
   // Un tiroir ouvert (notifications, « Plus ») devient l'onglet actif.
   const active = onPage && !(variant === "sidebar" && panel);
   if (variant === "bottom") {
+    // Sur téléphone, connexion et inscription s'ouvrent en page entière : un
+    // lien classique n'est pas intercepté en modal (src/app/@auth).
+    const Anchor = isAuthPage(href) ? "a" : Link;
     return (
-      <Link
+      <Anchor
         href={href}
         aria-label={label}
         aria-current={active ? "page" : undefined}
@@ -36,7 +39,7 @@ export function NavLink({
         )}
       >
         {icon}
-      </Link>
+      </Anchor>
     );
   }
   return (
@@ -53,4 +56,9 @@ export function NavLink({
       <span className={SIDEBAR_LABEL}>{label}</span>
     </Link>
   );
+}
+
+/** Écran d'authentification (/login, /register…), adresse et paramètres compris. */
+function isAuthPage(href: string) {
+  return /^\/(login|register|forgot-password)(\?|$)/.test(href);
 }
