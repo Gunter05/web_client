@@ -4,6 +4,7 @@ import { administrationApi } from "@/modules/admin/infrastructure/admin.api";
 export { getCurrentAdmin } from "@/modules/admin/infrastructure/admin-guard";
 
 export type {
+  AdminActivity,
   AdminAccount,
   AdminPageDetails,
   AdminEvent,
@@ -12,6 +13,7 @@ export type {
 } from "@/modules/admin/domain/admin.types";
 
 /** Supervision (US-07) : le rôle admin est vérifié par l'API à chaque appel. */
+export const getActivity = administrationApi.activity;
 export const listAccounts = administrationApi.accounts;
 export const listPages = administrationApi.pages;
 export const getPageDetails = administrationApi.pageDetails;

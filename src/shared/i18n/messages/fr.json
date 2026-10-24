@@ -360,7 +360,8 @@
       "pageRequests": "Demandes de page",
       "accounts": "Comptes",
       "pages": "Pages",
-      "events": "Événements"
+      "events": "Événements",
+      "activity": "Activité"
     },
     "pageRequests": {
       "empty": "Aucune demande en attente",
@@ -410,7 +411,19 @@
       "createdOn": "Créé le"
     },
     "noResults": "Aucun résultat pour cette recherche",
-    "viewSite": "Voir le site public"
+    "viewSite": "Voir le site public",
+    "activity": {
+      "intro": "Visiteurs anonymes, sans compte : un visiteur compte une fois par jour, quel que soit le nombre de pages vues.",
+      "today": "Aujourd'hui",
+      "week": "7 derniers jours",
+      "month": "30 derniers jours",
+      "visitors": "{n, plural, one {visiteur} other {visiteurs}}",
+      "installedApp": "dont {n} avec l'application installée",
+      "installs": "Installations de l'application",
+      "installsDetail": "{week} sur 7 jours · {month} sur 30 jours",
+      "installsHelp": "Signalées par Chrome et Android seulement : le chiffre réel est plus élevé. Le nombre de personnes qui utilisent l'application installée (ci-dessus) est plus fiable.",
+      "timezone": "Jours comptés en heure UTC."
+    }
   },
   "metadata": {
     "description": "Tous les événements de l'école : matchs, soirées, conférences. Sans compte."
