@@ -12,21 +12,25 @@ import { EventSheet } from "@/modules/events/presentation/components/EventSheet"
 export type LoadEvents = (
   filters: UrlFilters,
   offset: number,
+  asOf?: string,
 ) => Promise<{ events: EventView[]; nextOffset: number | null }>;
 
 /**
- * Fil infini : 20 événements, puis 20 de plus en atteignant le bas (US-16).
+ * Fil infini : 10 événements, puis 10 de plus en atteignant le bas (US-16),
+ * tous classés pour l'instant du premier chargement (`asOf`, ADR 0020).
  * Un clic sur un événement l'ouvre dans un panneau à droite.
  */
 export function EventFeed({
   initialEvents,
   initialNext,
+  asOf,
   filters,
   load,
   onView,
 }: {
   initialEvents: EventView[];
   initialNext: number | null;
+  asOf?: string;
   filters: UrlFilters;
   load: LoadEvents;
   onView?: (eventId: string, fromShareLink: boolean) => Promise<void>;
@@ -45,7 +49,7 @@ export function EventFeed({
       ([input]) => {
         if (!input?.isIntersecting || enCours) return;
         startTransition(async () => {
-          const page = await load(filters, next);
+          const page = await load(filters, next, asOf);
           setEvents((l) => [...l, ...page.events]);
           setNext(page.nextOffset);
         });
@@ -54,7 +58,7 @@ export function EventFeed({
     );
     observer.observe(target);
     return () => observer.disconnect();
-  }, [next, filters, enCours, load]);
+  }, [next, filters, enCours, load, asOf]);
 
   return (
     <div className="grid gap-6 sm:gap-10">

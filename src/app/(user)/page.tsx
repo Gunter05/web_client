@@ -16,7 +16,7 @@ import { ContentSkeleton } from "@/shared/components/layout/ContentSkeleton";
 async function Home({ searchParams }: PageProps<"/">) {
   const t = await getTranslations("events");
   const filters = readUrlFilters(await searchParams);
-  const [{ events, nextOffset }, pages] = await Promise.all([
+  const [{ events, nextOffset, asOf }, pages] = await Promise.all([
     listEventsFromUrl(filters),
     getFilterPages(),
   ]);
@@ -40,6 +40,7 @@ async function Home({ searchParams }: PageProps<"/">) {
           key={JSON.stringify(filters)}
           initialEvents={events}
           initialNext={nextOffset}
+          asOf={asOf}
           filters={filters}
           load={loadEventsAction}
           onView={trackEventViewAction}

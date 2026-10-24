@@ -74,7 +74,10 @@
     "photoSourceTooLarge": "Cette image est trop lourde (plus de 30 Mo) : choisissez une photo plus légère.",
     "photoUnreadable": "Cet appareil n'arrive pas à lire cette image (format HEIC d'iPhone ou fichier abîmé ?). Essayez une autre photo ou une capture d'écran.",
     "photoContentRejected": "Le serveur a refusé ce fichier : son contenu n'est pas une vraie image JPEG, PNG ou WebP, même si son nom se termine par .png ou .jpg. Essayez une autre photo.",
-    "photoStorageRefused": "Le stockage des photos a refusé l'envoi. Réessayez dans un instant ; si cela continue, prévenez un administrateur."
+    "photoStorageRefused": "Le stockage des photos a refusé l'envoi. Réessayez dans un instant ; si cela continue, prévenez un administrateur.",
+    "pinLimitReached": "Deux événements sont déjà épinglés : retirez-en un d'abord.",
+    "eventNotPinnable": "Un événement passé ou annulé ne peut pas être épinglé.",
+    "invalidPinDuration": "La durée d'épinglage doit être comprise entre 1 et 30 jours."
   },
   "nav": {
     "home": "Accueil",
@@ -408,7 +411,16 @@
     "events": {
       "empty": "Aucun événement publié pour le moment",
       "search": "Nom de l'événement",
-      "createdOn": "Créé le"
+      "createdOn": "Créé le",
+      "pin": "Épingler",
+      "unpin": "Retirer",
+      "pinFor": "Épingler pour",
+      "days": "{n, plural, one {# jour} other {# jours}}",
+      "pinnedUntil": "En tête jusqu'au {date}",
+      "pinned": "Événement épinglé en tête du fil",
+      "unpinned": "Épinglage retiré",
+      "feedColumn": "En tête du fil",
+      "help": "Un événement épinglé passe en tête du fil, sans mention visible. 2 au plus en même temps."
     },
     "noResults": "Aucun résultat pour cette recherche",
     "viewSite": "Voir le site public",

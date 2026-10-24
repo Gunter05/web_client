@@ -213,4 +213,4 @@ export function sort(events: readonly Event[], now: Date): Event[] {
   });
 }
 
-export const PAGE_SIZE = 20;
+export const PAGE_SIZE = 10;

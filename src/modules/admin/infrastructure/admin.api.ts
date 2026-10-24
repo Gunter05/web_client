@@ -52,6 +52,7 @@ type EventResponse = {
   debut: string;
   statut: AdminEvent["status"];
   creeLe: string;
+  epingleJusqua: string | null;
 };
 type MemberResponse = {
   compteId: string;
@@ -94,6 +95,7 @@ const toEvent = (e: EventResponse): AdminEvent => ({
   startsAt: e.debut,
   status: e.statut,
   createdAt: e.creeLe,
+  pinnedUntil: e.epingleJusqua ?? null,
 });
 const toMember = (m: MemberResponse): AdminMember => ({
   accountId: m.compteId,

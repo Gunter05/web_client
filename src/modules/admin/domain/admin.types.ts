@@ -31,6 +31,8 @@ export type AdminEvent = {
   startsAt: string;
   status: "published" | "updated" | "cancelled";
   createdAt: string;
+  /** Fin de l'épinglage en tête du fil, `null` s'il n'est pas épinglé. */
+  pinnedUntil: string | null;
 };
 
 export type AdminMember = {
@@ -58,3 +60,6 @@ export type AdminActivity = {
   /** Installations signalées : Chrome et Android seulement, chiffre sous-estimé. */
   installs: { week: number; month: number; total: number };
 };
+
+/** Durées d'épinglage proposées, en jours (30 au plus, vérifié par l'API). */
+export const PIN_DAYS = [1, 3, 7] as const;

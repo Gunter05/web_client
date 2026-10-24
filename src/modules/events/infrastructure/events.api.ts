@@ -20,6 +20,8 @@ export type EventSlice = {
   events: EventView[];
   nextOffset: number | null;
   total: number;
+  /** Instant du classement, à renvoyer avec les tranches suivantes (ADR 0020 du backend). */
+  asOf?: string;
 };
 
 /**
@@ -52,6 +54,20 @@ export const eventsApi = {
     withTranslatedErrors(() =>
       api<EventView>(`/api/v1/pages/${pageId}/events/${id}/cancellation`, {
         body: { reason },
+      }),
+    ),
+  /** Épinglage éditorial en tête du fil, réservé aux admins (ADR 0020 du backend). */
+  pin: (id: string, until: string) =>
+    withTranslatedErrors(() =>
+      api<void>(`/api/v1/admin/events/${encodeURIComponent(id)}/pin`, {
+        method: "PUT",
+        body: { until },
+      }),
+    ),
+  unpin: (id: string) =>
+    withTranslatedErrors(() =>
+      api<void>(`/api/v1/admin/events/${encodeURIComponent(id)}/pin`, {
+        method: "DELETE",
       }),
     ),
 };
