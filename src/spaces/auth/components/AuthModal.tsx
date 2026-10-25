@@ -4,12 +4,21 @@ import { RouteModal } from "@/shared/components/RouteModal";
 import { Skeleton } from "@/shared/ui/skeleton";
 
 /** Écran d'authentification ouvert par-dessus la page en cours (route interceptée). */
-export function AuthModal({ children }: { children: ReactNode }) {
+export function AuthModal({
+  path,
+  children,
+}: {
+  /** Adresse de l'écran (« /login »…). */
+  path: string;
+  children: ReactNode;
+}) {
   return (
     // Pas de squelette : la modal s'ouvre une fois le contenu prêt, sans
     // changer de taille sous les yeux.
     <Suspense fallback={null}>
-      <RouteModal labelledBy={AUTH_TITLE_ID}>{children}</RouteModal>
+      <RouteModal path={path} labelledBy={AUTH_TITLE_ID}>
+        {children}
+      </RouteModal>
     </Suspense>
   );
 }

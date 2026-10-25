@@ -101,7 +101,7 @@
 .dark {
   /* Rouge de marque éclairci : contraste de 5,04:1 sur les fonds sombres. */
   --brand: #ee3c3c;
-  --background: oklch(0.145 0 0);
+  --background: oklch(18.338% 0.00163 16.6);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -307,4 +307,21 @@ body:has([data-slot="dialog-content"][data-relay])
   --text-2xl: 1.375rem; /* 22 px */
   --text-3xl: 1.75rem; /* 28 px */
   --text-4xl: 2.125rem; /* 34 px */
+}
+
+/*
+ * Barres de défilement fines dans toute l'application, discrètes et aux
+ * couleurs du thème (Firefox et Chrome ; Safari les masque déjà au repos).
+ * Dans la couche « base » : une classe locale (barre masquée) l'emporte.
+ */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(
+        in oklab,
+        var(--muted-foreground) 35%,
+        transparent
+      )
+      transparent;
+  }
 }

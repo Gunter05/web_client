@@ -285,8 +285,28 @@
       "moreActions": "More actions",
       "by": "by"
     },
-    "later": "Maybe later",
-    "seeMore": "see more"
+    "seeMore": "see more",
+    "form": {
+      "namePlaceholder": "Event name",
+      "start": "Start",
+      "end": "End",
+      "locationPlaceholder": "Add the event location",
+      "descriptionPlaceholder": "Add a description",
+      "next": "Continue",
+      "back": "Back",
+      "changePage": "Change",
+      "pickDate": "Pick a date",
+      "optionalHint": "The poster and the description are optional.",
+      "addPoster": "Add a poster",
+      "posterHint": "Recommended 4:5 · drag and drop or click",
+      "changePhoto": "Change the poster",
+      "stepOf": "Step {step} of {total}",
+      "leaveTitle": "Discard this event?",
+      "leaveDescription": "What you entered will be lost.",
+      "leaveConfirm": "Discard",
+      "leaveCancel": "Keep editing",
+      "previewUnavailable": "Preview unavailable for this format. Prefer a JPEG, PNG or WebP photo."
+    }
   },
   "categories": {
     "match": "Match / competition",

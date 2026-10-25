@@ -29,9 +29,9 @@ export function NavLink({
   const active = onPage && !(variant === "sidebar" && panel);
   const shownIcon = active && activeIcon ? activeIcon : icon;
   if (variant === "bottom") {
-    // Sur téléphone, connexion et inscription s'ouvrent en page entière : un
-    // lien classique n'est pas intercepté en modal (src/app/@auth).
-    const Anchor = isAuthPage(href) ? "a" : Link;
+    // Sur téléphone, connexion, inscription et création s'ouvrent en page
+    // entière : un lien classique n'est pas intercepté en modal (@auth, @modal).
+    const Anchor = opensAsPage(href) ? "a" : Link;
     return (
       <Anchor
         href={href}
@@ -62,7 +62,10 @@ export function NavLink({
   );
 }
 
-/** Écran d'authentification (/login, /register…), adresse et paramètres compris. */
-function isAuthPage(href: string) {
-  return /^\/(login|register|forgot-password)(\?|$)/.test(href);
+/**
+ * Écran ouvert en modal sur ordinateur et en page sur téléphone
+ * (/login, /register, /events/new…), adresse et paramètres compris.
+ */
+function opensAsPage(href: string) {
+  return /^\/(login|register|forgot-password|events\/new)(\?|$)/.test(href);
 }

@@ -285,8 +285,28 @@
       "moreActions": "Plus d'actions",
       "by": "par"
     },
-    "later": "Plus tard",
-    "seeMore": "voir plus"
+    "seeMore": "voir plus",
+    "form": {
+      "namePlaceholder": "Nom de l'événement",
+      "start": "Début",
+      "end": "Fin",
+      "locationPlaceholder": "Ajouter le lieu de l'événement",
+      "descriptionPlaceholder": "Ajouter une description",
+      "next": "Continuer",
+      "back": "Retour",
+      "changePage": "Changer",
+      "pickDate": "Choisir une date",
+      "optionalHint": "L'affiche et la description sont facultatives.",
+      "addPoster": "Ajouter une affiche",
+      "posterHint": "Format conseillé 4:5 · glissez-déposez ou cliquez",
+      "changePhoto": "Changer l'affiche",
+      "stepOf": "Étape {step} sur {total}",
+      "leaveTitle": "Abandonner l'événement ?",
+      "leaveDescription": "Ce que vous avez saisi sera perdu.",
+      "leaveConfirm": "Abandonner",
+      "leaveCancel": "Continuer la saisie",
+      "previewUnavailable": "Aperçu indisponible pour ce format. Préférez une photo JPEG, PNG ou WebP."
+    }
   },
   "categories": {
     "match": "Match / compétition",

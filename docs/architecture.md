@@ -13,6 +13,7 @@ src/
 │   │                                /events/new, /p/{slug}, /my-pages…, /page-request, /profile
 │   ├── @auth/                       Mêmes écrans en modal (plein écran sur mobile) quand ils sont
 │   │                                ouverts depuis l'application : routes interceptées (.)login…
+│   ├── @modal/                      Création d'un événement en modal sur ordinateur ((.)events/new)
 │   ├── (super-admin)/admin/         Espace Super-Admin : /admin, /admin/page-requests,
 │   │                                /admin/accounts, /admin/pages, /admin/events
 │   ├── demo/[name]/route.ts         Images de démonstration

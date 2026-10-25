@@ -45,7 +45,6 @@ export {
 } from "@/modules/events/presentation/components/EventFeed";
 export { EventForm } from "@/modules/events/presentation/components/EventForm";
 export { EventGrid } from "@/modules/events/presentation/components/EventGrid";
-export { ChoosePageDialog } from "@/modules/events/presentation/components/ChoosePageDialog";
 export {
   eventImage,
   PUBLIC_IMAGE_HOST,

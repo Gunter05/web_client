@@ -18,7 +18,7 @@ async function EditEvent({ params }: PageProps<"/e/[id]/edit">) {
   const isOrganizer = await getMyPageById(event.organizerPageId);
 
   return (
-    <div className="mx-auto max-w-2xl px-4 pt-6 md:pt-10">
+    <div className="mx-auto max-w-xl px-4 pt-6 pb-10 md:pt-10">
       <PageTitle title={t("edit")} returnTo={`/e/${id}`} />
       {!isOrganizer ? (
         <p className="rounded-xl border bg-muted/40 p-4 text-sm">
