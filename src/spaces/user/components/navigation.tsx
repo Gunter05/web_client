@@ -1,17 +1,11 @@
 import {
-  FlagIcon,
   HouseLineIcon,
   MagnifyingGlassIcon,
   PlusSquareIcon,
-  ShieldIcon,
-  SignOutIcon,
   SquaresFourIcon,
-  UserIcon,
 } from "@/shared/components/icons";
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { cache } from "react";
-import { logoutAction } from "@/modules/authentication/application/authentication.actions";
 import {
   countNotificationsAction,
   listNotificationsAction,
@@ -19,11 +13,6 @@ import {
 } from "@/modules/notifications/application/notifications.actions";
 import { countUnread } from "@/modules/notifications/server";
 import { getCurrentUser } from "@/modules/pages/server";
-import { ThemeSwitcher } from "@/shared/components/ThemeSwitcher";
-import {
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "@/shared/ui/dropdown-menu";
 
 /** Server Actions de la cloche de notifications. */
 export const notificationActions = {
@@ -75,35 +64,5 @@ export const getNavigation = cache(async () => {
       : []),
   ];
 
-  const accountMenu = account && (
-    <>
-      <DropdownMenuItem render={<Link href="/profile" />}>
-        <UserIcon /> {t("auth.myProfile")}
-      </DropdownMenuItem>
-      <DropdownMenuItem render={<Link href="/page-request" />}>
-        <FlagIcon /> {t("nav.requestPage")}
-      </DropdownMenuItem>
-      {account.isAdmin && (
-        <DropdownMenuItem render={<Link href="/admin" />}>
-          <ShieldIcon /> {t("nav.admin")}
-        </DropdownMenuItem>
-      )}
-      <DropdownMenuSeparator />
-      <div className="flex items-center justify-between gap-3 px-2 py-1.5 text-sm">
-        {t("theme.darkMode")}
-        <ThemeSwitcher />
-      </div>
-      <DropdownMenuSeparator />
-      <form action={logoutAction}>
-        <DropdownMenuItem
-          render={<button type="submit" className="w-full" />}
-          nativeButton
-        >
-          <SignOutIcon /> {t("nav.logout")}
-        </DropdownMenuItem>
-      </form>
-    </>
-  );
-
-  return { t, account, unread, links, accountMenu };
+  return { t, account, unread, links };
 });

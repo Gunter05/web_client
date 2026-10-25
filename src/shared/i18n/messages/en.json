@@ -477,7 +477,10 @@
   "more": {
     "settings": "Settings",
     "account": "Account",
-    "other": "Other"
+    "other": "Other",
+    "notifications": "Notifications",
+    "devices": "Connected devices",
+    "menu": "Menu"
   },
   "theme": {
     "label": "Theme",
@@ -485,5 +488,8 @@
     "system": "Match device",
     "dark": "Dark",
     "light": "Light"
+  },
+  "profile": {
+    "changePhoto": "Change photo"
   }
 }

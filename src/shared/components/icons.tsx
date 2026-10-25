@@ -56,6 +56,7 @@ export const ImageIcon = icon(P.ImageIcon);
 export const KeyIcon = icon(P.KeyIcon);
 export const LaptopIcon = icon(P.LaptopIcon);
 export const LinkSimpleIcon = icon(P.LinkSimpleIcon);
+export const ListIcon = icon(P.ListIcon);
 export const LockIcon = icon(P.LockIcon);
 export const MagnifyingGlassIcon = icon(P.MagnifyingGlassIcon);
 export const MagnifyingGlassMinusIcon = icon(P.MagnifyingGlassMinusIcon);

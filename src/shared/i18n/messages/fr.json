@@ -477,7 +477,10 @@
   "more": {
     "settings": "Paramètres",
     "account": "Compte",
-    "other": "Autres"
+    "other": "Autres",
+    "notifications": "Notifications",
+    "devices": "Appareils connectés",
+    "menu": "Menu"
   },
   "theme": {
     "label": "Thème",
@@ -485,5 +488,8 @@
     "system": "Comme l'appareil",
     "dark": "Sombre",
     "light": "Clair"
+  },
+  "profile": {
+    "changePhoto": "Changer la photo"
   }
 }
