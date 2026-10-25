@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Montserrat } from "next/font/google";
+import { Quicksand } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { clientEnv } from "@/shared/config/env.client";
@@ -11,11 +11,11 @@ import { Providers } from "./providers";
 import "./globals.css";
 
 /**
- * Police de toute l'interface (titres et texte) : Montserrat. Next.js ajuste
+ * Police de toute l'interface (titres et texte) : Quicksand, arrondie et douce. Next.js ajuste
  * une police de repli du système à ses mesures, pour éviter tout décalage au
  * chargement.
  */
-const montserrat = Montserrat({
+const quicksand = Quicksand({
   variable: "--font-sans",
   subsets: ["latin"],
 });
@@ -51,7 +51,7 @@ export default function RootLayout({ children, auth }: LayoutProps<"/">) {
       lang="fr"
       // La classe `dark` est posée par le script du thème avant React.
       suppressHydrationWarning
-      className={`${montserrat.variable} h-full antialiased`}
+      className={`${quicksand.variable} h-full antialiased`}
     >
       <head>
         {/* Thème appliqué avant le premier affichage (pas de flash clair). */}

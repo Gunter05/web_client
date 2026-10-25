@@ -295,9 +295,8 @@ body:has([data-slot="dialog-content"][data-relay])
 }
 
 /*
- * Échelle des textes réduite d'environ 1 px par palier : Montserrat est plus
- * large que la plupart des polices, à taille égale elle paraît plus grande.
- * Seules les tailles de texte changent, pas les espacements.
+ * Échelle des textes réduite d'environ 1 px par palier, pour une interface
+ * plus fine. Seules les tailles de texte changent, pas les espacements.
  */
 @theme {
   --text-xs: 0.6875rem; /* 11 px */
