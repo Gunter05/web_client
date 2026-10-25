@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useLayoutEffect, useRef, useState } from "react";
+import { LinkifiedText } from "@/shared/components/LinkifiedText";
 import { cn } from "@/shared/lib/utils";
 
 const CLAMP = { 2: "line-clamp-2", 4: "line-clamp-4", 6: "line-clamp-6" };
@@ -9,6 +10,7 @@ const CLAMP = { 2: "line-clamp-2", 4: "line-clamp-4", 6: "line-clamp-6" };
 /**
  * Début d'un texte sur quelques lignes, puis « voir plus » qui déplie le
  * reste sur place. Le lien n'apparaît que si le texte est réellement coupé.
+ * Les adresses web du texte sont des liens.
  */
 export function ExpandableText({
   text,
@@ -45,7 +47,7 @@ export function ExpandableText({
           !expanded && CLAMP[lines],
         )}
       >
-        {text}
+        <LinkifiedText text={text} />
       </p>
       {clamped && !expanded && (
         <button
