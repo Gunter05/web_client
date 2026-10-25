@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { TikTok_Sans } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { clientEnv } from "@/shared/config/env.client";
@@ -11,14 +11,13 @@ import { Providers } from "./providers";
 import "./globals.css";
 
 /**
- * Police de toute l'interface (titres et texte). Next.js n'a pas les mesures
- * de TikTok Sans pour ajuster une police de repli : on prend celle du système.
+ * Police de toute l'interface (titres et texte) : Montserrat. Next.js ajuste
+ * une police de repli du système à ses mesures, pour éviter tout décalage au
+ * chargement.
  */
-const tiktokSans = TikTok_Sans({
+const montserrat = Montserrat({
   variable: "--font-sans",
   subsets: ["latin"],
-  adjustFontFallback: false,
-  fallback: ["system-ui", "Arial", "sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -52,7 +51,7 @@ export default function RootLayout({ children, auth }: LayoutProps<"/">) {
       lang="fr"
       // La classe `dark` est posée par le script du thème avant React.
       suppressHydrationWarning
-      className={`${tiktokSans.variable} h-full antialiased`}
+      className={`${montserrat.variable} h-full antialiased`}
     >
       <head>
         {/* Thème appliqué avant le premier affichage (pas de flash clair). */}
