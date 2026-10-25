@@ -36,6 +36,7 @@ export function EventGrid({
           >
             <ProgressiveImage
               src={eventImage(e)}
+              fallbackSrc={eventImage({ ...e, photoUrl: null })}
               placeholder={eventImageLayout(e)?.placeholder}
               fill
               fit="contain"

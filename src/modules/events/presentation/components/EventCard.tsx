@@ -107,6 +107,7 @@ export function EventCard({
         >
           <ProgressiveImage
             src={eventImage(event)}
+            fallbackSrc={eventImage({ ...event, photoUrl: null })}
             fill
             placeholder={layout?.placeholder}
             priority={priority}

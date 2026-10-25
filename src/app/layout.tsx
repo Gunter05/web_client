@@ -45,7 +45,11 @@ export const viewport: Viewport = {
 };
 
 /** Document racine : polices, mesures Web Vitals et providers globaux. */
-export default function RootLayout({ children, auth }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+  auth,
+  modal,
+}: LayoutProps<"/">) {
   return (
     <html
       lang="fr"
@@ -68,6 +72,8 @@ export default function RootLayout({ children, auth }: LayoutProps<"/">) {
           {children}
           {/* Connexion, inscription… en modal (routes interceptées de @auth) */}
           {auth}
+          {/* Création d'un événement en modal sur ordinateur (routes interceptées de @modal) */}
+          {modal}
         </Providers>
         <Analytics />
         <SpeedInsights />

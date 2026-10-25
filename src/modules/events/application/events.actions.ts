@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 import { z } from "zod";
 import {
   CATEGORIES,
@@ -113,7 +113,8 @@ export async function createEventAction(
   );
   if (!result.ok) return result.state;
   revalidatePath("/", "layout");
-  redirect(`/e/${result.value.id}?msg=published`);
+  // Remplace le formulaire dans l'historique : le retour ne le rouvre pas
+  redirect(`/e/${result.value.id}?msg=published`, RedirectType.replace);
 }
 
 export async function updateEventAction(

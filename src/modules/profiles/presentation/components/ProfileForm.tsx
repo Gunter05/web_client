@@ -1,7 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useId, useState } from "react";
+import { CameraIcon } from "@/shared/components/icons";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { FormField } from "@/shared/components/FormField";
 import { useFormAction } from "@/shared/hooks/useFormAction";
@@ -11,7 +12,10 @@ import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { usePhotoUpload } from "@/modules/medias";
 
-/** Profil personnel : nom et photo, affichés dans le sélecteur de profil. */
+/**
+ * Profil personnel : nom et photo. La photo se change d'un clic sur elle ;
+ * « Enregistrer » (secondaire) n'apparaît qu'après une modification.
+ */
 export function ProfileForm({
   action,
   name,
@@ -33,40 +37,54 @@ export function ProfileForm({
   // La photo part dès qu'elle est choisie ; le formulaire n'envoie que son adresse.
   const upload = usePhotoUpload();
   const [typedName, setTypedName] = useState(name);
+  const photoId = useId();
+  // Nom changé ou nouvelle photo choisie
+  const changed = typedName.trim() !== name || preview !== photo;
   return (
     <form action={send} onSubmit={onSubmit} className="grid gap-5" noValidate>
-      <div className="flex items-center gap-4">
-        <ProfileAvatar name={typedName || "?"} photo={preview} size="lg" />
-        <FormField
-          id="photo"
-          label={t("common.photo")}
-          error={errors(
-            upload.error ??
-              state.fieldErrors?.photo ??
-              state.fieldErrors?.photoUrl,
-          )}
-          help={
-            upload.uploading
-              ? t("common.photoUploading")
-              : t("common.photoFormats")
-          }
-          className="flex-1"
+      {/* Photo : un clic dessus (ou sur l'appareil photo) la change */}
+      <div className="grid justify-items-start gap-2">
+        <input type="hidden" name="photoUrl" value={upload.url ?? ""} />
+        <label
+          htmlFor={photoId}
+          title={t("profile.changePhoto")}
+          className="relative cursor-pointer rounded-full outline-none focus-within:ring-3 focus-within:ring-ring/50"
         >
-          <input type="hidden" name="photoUrl" value={upload.url ?? ""} />
-          <Input
-            id="photo"
+          <ProfileAvatar name={typedName || "?"} photo={preview} size="xl" />
+          <span className="absolute -right-0.5 -bottom-0.5 grid size-8 place-items-center rounded-full border-2 border-background bg-foreground text-background shadow-sm [&_svg]:size-4">
+            <CameraIcon />
+          </span>
+          <input
+            id={photoId}
             type="file"
             accept="image/*"
+            aria-label={t("profile.changePhoto")}
             aria-invalid={!!upload.error}
+            className="sr-only"
             onChange={(e) => {
               const file = e.target.files?.[0];
-              if (file) {
-                setPreview(URL.createObjectURL(file));
-                void upload.upload(file);
-              } else upload.reset();
+              if (!file) return;
+              setPreview(URL.createObjectURL(file));
+              void upload.upload(file);
             }}
           />
-        </FormField>
+        </label>
+        <p className="text-xs text-muted-foreground">
+          {upload.uploading
+            ? t("common.photoUploading")
+            : t("common.photoFormats")}
+        </p>
+        {(upload.error ??
+          state.fieldErrors?.photo ??
+          state.fieldErrors?.photoUrl) && (
+          <p role="alert" className="text-sm text-destructive">
+            {errors(
+              upload.error ??
+                state.fieldErrors?.photo ??
+                state.fieldErrors?.photoUrl,
+            )}
+          </p>
+        )}
       </div>
       <FormField
         id="name"
@@ -81,13 +99,17 @@ export function ProfileForm({
           aria-invalid={!!state.fieldErrors?.name}
         />
       </FormField>
-      <Button
-        type="submit"
-        disabled={enCours || upload.uploading}
-        className="justify-self-start"
-      >
-        {t("common.save")}
-      </Button>
+      {/* N'apparaît qu'après une modification */}
+      {changed && (
+        <Button
+          type="submit"
+          variant="secondary"
+          disabled={enCours || upload.uploading}
+          className="justify-self-start motion-safe:animate-rise"
+        >
+          {t("common.save")}
+        </Button>
+      )}
     </form>
   );
 }

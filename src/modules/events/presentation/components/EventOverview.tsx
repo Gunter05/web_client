@@ -30,7 +30,7 @@ type TitleProps = { className: string; children: ReactNode };
  * du contenu ; une fonctionnalité future (« J'y vais », commentaires…)
  * remplit une zone existante sans refaire la mise en page.
  *
- * 1. Héros : la photo bord à bord, l'état posé en haut ; en bas, sur un
+ * 1. Héros : la photo bord à bord, de hauteur bornée, l'état posé en haut ; en bas, sur un
  *    léger dégradé noir et en blanc, les statistiques (vues, réservées aux
  *    membres de la page) et les actions (partager, ···).
  * 2. Identité : le titre et, juste dessous, l'organisateur.
@@ -89,13 +89,23 @@ export function EventOverview({
           )}
         >
           <div className="relative overflow-hidden bg-muted">
+            {/* Hauteur bornée : au-delà, l'image est recadrée au centre */}
             <ProgressiveImage
               src={eventImage(event)}
               {...layoutProps(event)}
+              // Photo cassée : l'image par défaut de la catégorie
+              fallbackSrc={eventImage({ ...event, photoUrl: null })}
               priority
-              fit={page ? "contain" : undefined}
-              className={cn("w-full", page && "max-h-[80svh]")}
-              imageClassName={cn(cancelled && "grayscale")}
+              className={cn(
+                "w-full",
+                // Dimensions inconnues : place réservée en 4:5, jamais écrasée
+                !event.photo && "aspect-[4/5]",
+                page ? "max-h-[65svh] md:max-h-[560px]" : "max-h-[420px]",
+              )}
+              imageClassName={cn(
+                !event.photo && "h-full",
+                cancelled && "grayscale",
+              )}
             />
             <HeroBadges event={event} />
             {/* Sur le bas de l'image, en blanc : les statistiques (vues, réservées
@@ -181,7 +191,7 @@ function HeroBadges({ event }: { event: EventView }) {
       <EventBadges
         status={event.status}
         period={event.period}
-        className="empty:hidden [&>*]:bg-background/90 [&>*]:shadow-sm [&>*]:backdrop-blur"
+        className="empty:hidden [&>*]:shadow-sm"
       />
       {soon && (
         <span className="rounded-md bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground shadow-sm first-letter:uppercase">

@@ -24,8 +24,11 @@ export function ProgressiveImage({
   fit = "cover",
   className,
   imageClassName,
+  fallbackSrc,
 }: {
   src: string;
+  /** Image affichée si `src` ne se charge pas (fichier absent, adresse cassée). */
+  fallbackSrc?: string;
   alt?: string;
   width?: number;
   height?: number;
@@ -40,12 +43,19 @@ export function ProgressiveImage({
 }) {
   const image = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(priority);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const shownSrc = failedSrc === src && fallbackSrc ? fallbackSrc : src;
   const preview = useMemo(() => decode(placeholder), [placeholder]);
 
-  // Une image déjà en cache a fini de charger avant l'hydratation : pas de fondu
+  // Une image déjà en cache a fini de charger avant l'hydratation : pas de fondu.
+  // Une erreur survenue avant l'hydratation n'a pas été vue : on la rattrape.
   useEffect(() => {
-    if (image.current?.complete) setLoaded(true);
-  }, []);
+    const img = image.current;
+    if (!img?.complete) return;
+    if (img.naturalWidth === 0 && fallbackSrc)
+      setFailedSrc(img.getAttribute("src"));
+    else setLoaded(true);
+  }, [fallbackSrc]);
 
   return (
     <div
@@ -63,7 +73,7 @@ export function ProgressiveImage({
       {/* eslint-disable-next-line @next/next/no-img-element -- images servies par le stockage (ADR 0014) */}
       <img
         ref={image}
-        src={src}
+        src={shownSrc}
         alt={alt}
         width={width}
         height={height}
@@ -71,6 +81,7 @@ export function ProgressiveImage({
         fetchPriority={priority ? "high" : "auto"}
         decoding="async"
         onLoad={() => setLoaded(true)}
+        onError={() => fallbackSrc && setFailedSrc(src)}
         className={cn(
           "block w-full transition-opacity duration-300 motion-reduce:transition-none",
           fill || (width && height) ? "h-full" : "h-auto",
