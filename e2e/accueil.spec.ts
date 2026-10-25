@@ -39,7 +39,18 @@ test("la fiche s'ouvre sans compte et un lien inconnu est expliqué (US-36)", as
     page.getByRole("heading", { level: 1, name: "Soirée de gala" }),
   ).toBeVisible();
   await expect(page.getByText("Modifié").first()).toBeVisible();
-  await expect(page.getByRole("button", { name: "Partager" })).toBeVisible();
+  // Partager est une icône de la ligne d'actions ; le reste est dans « ··· »
+  // (sheet sur téléphone, panneau sur ordinateur : ce dernier remplace le
+  // premier une fois la page chargée, d'où la répétition)
+  await expect(
+    page.getByRole("button", { name: "Partager" }).first(),
+  ).toBeVisible();
+  await expect(async () => {
+    await page.getByRole("button", { name: "Plus d'actions" }).click();
+    await expect(
+      page.getByRole("button", { name: "Copier le lien" }),
+    ).toBeVisible({ timeout: 1000 });
+  }).toPass();
 
   await page.goto("/e/inexistant");
   await expect(

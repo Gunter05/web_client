@@ -263,7 +263,6 @@
     "from": "From",
     "to": "To",
     "views": "{n, plural, =0 {0 views} one {# view} other {# views}}",
-    "viewsHelp": "Only visible to the page's members",
     "myEvents": "My events",
     "myEventsEmpty": "Your page hasn't published any events yet.",
     "columnName": "Name",
@@ -282,11 +281,12 @@
       "next": "Next event",
       "organizedBy": "Hosted by {name}",
       "about": "About the event",
-      "presentedBy": "Presented by",
       "openMaps": "Maps",
-      "actions": "Share and manage"
+      "moreActions": "More actions",
+      "by": "by"
     },
-    "later": "Maybe later"
+    "later": "Maybe later",
+    "seeMore": "see more"
   },
   "categories": {
     "match": "Match / competition",

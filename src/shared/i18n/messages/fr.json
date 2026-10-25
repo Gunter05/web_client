@@ -263,7 +263,6 @@
     "from": "Du",
     "to": "Au",
     "views": "{n, plural, =0 {0 vue} one {# vue} other {# vues}}",
-    "viewsHelp": "Visible uniquement par les membres de la page",
     "myEvents": "Mes événements",
     "myEventsEmpty": "Votre page n'a encore publié aucun événement.",
     "columnName": "Nom",
@@ -282,11 +281,12 @@
       "next": "Événement suivant",
       "organizedBy": "Organisé par {name}",
       "about": "À propos de l'événement",
-      "presentedBy": "Présenté par",
       "openMaps": "Maps",
-      "actions": "Partager et gérer"
+      "moreActions": "Plus d'actions",
+      "by": "par"
     },
-    "later": "Plus tard"
+    "later": "Plus tard",
+    "seeMore": "voir plus"
   },
   "categories": {
     "match": "Match / compétition",
