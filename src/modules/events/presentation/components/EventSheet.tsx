@@ -5,12 +5,10 @@ import {
   CaretDoubleRightIcon,
   CaretDownIcon,
   CaretUpIcon,
-  CopyIcon,
 } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect } from "react";
-import { toast } from "sonner";
 import { Button, buttonVariants } from "@/shared/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/shared/ui/sheet";
 import type { EventView } from "@/modules/events/domain/event-view.types";
@@ -18,9 +16,8 @@ import { EventOverview } from "@/modules/events/presentation/components/EventOve
 
 /**
  * Aperçu d'un événement dans un panneau à droite, sans quitter le fil :
- * barre d'outils (fermer, copier le lien, page de l'événement, précédent /
- * suivant), puis image, nom, organisateur, date, lieu, description et page
- * organisatrice. La fiche complète reste sur /e/{id}.
+ * barre d'outils (fermer, page de l'événement, précédent / suivant), puis la
+ * présentation en zones de l'événement. La fiche complète reste sur /e/{id}.
  */
 export function EventSheet({
   events,
@@ -44,14 +41,7 @@ export function EventSheet({
   useEffect(() => {
     if (event) void onView?.(event.id, false);
   }, [event, onView]);
-
-  async function copyLink() {
-    if (!event) return;
-    await navigator.clipboard.writeText(
-      `${window.location.origin}/e/${event.id}`,
-    );
-    toast.success(t("linkCopied"));
-  }
+  const origin = typeof window === "undefined" ? "" : window.location.origin;
 
   return (
     <Sheet open={!!event} onOpenChange={(open) => !open && onSelect(null)}>
@@ -70,9 +60,6 @@ export function EventSheet({
                 aria-label={t("close")}
               >
                 <CaretDoubleRightIcon />
-              </Button>
-              <Button variant="secondary" size="sm" onClick={copyLink}>
-                <CopyIcon /> {t("copyLink")}
               </Button>
               <Link
                 href={`/e/${event.id}`}
@@ -106,6 +93,7 @@ export function EventSheet({
               <EventOverview
                 event={event}
                 title={(props) => <SheetTitle {...props} />}
+                share={{ url: `${origin}/e/${event.id}` }}
               />
             </div>
           </>

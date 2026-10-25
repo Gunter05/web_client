@@ -32,15 +32,15 @@ export function DateTile({
       aria-hidden
       className={cn(
         // Le jour occupe la hauteur restante : la tuile peut s'étirer sur le texte voisin
-        "grid grid-rows-[auto_1fr] overflow-hidden rounded-lg border bg-card text-center leading-none",
+        "grid grid-rows-[auto_1fr] overflow-hidden rounded-[4px] border bg-card text-center leading-none",
         size === "sm" ? "w-11" : "w-14",
         className,
       )}
     >
       <span
         className={cn(
-          "bg-ink font-bold tracking-wider text-ink-foreground",
-          size === "sm" ? "py-0.5 text-[10px]" : "py-1 text-[11px]",
+          "bg-primary font-bold tracking-wider text-primary-foreground",
+          size === "sm" ? "py-1 text-[10px]" : "py-1.5 text-[11px]",
         )}
       >
         {mounted ? month : " "}

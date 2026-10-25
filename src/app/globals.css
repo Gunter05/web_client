@@ -245,3 +245,51 @@ body:has([data-slot="dialog-content"][data-relay])
     }
   }
 }
+
+/*
+ * Bordures fines (0,5 px) pour tous les composants : traits de contour
+ * (`border`, `border-t`…), séparateurs (`divide-y`) et contours en anneau des
+ * fenêtres (`ring-1`). Tailwind les écrit à 1 px ; cette surcharge, hors
+ * @layer, l'emporte sans toucher aux composants shadcn/ui. Les anneaux de
+ * focus (`ring-3`) gardent leur épaisseur : ils doivent rester bien visibles.
+ */
+:root {
+  --hairline: 0.5px;
+}
+.border {
+  border-width: var(--hairline);
+}
+.border-t {
+  border-top-width: var(--hairline);
+}
+.border-b {
+  border-bottom-width: var(--hairline);
+}
+.border-l {
+  border-left-width: var(--hairline);
+}
+.border-r {
+  border-right-width: var(--hairline);
+}
+.border-x {
+  border-inline-width: var(--hairline);
+}
+.border-y {
+  border-block-width: var(--hairline);
+}
+.divide-y > :not(:last-child) {
+  border-top-width: calc(var(--hairline) * var(--tw-divide-y-reverse));
+  border-bottom-width: calc(var(--hairline) * (1 - var(--tw-divide-y-reverse)));
+}
+.ring-1 {
+  --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0
+    calc(var(--hairline) + var(--tw-ring-offset-width))
+    var(--tw-ring-color, currentcolor);
+}
+@media (width >= 40rem) {
+  .sm\:ring-1 {
+    --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0
+      calc(var(--hairline) + var(--tw-ring-offset-width))
+      var(--tw-ring-color, currentcolor);
+  }
+}
