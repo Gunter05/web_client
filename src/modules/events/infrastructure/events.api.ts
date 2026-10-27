@@ -2,7 +2,10 @@ import "server-only";
 import { api, apiOrNull } from "@/shared/api/client";
 import { withTranslatedErrors } from "@/modules/events/infrastructure/errors";
 import type { Category } from "@/modules/events/domain/event";
-import type { EventView } from "@/modules/events/domain/event-view.types";
+import type {
+  EventView,
+  InterestState,
+} from "@/modules/events/domain/event-view.types";
 
 /** Corps d'un événement envoyé à l'API (publication et modification). */
 export type EventPayload = {
@@ -54,6 +57,16 @@ export const eventsApi = {
     withTranslatedErrors(() =>
       api<EventView>(`/api/v1/pages/${pageId}/events/${id}/cancellation`, {
         body: { reason },
+      }),
+    ),
+  /**
+   * « Intéressé » (ADR 0022 du backend) : on envoie l'état voulu, jamais une
+   * bascule, si bien qu'un renvoi ne compte pas deux fois.
+   */
+  setInterest: (id: string, interested: boolean) =>
+    withTranslatedErrors(() =>
+      api<InterestState>(`/api/v1/events/${encodeURIComponent(id)}/interest`, {
+        method: interested ? "PUT" : "DELETE",
       }),
     ),
   /** Épinglage éditorial en tête du fil, réservé aux admins (ADR 0020 du backend). */
