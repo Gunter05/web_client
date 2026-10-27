@@ -47,6 +47,7 @@ export const DownloadSimpleIcon = icon(P.DownloadSimpleIcon);
 export const EnvelopeSimpleIcon = icon(P.EnvelopeSimpleIcon);
 export const EyeIcon = icon(P.EyeIcon);
 export const EyeSlashIcon = icon(P.EyeSlashIcon);
+export const FireIcon = icon(P.FireIcon);
 export const FlagBannerIcon = icon(P.FlagBannerIcon);
 export const FlagIcon = icon(P.FlagIcon);
 export const GlobeHemisphereWestIcon = icon(P.GlobeHemisphereWestIcon);

@@ -20,6 +20,7 @@ import {
   EventPracticalInfo,
 } from "@/modules/events/presentation/components/EventInfo";
 import { EventLatestUpdate } from "@/modules/events/presentation/components/EventLatestUpdate";
+import { InterestButton } from "@/modules/events/presentation/components/InterestButton";
 import { ShareIconButton } from "@/modules/events/presentation/components/ShareButton";
 
 type TitleProps = { className: string; children: ReactNode };
@@ -32,7 +33,7 @@ type TitleProps = { className: string; children: ReactNode };
  *
  * 1. Héros : la photo bord à bord, de hauteur bornée, l'état posé en haut ; en bas, sur un
  *    léger dégradé noir et en blanc, les statistiques (vues, réservées aux
- *    membres de la page) et les actions (partager, ···).
+ *    membres de la page) et les actions (intéressé, partager, ···).
  * 2. Identité : le titre et, juste dessous, l'organisateur.
  * 3. Alertes : annulation, dernière modification.
  * 4. Infos pratiques : quand et où.
@@ -114,6 +115,9 @@ export function EventOverview({
             <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-black/60 via-black/25 to-transparent p-3 pt-12 text-white">
               <div className="min-w-0">{views}</div>
               <div className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-black/30 p-1 backdrop-blur-sm">
+                {!cancelled && event.period !== "past" && (
+                  <InterestButton event={event} className="hover:bg-white/15" />
+                )}
                 <ShareIconButton
                   url={share.url}
                   title={event.name}

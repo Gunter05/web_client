@@ -21,4 +21,11 @@ export type EventView = Event & {
   organizer: PageSummary;
   /** Absent pour les photos envoyées avant l'enregistrement des dimensions. */
   photo?: PhotoLayout | null;
+  /** Nombre de comptes intéressés, public (ADR 0022 du backend). */
+  interestCount?: number;
+  /** Ce qu'a fait la personne connectée ; absent sans compte. */
+  viewer?: { interested: boolean } | null;
 };
+
+/** Intérêt pour un événement, tel que renvoyé après l'avoir changé. */
+export type InterestState = { interested: boolean; interestCount: number };

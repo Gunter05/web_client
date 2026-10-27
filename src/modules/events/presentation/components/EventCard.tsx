@@ -9,6 +9,7 @@ import {
 } from "@/modules/events/domain/event-image";
 import type { EventView } from "@/modules/events/domain/event-view.types";
 import { EventBadges } from "@/modules/events/presentation/components/EventBadges";
+import { InterestButton } from "@/modules/events/presentation/components/InterestButton";
 import { DateTile } from "@/modules/events/presentation/components/DateTile";
 import { EventTime } from "@/modules/events/presentation/components/EventTime";
 import { PublicationDate } from "@/modules/events/presentation/components/PublicationDate";
@@ -134,13 +135,17 @@ export function EventCard({
             cancelled && "opacity-70 grayscale",
           )}
         />
-        <ShareIconButton
-          path={`/e/${event.id}`}
-          title={event.name}
-          text={event.name}
-          onShare={onShare && (() => onShare(event.id))}
-          className="-mr-2 -mb-2"
-        />
+        <div className="-mr-2 -mb-2 flex items-center">
+          {!cancelled && event.period !== "past" && (
+            <InterestButton event={event} />
+          )}
+          <ShareIconButton
+            path={`/e/${event.id}`}
+            title={event.name}
+            text={event.name}
+            onShare={onShare && (() => onShare(event.id))}
+          />
+        </div>
       </div>
 
       <div className="grid gap-1 px-4 sm:px-0">

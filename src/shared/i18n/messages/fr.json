@@ -76,6 +76,7 @@
     "photoContentRejected": "Le serveur a refusé ce fichier : son contenu n'est pas une vraie image JPEG, PNG ou WebP, même si son nom se termine par .png ou .jpg. Essayez une autre photo.",
     "photoStorageRefused": "Le stockage des photos a refusé l'envoi. Réessayez dans un instant ; si cela continue, prévenez un administrateur.",
     "pinLimitReached": "Deux événements sont déjà épinglés : retirez-en un d'abord.",
+    "eventNotInterestable": "Un événement passé ou annulé ne peut plus être suivi.",
     "eventNotPinnable": "Un événement passé ou annulé ne peut pas être épinglé.",
     "invalidPinDuration": "La durée d'épinglage doit être comprise entre 1 et 30 jours."
   },
@@ -306,7 +307,8 @@
       "leaveConfirm": "Abandonner",
       "leaveCancel": "Continuer la saisie",
       "previewUnavailable": "Aperçu indisponible pour ce format. Préférez une photo JPEG, PNG ou WebP."
-    }
+    },
+    "interest": "Intéressé"
   },
   "categories": {
     "match": "Match / compétition",

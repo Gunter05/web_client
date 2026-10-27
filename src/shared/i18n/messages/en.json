@@ -76,6 +76,7 @@
     "photoContentRejected": "The server refused this file: its content is not a real JPEG, PNG or WebP image, even if its name ends with .png or .jpg. Try another photo.",
     "photoStorageRefused": "The photo storage refused the upload. Try again in a moment; if it keeps happening, tell an administrator.",
     "pinLimitReached": "Two events are already pinned: remove one first.",
+    "eventNotInterestable": "A past or cancelled event can no longer be followed.",
     "eventNotPinnable": "A past or cancelled event cannot be pinned.",
     "invalidPinDuration": "The pin must last between 1 and 30 days."
   },
@@ -306,7 +307,8 @@
       "leaveConfirm": "Discard",
       "leaveCancel": "Keep editing",
       "previewUnavailable": "Preview unavailable for this format. Prefer a JPEG, PNG or WebP photo."
-    }
+    },
+    "interest": "Interested"
   },
   "categories": {
     "match": "Match / competition",
