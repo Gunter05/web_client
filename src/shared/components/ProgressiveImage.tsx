@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { thumbHashToDataURL } from "thumbhash";
+import { mediaSrc } from "@/shared/lib/media-src";
 import { cn } from "@/shared/lib/utils";
 
 /**
@@ -73,7 +74,7 @@ export function ProgressiveImage({
       {/* eslint-disable-next-line @next/next/no-img-element -- images servies par le stockage (ADR 0014) */}
       <img
         ref={image}
-        src={shownSrc}
+        src={mediaSrc(shownSrc)}
         alt={alt}
         width={width}
         height={height}

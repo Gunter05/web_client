@@ -41,6 +41,13 @@ export const clientSchema = z.object({
     .default("development"),
   NEXT_PUBLIC_SITE_URL: z.url(),
   /**
+   * Adresse publique du stockage des photos, la même que MEDIAS_S3_URL_PUBLIQUE
+   * de l'API (ex. https://medias.<domaine>, domaine R2) : le navigateur y lit
+   * `medias/{id}` sans passer par Vercel ni par l'API. Vide : les photos
+   * passent par le site, qui les demande à l'API.
+   */
+  NEXT_PUBLIC_MEDIA_URL: z.union([z.url(), z.literal("")]).default(""),
+  /**
    * Projet Firebase (notifications push, ADR 0017). Valeurs publiques, données
    * par la console Firebase (configuration de l'application Web, clé VAPID des
    * certificats Web Push). Si l'une manque, les push sont désactivés.
