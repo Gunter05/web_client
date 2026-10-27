@@ -41,6 +41,13 @@ export const clientSchema = z.object({
     .default("development"),
   NEXT_PUBLIC_SITE_URL: z.url(),
   /**
+   * Adresse publique du bucket des photos, la même que MEDIAS_S3_URL_PUBLIQUE
+   * de l'API (ADR 0014 du backend). Le navigateur y lit les photos
+   * directement, sans passer par le site ni par l'API. Vide : les photos
+   * passent par l'API, qui redirige vers le stockage.
+   */
+  NEXT_PUBLIC_MEDIAS_PUBLIC_URL: z.union([z.literal(""), z.url()]).default(""),
+  /**
    * Projet Firebase (notifications push, ADR 0017). Valeurs publiques, données
    * par la console Firebase (configuration de l'application Web, clé VAPID des
    * certificats Web Push). Si l'une manque, les push sont désactivés.

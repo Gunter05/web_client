@@ -14,6 +14,7 @@ import type { FormAction, FormState } from "@/shared/lib/form";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
+import { mediaSrc } from "@/shared/lib/media-url";
 
 type Option = { id: string; name: string };
 
@@ -372,7 +373,7 @@ function ImageField({
       {url && (
         // eslint-disable-next-line @next/next/no-img-element -- aperçu de l'image choisie
         <img
-          src={url}
+          src={mediaSrc(url)}
           alt=""
           className={`w-full rounded-md border bg-muted object-contain ${previewClassName}`}
         />

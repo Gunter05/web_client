@@ -43,12 +43,13 @@ Les hooks Git (Husky) tournent tout seuls : avant chaque commit, `lint-staged` f
 
 Elles sont décrites et validées par Zod dans `src/shared/config/schema.ts`. Une variable manquante fait échouer le build en la nommant.
 
-| Variable                 | Côté    | Obligatoire | Rôle                                                                                |
-| ------------------------ | ------- | ----------- | ----------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL`   | public  | oui         | Adresse publique du site                                                            |
-| `API_URL`                | serveur | non         | URL de l'API (défaut :8080)                                                         |
-| `FUSEAU_APERCU`          | serveur | non         | Fuseau de l'aperçu WhatsApp                                                         |
-| `NEXT_PUBLIC_FIREBASE_*` | public  | non         | Projet Firebase des notifications push (ADR 0017) ; push désactivés si l'une manque |
+| Variable                        | Côté    | Obligatoire | Rôle                                                                                                             |
+| ------------------------------- | ------- | ----------- | ---------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`          | public  | oui         | Adresse publique du site                                                                                         |
+| `API_URL`                       | serveur | non         | URL de l'API (défaut :8080)                                                                                      |
+| `FUSEAU_APERCU`                 | serveur | non         | Fuseau de l'aperçu WhatsApp                                                                                      |
+| `NEXT_PUBLIC_FIREBASE_*`        | public  | non         | Projet Firebase des notifications push (ADR 0017) ; push désactivés si l'une manque                              |
+| `NEXT_PUBLIC_MEDIAS_PUBLIC_URL` | public  | non         | Adresse publique du bucket des photos (= `MEDIAS_S3_URL_PUBLIQUE` de l'API) ; vide, les photos passent par l'API |
 
 - En local : `.env.local` (jamais commité).
 - En CI : bloc `env` de `.github/workflows/ci.yml`.
@@ -94,7 +95,9 @@ npx shadcn@latest add dialog
 
 ### Cache
 
-`cacheComponents` est activé (ADR 0004) : rien n'est mis en cache par défaut. Une fonction ou un composant n'est mis en cache que s'il porte `"use cache"`, dans `src/modules/<module>/server.ts`. Les données propres à un utilisateur ne vont jamais dans un cache partagé.
+`cacheComponents` est activé (ADR 0004) : rien n'est mis en cache par défaut. Une fonction ou un composant n'est mis en cache que s'il porte `"use cache"`, dans `src/modules/<module>/server.ts` ou l'infrastructure du module. Les données propres à un utilisateur ne vont jamais dans un cache partagé.
+
+Sont mis en cache, avec le profil `publicList` (30 s, servi au plus 2 min pendant le renouvellement, défini dans `next.config.ts`) : la liste des pages (`getAllPages`), les campagnes en cours et le fil des visiteurs sans compte. Le fil d'une personne connectée n'est jamais mis en cache : il dit ce qu'elle a fait (`viewer`).
 
 ### Sécurité
 

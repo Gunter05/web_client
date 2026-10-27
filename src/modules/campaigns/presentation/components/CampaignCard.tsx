@@ -14,6 +14,7 @@ import {
 } from "@/modules/campaigns/domain/campaign";
 import { CampaignLink } from "@/modules/campaigns/presentation/components/CampaignLink";
 import type { TrackCampaign } from "@/modules/campaigns/presentation/components/track";
+import { mediaSrc } from "@/shared/lib/media-url";
 
 /**
  * Campagne en tête du fil (FEED_TOP), dans la grammaire d'une carte
@@ -99,7 +100,7 @@ export function CampaignCard({
             {/* Affiche dans ses proportions, jamais plus haute que 70 % de l'écran, comme un événement */}
             {/* eslint-disable-next-line @next/next/no-img-element -- affiche de campagne, sans recadrage */}
             <img
-              src={campaign.posterUrl}
+              src={mediaSrc(campaign.posterUrl)}
               alt=""
               className="max-h-[70svh] w-full object-cover"
             />
