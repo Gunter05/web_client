@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { ExpandableText } from "@/shared/components/ExpandableText";
 import { CaretRightIcon, MegaphoneIcon } from "@/shared/components/icons";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
+import { mediaSrc } from "@/shared/lib/media-src";
 import { cn } from "@/shared/lib/utils";
 import { ShareIconButton } from "@/modules/events";
 import {
@@ -96,11 +97,14 @@ export function CampaignCard({
               background: `color-mix(in srgb, ${accent} 14%, transparent)`,
             }}
           >
-            {/* Affiche dans ses proportions, jamais plus haute que 70 % de l'écran, comme un événement */}
+            {/* Affiche dans ses proportions, jamais plus haute que 70 % de l'écran, comme un événement.
+                Toujours en tête de page : c'est la plus grande image visible (LCP), chargée en priorité. */}
             {/* eslint-disable-next-line @next/next/no-img-element -- affiche de campagne, sans recadrage */}
             <img
-              src={campaign.posterUrl}
+              src={mediaSrc(campaign.posterUrl)}
               alt=""
+              fetchPriority="high"
+              decoding="async"
               className="max-h-[70svh] w-full object-cover"
             />
           </span>

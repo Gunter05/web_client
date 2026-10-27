@@ -28,6 +28,7 @@ export function EventFeed({
   load,
   onView,
   onShare,
+  firstImagePriority = true,
 }: {
   initialEvents: EventView[];
   initialNext: number | null;
@@ -36,6 +37,11 @@ export function EventFeed({
   load: LoadEvents;
   onView?: (eventId: string, fromShareLink: boolean) => Promise<void>;
   onShare?: (eventId: string) => Promise<void>;
+  /**
+   * La photo du premier événement est la plus grande image visible (LCP) :
+   * chargée en priorité, sauf si une autre image passe avant (campagne).
+   */
+  firstImagePriority?: boolean;
 }) {
   const t = useTranslations("events");
   const [events, setEvents] = useState(initialEvents);
@@ -68,7 +74,7 @@ export function EventFeed({
         <EventCard
           key={e.id}
           event={e}
-          priority={i < 2}
+          priority={i === 0 && firstImagePriority}
           onOpen={setOpenId}
           onShare={onShare}
         />

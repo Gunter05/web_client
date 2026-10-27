@@ -11,6 +11,7 @@ import {
   useCampaignDismissal,
 } from "@/modules/campaigns/presentation/components/useCampaignDismissal";
 import type { TrackCampaign } from "@/modules/campaigns/presentation/components/track";
+import { mediaSrc } from "@/shared/lib/media-src";
 
 /** Délai avant l'apparition : on laisse d'abord voir la page. */
 const APPEAR_AFTER_MS = 1500;
@@ -90,7 +91,7 @@ export function FloatingCampaignBanner({
             // bannière), quelle que soit l'image envoyée.
             // eslint-disable-next-line @next/next/no-img-element -- visuel détouré, fond transparent
             <img
-              src={campaign.bannerImageUrl}
+              src={mediaSrc(campaign.bannerImageUrl)}
               alt=""
               className="pointer-events-none absolute bottom-0 left-2 max-h-[5.5rem] max-w-24 object-contain object-bottom drop-shadow-md"
             />
