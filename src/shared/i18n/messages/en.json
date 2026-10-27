@@ -550,7 +550,23 @@
       "deleteTitle": "Delete “{name}”?",
       "deleteDescription": "The campaign, its statistics, its clicks and its images are deleted for good. This cannot be undone.",
       "deleteConfirm": "Delete for good",
-      "deleted": "Campaign deleted"
+      "deleted": "Campaign deleted",
+      "fixErrors": "The campaign was not saved. Please fix: {fields}.",
+      "fieldNames": {
+        "kind": "Type",
+        "sponsor": "Sponsor",
+        "title": "Title",
+        "body": "Text",
+        "ctaLabel": "Button label",
+        "accentColor": "Color",
+        "posterUrl": "Poster",
+        "bannerImageUrl": "Banner visual",
+        "target": "Target",
+        "placements": "Placements",
+        "startsAt": "Start",
+        "endsAt": "End",
+        "priority": "Priority"
+      }
     }
   },
   "metadata": {

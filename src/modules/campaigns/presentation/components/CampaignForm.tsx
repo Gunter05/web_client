@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useActionState, useState } from "react";
+import { useActionState, useState, useTransition } from "react";
 import { usePhotoUpload } from "@/modules/medias";
 import type { AdminCampaign } from "@/modules/campaigns/domain/campaign-admin";
 import {
@@ -49,6 +49,7 @@ export function CampaignForm({
     action,
     {},
   );
+  const [, startTransition] = useTransition();
   const field = (name: string) => errors(state.fieldErrors?.[name]);
   const [sponsorType, setSponsorType] = useState(
     campaign?.sponsor.type ?? "ACCOUNT",
@@ -59,10 +60,32 @@ export function CampaignForm({
   const sponsors = sponsorType === "PAGE" ? options.pages : options.accounts;
 
   return (
-    <form action={submit} className="grid max-w-2xl gap-5">
-      {state.error && !state.fieldErrors && (
-        <p role="alert" className="text-sm text-destructive">
-          {errors(state.error)}
+    <form
+      // Envoi sans « action » : React viderait le formulaire après chaque
+      // envoi, même refusé, et il faudrait tout ressaisir.
+      onSubmit={(e) => {
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+        startTransition(() => submit(data));
+      }}
+      className="grid max-w-2xl gap-5"
+    >
+      {state.error && (
+        <p
+          role="alert"
+          className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive"
+        >
+          {state.fieldErrors
+            ? t("fixErrors", {
+                fields: Object.keys(state.fieldErrors)
+                  .map((f) =>
+                    t.has(`fieldNames.${f}` as "title")
+                      ? t(`fieldNames.${f}` as "title")
+                      : f,
+                  )
+                  .join(", "),
+              })
+            : errors(state.error)}
         </p>
       )}
 

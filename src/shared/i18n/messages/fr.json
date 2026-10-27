@@ -550,7 +550,23 @@
       "deleteTitle": "Supprimer « {name} » ?",
       "deleteDescription": "La campagne, ses statistiques, ses clics et ses images sont supprimés définitivement. Cette action est irréversible.",
       "deleteConfirm": "Supprimer définitivement",
-      "deleted": "Campagne supprimée"
+      "deleted": "Campagne supprimée",
+      "fixErrors": "La campagne n'a pas été enregistrée. À corriger : {fields}.",
+      "fieldNames": {
+        "kind": "Type",
+        "sponsor": "Diffuseur",
+        "title": "Titre",
+        "body": "Texte",
+        "ctaLabel": "Libellé du bouton",
+        "accentColor": "Couleur",
+        "posterUrl": "Affiche",
+        "bannerImageUrl": "Visuel de la bannière",
+        "target": "Cible",
+        "placements": "Emplacements",
+        "startsAt": "Début",
+        "endsAt": "Fin",
+        "priority": "Priorité"
+      }
     }
   },
   "metadata": {
