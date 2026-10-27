@@ -4,6 +4,7 @@ import { cn } from "@/shared/lib/utils";
 import {
   CalendarDotsIcon,
   FlagIcon,
+  MegaphoneIcon,
   PulseIcon,
   TrayIcon,
   UsersIcon,
@@ -17,6 +18,7 @@ const TABS = [
   { href: "/admin/accounts", key: "accounts", icon: UsersIcon },
   { href: "/admin/pages", key: "pages", icon: FlagIcon },
   { href: "/admin/events", key: "events", icon: CalendarDotsIcon },
+  { href: "/admin/campaigns", key: "campaigns", icon: MegaphoneIcon },
   { href: "/admin/activity", key: "activity", icon: PulseIcon },
 ] as const;
 

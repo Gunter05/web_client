@@ -7,6 +7,7 @@ import {
 import { Logo } from "@/shared/components/layout/Logo";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { BottomNav } from "@/spaces/user/components/BottomNav";
+import { CampaignBanner } from "@/spaces/user/components/CampaignBanner";
 import { ShowOnMainTabs } from "@/spaces/user/components/ShowOnMainTabs";
 import { EmailVerificationForAccount } from "@/spaces/user/components/EmailVerificationForAccount";
 import { MobileHeader } from "@/spaces/user/components/MobileHeader";
@@ -39,6 +40,9 @@ export function UserLayout({ children }: { children: ReactNode }) {
       </Suspense>
       <main className="pb-20 md:pb-10">{children}</main>
       <ShowOnMainTabs>
+        <Suspense>
+          <CampaignBanner />
+        </Suspense>
         <Suspense>
           <BottomNav />
         </Suspense>

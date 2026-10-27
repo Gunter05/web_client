@@ -13,15 +13,19 @@ import {
 import { loadEventsAction } from "@/modules/events/application/events.actions";
 import { listEventsFromUrl, getFilterPages } from "@/modules/events/server";
 import { Suspense } from "react";
+import { CampaignCard } from "@/modules/campaigns";
+import { trackCampaignAction } from "@/modules/campaigns/application/campaigns.actions";
+import { getActiveCampaigns } from "@/modules/campaigns/server";
 import { ContentSkeleton } from "@/shared/components/layout/ContentSkeleton";
 
 /** Accueil = liste publique des événements, sans compte (US-01, US-16, US-17). */
 async function Home({ searchParams }: PageProps<"/">) {
   const t = await getTranslations("events");
   const filters = readUrlFilters(await searchParams);
-  const [{ events, nextOffset, asOf }, pages] = await Promise.all([
+  const [{ events, nextOffset, asOf }, pages, campaigns] = await Promise.all([
     listEventsFromUrl(filters),
     getFilterPages(),
+    getActiveCampaigns(),
   ]);
 
   // Sur ordinateur, le fil est décalé vers la gauche du centre (10rem),
@@ -32,6 +36,13 @@ async function Home({ searchParams }: PageProps<"/">) {
       <div className="grid gap-4 px-4 sm:px-0">
         <FilterBar filters={filters} pages={pages} />
       </div>
+      {/* Mise en avant hors du fil, en tête et seulement sans filtre */}
+      {campaigns.FEED_TOP && isDefault(filters) && (
+        <CampaignCard
+          campaign={campaigns.FEED_TOP}
+          track={trackCampaignAction}
+        />
+      )}
       {events.length === 0 ? (
         <div className="flex flex-col items-center gap-3 px-4 py-20 text-center text-muted-foreground">
           <CalendarXIcon className="size-10" />

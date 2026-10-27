@@ -23,7 +23,8 @@
     "photoFormats": "JPEG, PNG or WebP. Large photos are reduced automatically.",
     "optional": "optional",
     "characters": "{n}/{max}",
-    "photoUploading": "Uploading photo…"
+    "photoUploading": "Uploading photo…",
+    "seeMore": "see more"
   },
   "errors": {
     "required": "This field is required",
@@ -78,7 +79,15 @@
     "pinLimitReached": "Two events are already pinned: remove one first.",
     "eventNotInterestable": "A past or cancelled event can no longer be followed.",
     "eventNotPinnable": "A past or cancelled event cannot be pinned.",
-    "invalidPinDuration": "The pin must last between 1 and 30 days."
+    "invalidPinDuration": "The pin must last between 1 and 30 days.",
+    "invalidColor": "Invalid color (#RRGGBB)",
+    "invalidUrl": "Invalid https link",
+    "outOfRange": "Value out of range",
+    "sponsorNotFound": "Sponsor not found",
+    "targetNotFound": "Target not found",
+    "invalidImage": "Image refused: upload it again",
+    "campaignNotFound": "Campaign not found",
+    "tooLong": "Text too long"
   },
   "nav": {
     "home": "Home",
@@ -286,7 +295,6 @@
       "moreActions": "More actions",
       "by": "by"
     },
-    "seeMore": "see more",
     "form": {
       "namePlaceholder": "Event name",
       "start": "Start",
@@ -387,7 +395,8 @@
       "accounts": "Accounts",
       "pages": "Pages",
       "events": "Events",
-      "activity": "Activity"
+      "activity": "Activity",
+      "campaigns": "Campaigns"
     },
     "pageRequests": {
       "empty": "No pending requests",
@@ -463,6 +472,85 @@
       "installsDetail": "{week} in 7 days · {month} in 30 days",
       "installsHelp": "Reported by Chrome and Android only: the real number is higher. The number of people using the installed app (above) is more reliable.",
       "timezone": "Days are counted in UTC."
+    },
+    "campaigns": {
+      "help": "Promotions outside the feed: card at the top of the feed and bottom banner on phones. A new campaign stays a draft until activated.",
+      "new": "New campaign",
+      "edit": "Edit campaign",
+      "empty": "No campaigns yet",
+      "columnTitle": "Campaign",
+      "columnSponsor": "Sponsor",
+      "columnPeriod": "Period",
+      "columnStatus": "State",
+      "columnPlacements": "Placements",
+      "state": {
+        "DRAFT": "Draft",
+        "PAUSED": "Paused",
+        "scheduled": "Scheduled",
+        "running": "Running",
+        "ended": "Ended"
+      },
+      "activate": "Activate",
+      "pause": "Pause",
+      "toDraft": "Back to draft",
+      "activated": "Campaign activated",
+      "paused": "Campaign paused",
+      "drafted": "Campaign is a draft",
+      "saved": "Campaign saved",
+      "kind": "Type",
+      "kinds": {
+        "SPONSORED": "Sponsored",
+        "ANNOUNCEMENT": "Announcement"
+      },
+      "sponsor": "Sponsor",
+      "sponsorTypes": {
+        "PAGE": "A page",
+        "ACCOUNT": "An account"
+      },
+      "choose": "Choose…",
+      "title": "Title",
+      "body": "Text",
+      "bodyHelp": "Optional, 1,000 characters max. The card shows two lines, then “see more”.",
+      "ctaLabel": "Button label",
+      "accentColor": "Color",
+      "poster": "Poster (feed card)",
+      "banner": "Bottom banner cut-out visual",
+      "bannerHelp": "Optional. Image without background (PNG), on the left; it may stick out a little above the banner.",
+      "choosePhoto": "Choose an image",
+      "removePhoto": "Remove",
+      "uploading": "Uploading…",
+      "target": "On click, open",
+      "targetTypes": {
+        "EVENT": "An event",
+        "PAGE": "A page",
+        "URL": "A link"
+      },
+      "targetUrl": "Link (https)",
+      "placements": "Placements",
+      "placementNames": {
+        "FEED_TOP": "Card at the top of the feed",
+        "FLOATING_BOTTOM": "Bottom banner"
+      },
+      "startsAt": "Start",
+      "endsAt": "End",
+      "priority": "Priority",
+      "priorityHelp": "From 0 to 100: the highest wins on a shared placement.",
+      "dismissible": "Visitors may close the bottom banner",
+      "save": "Save",
+      "create": "Create draft",
+      "stats": "Reach",
+      "impressions": "Impressions",
+      "clicks": "Clicks",
+      "dismissals": "Dismissals",
+      "noStats": "No measures yet.",
+      "back": "All campaigns",
+      "uniqueDetailsClicks": "Unique clicks on “Details”",
+      "uniqueCardClicks": "Unique clicks on the card",
+      "delete": "Delete",
+      "deleteTitle": "Delete “{name}”?",
+      "deleteDescription": "The campaign, its statistics, its clicks and its images are deleted for good. This cannot be undone.",
+      "deleteConfirm": "Delete for good",
+      "deleted": "Campaign deleted"
     }
   },
   "metadata": {
@@ -493,5 +581,14 @@
   },
   "profile": {
     "changePhoto": "Change photo"
+  },
+  "campaigns": {
+    "sponsored": "Sponsored",
+    "close": "Hide this campaign",
+    "announcementShort": "Announcement",
+    "learnMore": "Learn more",
+    "details": "Details",
+    "notFound": "This announcement is no longer available",
+    "backToList": "See events"
   }
 }

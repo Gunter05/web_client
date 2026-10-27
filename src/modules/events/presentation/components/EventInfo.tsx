@@ -12,7 +12,7 @@ import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { useMounted } from "@/shared/hooks/useMounted";
 import { cn } from "@/shared/lib/utils";
 import type { EventView } from "@/modules/events/domain/event-view.types";
-import { ExpandableText } from "@/modules/events/presentation/components/ExpandableText";
+import { ExpandableText } from "@/shared/components/ExpandableText";
 
 /**
  * Zones de la fiche d'un événement, communes à l'aperçu (panneau) et à la
