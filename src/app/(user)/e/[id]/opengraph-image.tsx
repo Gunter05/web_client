@@ -25,7 +25,30 @@ async function photo(address: string | null): Promise<Buffer | null> {
 }
 
 /**
- * Image d'aperçu WhatsApp (US-36) : la photo de l'événement recadrée en
+ * L'image entière, sans rognage, centrée dans le cadre 1200 × 630 ; le reste
+ * du cadre est rempli par la même image agrandie et floutée.
+ */
+async function framed(source: Buffer, background: string): Promise<Buffer> {
+  const flat = await sharp(source)
+    .rotate() // applique l'orientation EXIF des photos de téléphone
+    .flatten({ background }) // le JPEG n'a pas de transparence
+    .toBuffer();
+  const [backdrop, picture] = await Promise.all([
+    sharp(flat)
+      .resize(size.width, size.height, { fit: "cover" })
+      .blur(30)
+      .modulate({ brightness: 0.8 })
+      .toBuffer(),
+    sharp(flat).resize(size.width, size.height, { fit: "inside" }).toBuffer(),
+  ]);
+  return sharp(backdrop)
+    .composite([{ input: picture, gravity: "centre" }])
+    .jpeg({ quality: 80, mozjpeg: true })
+    .toBuffer();
+}
+
+/**
+ * Image d'aperçu WhatsApp (US-36) : la photo de l'événement entière dans un cadre
  * 1200 × 630, en JPEG. WhatsApp n'affiche ni SVG ni WebP (format des photos
  * envoyées depuis le site, ADR 0014 du backend) et ignore les images trop
  * lourdes : un JPEG d'une centaine de Ko passe partout. Sans photo lisible,
@@ -40,18 +63,12 @@ export default async function Image({
   const source =
     (await photo(event ? eventImage(event) : null)) ??
     Buffer.from(demoImage("defaut"));
-  const jpeg = await sharp(source)
-    .rotate() // applique l'orientation EXIF des photos de téléphone
-    .resize(size.width, size.height, { fit: "cover", position: "attention" })
-    .flatten({ background: "#ffffff" }) // le JPEG n'a pas de transparence
-    .jpeg({ quality: 80, mozjpeg: true })
-    .toBuffer()
-    .catch(() =>
-      sharp(Buffer.from(demoImage("defaut")))
-        .resize(size.width, size.height, { fit: "cover" })
-        .jpeg({ quality: 80 })
-        .toBuffer(),
-    );
+  const jpeg = await framed(source, "#ffffff").catch(() =>
+    sharp(Buffer.from(demoImage("defaut")))
+      .resize(size.width, size.height, { fit: "cover" })
+      .jpeg({ quality: 80 })
+      .toBuffer(),
+  );
   return new Response(new Uint8Array(jpeg), {
     headers: {
       "Content-Type": contentType,
