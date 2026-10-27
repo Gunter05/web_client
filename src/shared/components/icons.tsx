@@ -27,6 +27,7 @@ export const ArrowLeftIcon = icon(P.ArrowLeftIcon);
 export const ArrowSquareOutIcon = icon(P.ArrowSquareOutIcon);
 export const ArrowUpRightIcon = icon(P.ArrowUpRightIcon);
 export const BellIcon = icon(P.BellIcon);
+export const MegaphoneIcon = icon(P.MegaphoneIcon);
 export const BellRingingIcon = icon(P.BellRingingIcon);
 export const BellSlashIcon = icon(P.BellSlashIcon);
 export const CalendarBlankIcon = icon(P.CalendarBlankIcon);

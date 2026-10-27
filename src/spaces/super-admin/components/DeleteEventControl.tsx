@@ -19,14 +19,18 @@ import {
 import { Button } from "@/shared/ui/button";
 
 /**
- * Suppression définitive d'un événement (ADR 0021 du backend), après une
- * confirmation qui dit ce qui disparaît : irréversible.
+ * Suppression définitive d'un événement (ADR 0021 du backend) ou d'une
+ * campagne (ADR 0023), après une confirmation qui dit ce qui disparaît :
+ * irréversible.
  */
 export function DeleteEventControl({
   name,
   remove,
+  scope = "events",
 }: {
   name: string;
+  /** Textes de l'espace Administration à utiliser. */
+  scope?: "events" | "campaigns";
   remove: () => Promise<{ error?: string }>;
 }) {
   const t = useTranslations();
@@ -41,7 +45,7 @@ export function DeleteEventControl({
         return;
       }
       setOpen(false);
-      toast.success(t("admin.events.deleted"));
+      toast.success(t(`admin.${scope}.deleted`));
     });
   return (
     <AlertDialog open={open} onOpenChange={(next) => !pending && setOpen(next)}>
@@ -54,15 +58,15 @@ export function DeleteEventControl({
           />
         }
       >
-        <TrashIcon /> {t("admin.events.delete")}
+        <TrashIcon /> {t(`admin.${scope}.delete`)}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            {t("admin.events.deleteTitle", { name })}
+            {t(`admin.${scope}.deleteTitle`, { name })}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {t("admin.events.deleteDescription")}
+            {t(`admin.${scope}.deleteDescription`)}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -74,7 +78,7 @@ export function DeleteEventControl({
             disabled={pending}
             onClick={confirm}
           >
-            {t("admin.events.deleteConfirm")}
+            {t(`admin.${scope}.deleteConfirm`)}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

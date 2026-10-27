@@ -6,6 +6,7 @@ import { z } from "zod";
 import { deleteEvent, pinEvent, unpinEvent } from "@/modules/events/server";
 import { acceptPageRequest, rejectPageRequest } from "@/modules/pages/server";
 import { getCurrentAdmin } from "@/modules/admin/server";
+import { campaignsAdmin } from "@/modules/campaigns/server";
 import {
   idField,
   textField,
@@ -89,6 +90,98 @@ export async function deleteEventAction(
   if (!id.success) return { error: "invalidInput" };
   if (!(await getCurrentAdmin())) return { error: "accessDenied" };
   const error = await apiErrorCode(() => deleteEvent(id.data));
+  revalidatePath("/", "layout");
+  return error ? { error } : {};
+}
+
+// ——— Campagnes (ADR 0023 du backend) ———
+
+const optionalText = (max: number) =>
+  z.preprocess(
+    (v) => (typeof v === "string" && v.trim() !== "" ? v.trim() : null),
+    z.string().max(max).nullable(),
+  );
+
+const campaignForm = {
+  kind: z.enum(["SPONSORED", "ANNOUNCEMENT"]),
+  sponsorType: z.enum(["PAGE", "ACCOUNT"]),
+  sponsorId: textField(100),
+  title: textField(200),
+  body: optionalText(500),
+  posterUrl: optionalText(500),
+  bannerImageUrl: optionalText(500),
+  accentColor: optionalText(20),
+  ctaLabel: textField(100),
+  targetType: z.enum(["EVENT", "PAGE", "URL"]),
+  targetEventId: optionalText(100),
+  targetPageId: optionalText(100),
+  targetUrl: optionalText(2048),
+  placements: z.array(z.enum(["FEED_TOP", "FLOATING_BOTTOM"])),
+  startsAt: textField(40),
+  endsAt: textField(40),
+  priority: z.coerce.number().int().min(0).max(100),
+  dismissible: z.preprocess((v) => v === "on", z.boolean()),
+};
+
+/**
+ * Création ou modification d'une campagne. L'API revérifie tout (rôle,
+ * diffuseur, cible, images) et renvoie les erreurs par champ.
+ */
+export async function saveCampaignAction(
+  campaignId: string | null,
+  _: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const f = parseForm(campaignForm, formData);
+  if (!f) return { error: "invalidInput" };
+  if (campaignId !== null && !idField.safeParse(campaignId).success) {
+    return { error: "invalidInput" };
+  }
+  if (!(await getCurrentAdmin())) return { error: "accessDenied" };
+  const input = {
+    ...f,
+    targetEventId: f.targetType === "EVENT" ? f.targetEventId : null,
+    targetPageId: f.targetType === "PAGE" ? f.targetPageId : null,
+    targetUrl: f.targetType === "URL" ? f.targetUrl : null,
+  };
+  const result = await catchApiError(() =>
+    campaignId
+      ? campaignsAdmin.update(campaignId, input)
+      : campaignsAdmin.create(input),
+  );
+  if (!result.ok) return result.state;
+  revalidatePath("/", "layout");
+  redirect(`/admin/campaigns/${result.value.id}?msg=saved`);
+}
+
+/**
+ * Suppression définitive d'une campagne : l'API vérifie le rôle et efface ses
+ * compteurs, ses clics et ses images.
+ */
+export async function deleteCampaignAction(
+  campaignId: string,
+): Promise<{ error?: string }> {
+  const id = idField.safeParse(campaignId);
+  if (!id.success) return { error: "invalidInput" };
+  if (!(await getCurrentAdmin())) return { error: "accessDenied" };
+  const error = await apiErrorCode(() => campaignsAdmin.remove(id.data));
+  revalidatePath("/", "layout");
+  return error ? { error } : {};
+}
+
+/** Active, met en pause ou repasse en brouillon une campagne. */
+export async function changeCampaignStatusAction(
+  campaignId: string,
+  status: "DRAFT" | "ACTIVE" | "PAUSED",
+): Promise<{ error?: string }> {
+  const input = z
+    .object({ id: idField, status: z.enum(["DRAFT", "ACTIVE", "PAUSED"]) })
+    .safeParse({ id: campaignId, status });
+  if (!input.success) return { error: "invalidInput" };
+  if (!(await getCurrentAdmin())) return { error: "accessDenied" };
+  const error = await apiErrorCode(() =>
+    campaignsAdmin.changeStatus(input.data.id, input.data.status),
+  );
   revalidatePath("/", "layout");
   return error ? { error } : {};
 }

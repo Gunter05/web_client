@@ -25,6 +25,14 @@ export const serverSchema = z.object({
    */
   GOOGLE_CLIENT_ID: z.string().default(""),
   GOOGLE_CLIENT_SECRET: z.string().default(""),
+  /**
+   * Scénario de campagnes de démonstration (bds, mix, partner, announcement)
+   * tant que l'API ne sert pas /campaigns/active. Vide : campagnes de l'API.
+   */
+  CAMPAIGNS_DEMO: z.preprocess(
+    (v) => (v === "" ? undefined : v),
+    z.enum(["bds", "mix", "partner", "announcement"]).optional(),
+  ),
 });
 
 export const clientSchema = z.object({

@@ -21,7 +21,7 @@ export function ExpandableText({
   lines?: keyof typeof CLAMP;
   className?: string;
 }) {
-  const t = useTranslations("events");
+  const t = useTranslations("common");
   const ref = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false);
   const [clamped, setClamped] = useState(false);
