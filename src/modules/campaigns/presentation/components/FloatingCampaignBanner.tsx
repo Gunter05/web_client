@@ -11,6 +11,7 @@ import {
   useCampaignDismissal,
 } from "@/modules/campaigns/presentation/components/useCampaignDismissal";
 import type { TrackCampaign } from "@/modules/campaigns/presentation/components/track";
+import { trackImpressionOncePerDay } from "@/modules/campaigns/presentation/components/track-impression";
 import { mediaSrc } from "@/shared/lib/media-src";
 
 /** Délai avant l'apparition : on laisse d'abord voir la page. */
@@ -42,12 +43,12 @@ export function FloatingCampaignBanner({
     return () => clearTimeout(timer);
   }, []);
 
-  // Une impression par affichage de page, même si la carte du fil la masque un temps.
+  // Une impression par jour, même si la carte du fil la masque un temps.
   const seen = useRef(false);
   useEffect(() => {
     if (!shown || seen.current) return;
     seen.current = true;
-    void track?.(campaign.id, "FLOATING_BOTTOM", "IMPRESSION");
+    trackImpressionOncePerDay(track, campaign.id, "FLOATING_BOTTOM");
   }, [shown, campaign.id, track]);
 
   if (!shown) return null;

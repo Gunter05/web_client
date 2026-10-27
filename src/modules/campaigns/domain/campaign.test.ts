@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  impressionToSend,
   type Campaign,
   campaignHref,
   selectActive,
@@ -109,5 +110,39 @@ describe("campaignState", () => {
       campaignState({ ...period, status: "ACTIVE" }, new Date("2027-01-01")),
     ).toBe("ended");
     expect(campaignState({ ...period, status: "PAUSED" }, now)).toBe("PAUSED");
+  });
+});
+
+describe("impressionToSend", () => {
+  const morning = new Date("2026-10-27T08:00:00Z");
+  const evening = new Date("2026-10-27T20:00:00Z");
+  const nextDay = new Date("2026-10-28T08:00:00Z");
+
+  it("envoie la première impression du jour", () => {
+    expect(impressionToSend(null, morning, "c1", "FEED_TOP")).toEqual({
+      day: "2026-10-27",
+      keys: ["c1:FEED_TOP"],
+    });
+  });
+
+  it("n'envoie plus la même impression le même jour", () => {
+    const seen = impressionToSend(null, morning, "c1", "FEED_TOP");
+    expect(impressionToSend(seen, evening, "c1", "FEED_TOP")).toBeNull();
+  });
+
+  it("compte à part chaque emplacement et chaque campagne", () => {
+    const seen = impressionToSend(null, morning, "c1", "FEED_TOP");
+    expect(
+      impressionToSend(seen, evening, "c1", "FLOATING_BOTTOM")?.keys,
+    ).toEqual(["c1:FEED_TOP", "c1:FLOATING_BOTTOM"]);
+    expect(impressionToSend(seen, evening, "c2", "FEED_TOP")).not.toBeNull();
+  });
+
+  it("repart de zéro le lendemain", () => {
+    const seen = impressionToSend(null, morning, "c1", "FEED_TOP");
+    expect(impressionToSend(seen, nextDay, "c1", "FEED_TOP")).toEqual({
+      day: "2026-10-28",
+      keys: ["c1:FEED_TOP"],
+    });
   });
 });

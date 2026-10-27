@@ -118,3 +118,23 @@ export const CAMPAIGN_INTERACTIONS = [
   "DISMISS",
 ] as const;
 export type CampaignInteraction = (typeof CAMPAIGN_INTERACTIONS)[number];
+
+/**
+ * Impressions déjà envoyées aujourd'hui (jour UTC, comme les visites) : une
+ * seule par personne, campagne et emplacement et par jour, soit le nombre de
+ * personnes qui l'ont vue dans la journée, et non le nombre d'affichages.
+ */
+export type SeenImpressions = { day: string; keys: string[] };
+
+export function impressionToSend(
+  seen: SeenImpressions | null,
+  now: Date,
+  campaignId: string,
+  placement: CampaignPlacement,
+): SeenImpressions | null {
+  const day = now.toISOString().slice(0, 10);
+  const key = `${campaignId}:${placement}`;
+  // Un autre jour : la liste repart de zéro.
+  const keys = seen?.day === day ? seen.keys : [];
+  return keys.includes(key) ? null : { day, keys: [...keys, key] };
+}
