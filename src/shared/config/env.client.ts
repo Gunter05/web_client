@@ -4,6 +4,7 @@ export const clientEnv = validate(clientSchema, {
   // Lecture littérale : Next.js remplace ces valeurs dans le code client.
   NODE_ENV: process.env.NODE_ENV,
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+  NEXT_PUBLIC_MEDIA_URL: process.env.NEXT_PUBLIC_MEDIA_URL,
   NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:
     process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,

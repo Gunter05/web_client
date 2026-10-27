@@ -34,6 +34,7 @@ import { Skeleton } from "@/shared/ui/skeleton";
 import { usePhotoUpload } from "@/modules/medias";
 import { CATEGORIES, type Event } from "@/modules/events/domain/event";
 import { DateTimeField } from "@/modules/events/presentation/components/DateTimeField";
+import { mediaSrc } from "@/shared/lib/media-src";
 
 type OrganizerPage = { id: string; name: string; photoUrl: string | null };
 type CreateAction = (
@@ -478,7 +479,7 @@ export function EventForm({
                   ) : (
                     // eslint-disable-next-line @next/next/no-img-element -- aperçu local
                     <img
-                      src={shownPhoto}
+                      src={mediaSrc(shownPhoto)}
                       alt=""
                       onError={() => setPreviewFailed(true)}
                       className="block h-auto w-full"

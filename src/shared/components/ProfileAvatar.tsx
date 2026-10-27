@@ -1,3 +1,4 @@
+import { mediaSrc } from "@/shared/lib/media-src";
 import { cn } from "@/shared/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 
@@ -27,7 +28,9 @@ export function ProfileAvatar({
     .join("");
   return (
     <Avatar className={cn(sizes[size], className)}>
-      {photo && <AvatarImage src={photo} alt="" className="object-cover" />}
+      {photo && (
+        <AvatarImage src={mediaSrc(photo)} alt="" className="object-cover" />
+      )}
       <AvatarFallback className="bg-muted font-semibold text-foreground">
         {initials}
       </AvatarFallback>
