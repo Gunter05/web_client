@@ -132,7 +132,9 @@ export function EventCard({
           size="sm"
           className={cn(
             "relative -mt-8 shrink-0",
-            cancelled && "opacity-70 grayscale",
+            // Grisée sans transparence : le texte de la tuile garde un
+            // contraste suffisant (WCAG 1.4.3), ce qu'une opacité réduite casse.
+            cancelled && "grayscale",
           )}
         />
         <div className="-mr-2 -mb-2 flex items-center">
