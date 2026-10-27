@@ -7,7 +7,6 @@ import {
 import { getTranslations } from "next-intl/server";
 import { cache } from "react";
 import {
-  countNotificationsAction,
   listNotificationsAction,
   markNotificationsReadAction,
 } from "@/modules/notifications/application/notifications.actions";
@@ -16,7 +15,6 @@ import { getCurrentUser } from "@/modules/pages/server";
 
 /** Server Actions de la cloche de notifications. */
 export const notificationActions = {
-  count: countNotificationsAction,
   list: listNotificationsAction,
   markRead: markNotificationsReadAction,
 };

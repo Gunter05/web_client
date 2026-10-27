@@ -19,7 +19,6 @@ import { Button, buttonVariants } from "@/shared/ui/button";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { logoutAction } from "@/modules/authentication/application/authentication.actions";
 import {
-  countNotificationsAction,
   listNotificationsAction,
   markNotificationsReadAction,
   registerPushDeviceAction,
@@ -99,7 +98,6 @@ async function AdminHeader() {
               <NotificationBell
                 initialUnread={await countUnread()}
                 actions={{
-                  count: countNotificationsAction,
                   list: listNotificationsAction,
                   markRead: markNotificationsReadAction,
                 }}
