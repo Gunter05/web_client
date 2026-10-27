@@ -50,6 +50,7 @@ async function AdminSearch({ searchParams }: PageProps<"/search">) {
       {events.length ? (
         <EventGrid
           events={events}
+          priority
           className="-mx-4 sm:mx-0 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4"
         />
       ) : (

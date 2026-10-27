@@ -21,6 +21,7 @@ export function ProgressiveImage({
   height,
   placeholder,
   priority = false,
+  eager = false,
   fill = false,
   fit = "cover",
   className,
@@ -36,6 +37,8 @@ export function ProgressiveImage({
   /** Aperçu flou : ThumbHash en base64. */
   placeholder?: string | null;
   priority?: boolean;
+  /** Chargée tout de suite (visible à l'ouverture), sans passer devant l'image prioritaire. */
+  eager?: boolean;
   /** Remplit son conteneur (taille fixée par le parent) au lieu de la réserver. */
   fill?: boolean;
   fit?: "cover" | "contain";
@@ -78,7 +81,7 @@ export function ProgressiveImage({
         alt={alt}
         width={width}
         height={height}
-        loading={priority ? "eager" : "lazy"}
+        loading={priority || eager ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : "auto"}
         decoding="async"
         onLoad={() => setLoaded(true)}
