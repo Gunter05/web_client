@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { thumbHashToDataURL } from "thumbhash";
 import { cn } from "@/shared/lib/utils";
+import { mediaSrc } from "@/shared/lib/media-url";
 
 /**
  * Image qui ne fait pas sauter la page : sa place est réservée d'avance
@@ -44,7 +45,8 @@ export function ProgressiveImage({
   const image = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(priority);
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
-  const shownSrc = failedSrc === src && fallbackSrc ? fallbackSrc : src;
+  const source = mediaSrc(src);
+  const shownSrc = failedSrc === source && fallbackSrc ? fallbackSrc : source;
   const preview = useMemo(() => decode(placeholder), [placeholder]);
 
   // Une image déjà en cache a fini de charger avant l'hydratation : pas de fondu.
@@ -81,7 +83,7 @@ export function ProgressiveImage({
         fetchPriority={priority ? "high" : "auto"}
         decoding="async"
         onLoad={() => setLoaded(true)}
-        onError={() => fallbackSrc && setFailedSrc(src)}
+        onError={() => fallbackSrc && setFailedSrc(source)}
         className={cn(
           "block w-full transition-opacity duration-300 motion-reduce:transition-none",
           fill || (width && height) ? "h-full" : "h-auto",
