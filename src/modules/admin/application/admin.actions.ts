@@ -106,12 +106,12 @@ const campaignForm = {
   kind: z.enum(["SPONSORED", "ANNOUNCEMENT"]),
   sponsorType: z.enum(["PAGE", "ACCOUNT"]),
   sponsorId: textField(100),
-  title: textField(200),
-  body: optionalText(500),
-  posterUrl: optionalText(500),
-  bannerImageUrl: optionalText(500),
+  title: textField(80),
+  body: optionalText(1000),
+  posterUrl: optionalText(2048),
+  bannerImageUrl: optionalText(2048),
   accentColor: optionalText(20),
-  ctaLabel: textField(100),
+  ctaLabel: textField(30),
   targetType: z.enum(["EVENT", "PAGE", "URL"]),
   targetEventId: optionalText(100),
   targetPageId: optionalText(100),
@@ -123,6 +123,23 @@ const campaignForm = {
   dismissible: z.preprocess((v) => v === "on", z.boolean()),
 };
 
+/** Erreurs de validation du front, rangées sous les champs du formulaire. */
+function campaignFieldErrors(
+  issues: z.core.$ZodIssue[],
+): Record<string, string> {
+  const errors: Record<string, string> = {};
+  for (const issue of issues) {
+    const key = String(issue.path[0] ?? "");
+    const field = key.startsWith("sponsor")
+      ? "sponsor"
+      : key.startsWith("target")
+        ? "target"
+        : key;
+    errors[field] ??= issue.code === "too_big" ? "tooLong" : "required";
+  }
+  return errors;
+}
+
 /**
  * Création ou modification d'une campagne. L'API revérifie tout (rôle,
  * diffuseur, cible, images) et renvoie les erreurs par champ.
@@ -132,8 +149,26 @@ export async function saveCampaignAction(
   _: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  const f = parseForm(campaignForm, formData);
-  if (!f) return { error: "invalidInput" };
+  const parsed = z
+    .object(campaignForm)
+    .safeParse(
+      Object.fromEntries(
+        Object.entries(campaignForm).map(([key, schema]) => [
+          key,
+          schema instanceof z.ZodArray
+            ? formData.getAll(key)
+            : (formData.get(key) ?? undefined),
+        ]),
+      ),
+    );
+  // Refus avant l'API : on dit quel champ, sinon le formulaire n'en montre aucun
+  if (!parsed.success) {
+    return {
+      error: "invalidInput",
+      fieldErrors: campaignFieldErrors(parsed.error.issues),
+    };
+  }
+  const f = parsed.data;
   if (campaignId !== null && !idField.safeParse(campaignId).success) {
     return { error: "invalidInput" };
   }
