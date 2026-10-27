@@ -23,7 +23,8 @@
     "photoFormats": "JPEG, PNG or WebP. Large photos are reduced automatically.",
     "optional": "optional",
     "characters": "{n}/{max}",
-    "photoUploading": "Uploading photo…"
+    "photoUploading": "Uploading photo…",
+    "seeMore": "see more"
   },
   "errors": {
     "required": "This field is required",
@@ -74,7 +75,19 @@
     "photoSourceTooLarge": "This image is too heavy (over 30 MB): choose a lighter photo.",
     "photoUnreadable": "This device cannot read this image (iPhone HEIC format or damaged file?). Try another photo or a screenshot.",
     "photoContentRejected": "The server refused this file: its content is not a real JPEG, PNG or WebP image, even if its name ends with .png or .jpg. Try another photo.",
-    "photoStorageRefused": "The photo storage refused the upload. Try again in a moment; if it keeps happening, tell an administrator."
+    "photoStorageRefused": "The photo storage refused the upload. Try again in a moment; if it keeps happening, tell an administrator.",
+    "pinLimitReached": "Two events are already pinned: remove one first.",
+    "eventNotInterestable": "A past or cancelled event can no longer be followed.",
+    "eventNotPinnable": "A past or cancelled event cannot be pinned.",
+    "invalidPinDuration": "The pin must last between 1 and 30 days.",
+    "invalidColor": "Invalid color (#RRGGBB)",
+    "invalidUrl": "Invalid https link",
+    "outOfRange": "Value out of range",
+    "sponsorNotFound": "Sponsor not found",
+    "targetNotFound": "Target not found",
+    "invalidImage": "Image refused: upload it again",
+    "campaignNotFound": "Campaign not found",
+    "tooLong": "Text too long"
   },
   "nav": {
     "home": "Home",
@@ -120,7 +133,6 @@
     "saveNewPassword": "Save the password",
     "askNewLink": "Ask for a new link",
     "passwordResetDone": "Password changed: sign in",
-    "passwordHelp": "At least {min} characters",
     "verifyEmailTitle": "Confirm your address",
     "verifyEmailSubtitle": "One click confirms that this address is yours.",
     "confirmEmail": "Confirm my address",
@@ -137,7 +149,9 @@
       "unknown": "Unknown device"
     },
     "or": "or",
-    "continueWithGoogle": "Continue with Google"
+    "continueWithGoogle": "Continue with Google",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "pages": {
     "types": {
@@ -259,7 +273,6 @@
     "from": "From",
     "to": "To",
     "views": "{n, plural, =0 {0 views} one {# view} other {# views}}",
-    "viewsHelp": "Only visible to the page's members",
     "myEvents": "My events",
     "myEventsEmpty": "Your page hasn't published any events yet.",
     "columnName": "Name",
@@ -278,11 +291,32 @@
       "next": "Next event",
       "organizedBy": "Hosted by {name}",
       "about": "About the event",
-      "presentedBy": "Presented by",
       "openMaps": "Maps",
-      "actions": "Share and manage"
+      "moreActions": "More actions",
+      "by": "by"
     },
-    "later": "Maybe later"
+    "form": {
+      "namePlaceholder": "Event name",
+      "start": "Start",
+      "end": "End",
+      "locationPlaceholder": "Add the event location",
+      "descriptionPlaceholder": "Add a description",
+      "next": "Continue",
+      "back": "Back",
+      "changePage": "Change",
+      "pickDate": "Pick a date",
+      "optionalHint": "The poster and the description are optional.",
+      "addPoster": "Add a poster",
+      "posterHint": "Recommended 4:5 · drag and drop or click",
+      "changePhoto": "Change the poster",
+      "stepOf": "Step {step} of {total}",
+      "leaveTitle": "Discard this event?",
+      "leaveDescription": "What you entered will be lost.",
+      "leaveConfirm": "Discard",
+      "leaveCancel": "Keep editing",
+      "previewUnavailable": "Preview unavailable for this format. Prefer a JPEG, PNG or WebP photo."
+    },
+    "interest": "Interested"
   },
   "categories": {
     "match": "Match / competition",
@@ -360,7 +394,9 @@
       "pageRequests": "Page requests",
       "accounts": "Accounts",
       "pages": "Pages",
-      "events": "Events"
+      "events": "Events",
+      "activity": "Activity",
+      "campaigns": "Campaigns"
     },
     "pageRequests": {
       "empty": "No pending requests",
@@ -407,10 +443,131 @@
     "events": {
       "empty": "No events published yet",
       "search": "Event name",
-      "createdOn": "Created on"
+      "createdOn": "Created on",
+      "pin": "Pin",
+      "unpin": "Remove",
+      "pinFor": "Pin for",
+      "days": "{n, plural, one {# day} other {# days}}",
+      "pinnedUntil": "On top until {date}",
+      "pinned": "Event pinned at the top of the feed",
+      "unpinned": "Pin removed",
+      "feedColumn": "Top of feed",
+      "help": "A pinned event goes to the top of the feed, with no visible label. 2 at most at once.",
+      "delete": "Delete",
+      "deleteTitle": "Delete “{name}”?",
+      "deleteDescription": "The event, its views, its statistics and its photo are deleted for good. This cannot be undone.",
+      "deleteConfirm": "Delete for good",
+      "deleted": "Event deleted"
     },
     "noResults": "No results for this search",
-    "viewSite": "View public site"
+    "viewSite": "View public site",
+    "activity": {
+      "intro": "Anonymous visitors, no account needed: a visitor counts once a day, however many pages they view.",
+      "today": "Today",
+      "week": "Last 7 days",
+      "month": "Last 30 days",
+      "visitors": "{n, plural, one {visitor} other {visitors}}",
+      "installedApp": "including {n} using the installed app",
+      "installs": "App installs",
+      "installsDetail": "{week} in 7 days · {month} in 30 days",
+      "installsHelp": "Reported by Chrome and Android only: the real number is higher. The number of people using the installed app (above) is more reliable.",
+      "timezone": "Days are counted in UTC."
+    },
+    "campaigns": {
+      "help": "Promotions outside the feed: card at the top of the feed and bottom banner on phones. A new campaign stays a draft until activated.",
+      "new": "New campaign",
+      "edit": "Edit campaign",
+      "empty": "No campaigns yet",
+      "columnTitle": "Campaign",
+      "columnSponsor": "Sponsor",
+      "columnPeriod": "Period",
+      "columnStatus": "State",
+      "columnPlacements": "Placements",
+      "state": {
+        "DRAFT": "Draft",
+        "PAUSED": "Paused",
+        "scheduled": "Scheduled",
+        "running": "Running",
+        "ended": "Ended"
+      },
+      "activate": "Activate",
+      "pause": "Pause",
+      "toDraft": "Back to draft",
+      "activated": "Campaign activated",
+      "paused": "Campaign paused",
+      "drafted": "Campaign is a draft",
+      "saved": "Campaign saved",
+      "kind": "Type",
+      "kinds": {
+        "SPONSORED": "Sponsored",
+        "ANNOUNCEMENT": "Announcement"
+      },
+      "sponsor": "Sponsor",
+      "sponsorTypes": {
+        "PAGE": "A page",
+        "ACCOUNT": "An account"
+      },
+      "choose": "Choose…",
+      "title": "Title",
+      "body": "Text",
+      "bodyHelp": "Optional, 1,000 characters max. The card shows two lines, then “see more”.",
+      "ctaLabel": "Button label",
+      "accentColor": "Color",
+      "poster": "Poster (feed card)",
+      "banner": "Bottom banner cut-out visual",
+      "bannerHelp": "Optional. Image without background (PNG), on the left; it may stick out a little above the banner.",
+      "choosePhoto": "Choose an image",
+      "removePhoto": "Remove",
+      "uploading": "Uploading…",
+      "target": "On click, open",
+      "targetTypes": {
+        "EVENT": "An event",
+        "PAGE": "A page",
+        "URL": "A link"
+      },
+      "targetUrl": "Link (https)",
+      "placements": "Placements",
+      "placementNames": {
+        "FEED_TOP": "Card at the top of the feed",
+        "FLOATING_BOTTOM": "Bottom banner"
+      },
+      "startsAt": "Start",
+      "endsAt": "End",
+      "priority": "Priority",
+      "priorityHelp": "From 0 to 100: the highest wins on a shared placement.",
+      "dismissible": "Visitors may close the bottom banner",
+      "save": "Save",
+      "create": "Create draft",
+      "stats": "Reach",
+      "impressions": "Impressions",
+      "clicks": "Clicks",
+      "dismissals": "Dismissals",
+      "noStats": "No measures yet.",
+      "back": "All campaigns",
+      "uniqueDetailsClicks": "Unique clicks on “Details”",
+      "uniqueCardClicks": "Unique clicks on the card",
+      "delete": "Delete",
+      "deleteTitle": "Delete “{name}”?",
+      "deleteDescription": "The campaign, its statistics, its clicks and its images are deleted for good. This cannot be undone.",
+      "deleteConfirm": "Delete for good",
+      "deleted": "Campaign deleted",
+      "fixErrors": "The campaign was not saved. Please fix: {fields}.",
+      "fieldNames": {
+        "kind": "Type",
+        "sponsor": "Sponsor",
+        "title": "Title",
+        "body": "Text",
+        "ctaLabel": "Button label",
+        "accentColor": "Color",
+        "posterUrl": "Poster",
+        "bannerImageUrl": "Banner visual",
+        "target": "Target",
+        "placements": "Placements",
+        "startsAt": "Start",
+        "endsAt": "End",
+        "priority": "Priority"
+      }
+    }
   },
   "metadata": {
     "description": "All your school's events: matches, parties, talks. No account needed."
@@ -426,7 +583,10 @@
   "more": {
     "settings": "Settings",
     "account": "Account",
-    "other": "Other"
+    "other": "Other",
+    "notifications": "Notifications",
+    "devices": "Connected devices",
+    "menu": "Menu"
   },
   "theme": {
     "label": "Theme",
@@ -434,5 +594,17 @@
     "system": "Match device",
     "dark": "Dark",
     "light": "Light"
+  },
+  "profile": {
+    "changePhoto": "Change photo"
+  },
+  "campaigns": {
+    "sponsored": "Sponsored",
+    "close": "Hide this campaign",
+    "announcementShort": "Announcement",
+    "learnMore": "Learn more",
+    "details": "Details",
+    "notFound": "This announcement is no longer available",
+    "backToList": "See events"
   }
 }

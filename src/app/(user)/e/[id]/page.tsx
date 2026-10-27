@@ -1,15 +1,10 @@
-import { CalendarXIcon, PencilIcon } from "lucide-react";
+import { CalendarXIcon, PencilSimpleIcon } from "@/shared/components/icons";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ViewCount, ViewTracker } from "@/modules/audience";
 import { countViews } from "@/modules/audience/server";
-import {
-  ShareButton,
-  CancelEventDialog,
-  isEditable,
-  EventDetails,
-} from "@/modules/events";
+import { CancelEventDialog, isEditable, EventDetails } from "@/modules/events";
 import { getEventById } from "@/modules/events/server";
 import { BackBar } from "@/shared/components/layout/BackBar";
 import { UrlToast } from "@/shared/components/UrlToast";
@@ -105,9 +100,14 @@ async function EventPage({ params }: PageProps<"/e/[id]">) {
       <ViewTracker report={trackEventViewAction.bind(null, event.id)} />
       <EventDetails
         event={event}
+        share={{
+          url: `${clientEnv.NEXT_PUBLIC_SITE_URL}/e/${event.id}`,
+          onShare: trackShareClickAction.bind(null, event.id),
+        }}
         views={
           isOrganizer ? (
             <ViewCount
+              className="bg-black/30 text-white backdrop-blur-sm"
               n={
                 (await countViews(event.organizerPageId, [event.id])).get(
                   event.id,
@@ -116,30 +116,22 @@ async function EventPage({ params }: PageProps<"/e/[id]">) {
             />
           ) : null
         }
-        actions={
-          <>
-            <ShareButton
-              url={`${clientEnv.NEXT_PUBLIC_SITE_URL}/e/${event.id}`}
-              title={event.name}
-              text={event.name}
-              onShare={trackShareClickAction.bind(null, event.id)}
-              className="flex-1 sm:flex-none"
-            />
-            {isOrganizer && editable && (
-              <>
-                <Link
-                  href={`/e/${event.id}/edit`}
-                  className={buttonVariants({ variant: "outline" })}
-                >
-                  <PencilIcon /> {t("events.edit")}
-                </Link>
-                <CancelEventDialog
-                  eventId={event.id}
-                  action={cancelEventAction}
-                />
-              </>
-            )}
-          </>
+        manage={
+          isOrganizer &&
+          editable && (
+            <>
+              <Link
+                href={`/e/${event.id}/edit`}
+                className={buttonVariants({ variant: "ghost" })}
+              >
+                <PencilSimpleIcon /> {t("events.edit")}
+              </Link>
+              <CancelEventDialog
+                eventId={event.id}
+                action={cancelEventAction}
+              />
+            </>
+          )
         }
       />
     </div>

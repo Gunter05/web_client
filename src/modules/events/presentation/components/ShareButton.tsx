@@ -1,6 +1,6 @@
 "use client";
 
-import { SendIcon } from "lucide-react";
+import { ShareFatIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { cn } from "@/shared/lib/utils";
@@ -46,12 +46,12 @@ export function ShareButton({
   const shareEvent = useShare(share);
   return (
     <Button onClick={shareEvent} className={className}>
-      <SendIcon /> {t("share")}
+      <ShareFatIcon /> {t("share")}
     </Button>
   );
 }
 
-/** Variante icône seule, comme l'avion en papier d'Instagram sous une publication. */
+/** Variante icône seule, comme la flèche de partage des réseaux sociaux sous une publication. */
 export function ShareIconButton({
   className,
   ...share
@@ -69,7 +69,7 @@ export function ShareIconButton({
         className,
       )}
     >
-      <SendIcon />
+      <ShareFatIcon />
     </button>
   );
 }

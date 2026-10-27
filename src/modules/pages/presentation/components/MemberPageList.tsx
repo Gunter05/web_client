@@ -1,4 +1,4 @@
-import { ChevronRightIcon } from "lucide-react";
+import { CaretRightIcon } from "@/shared/components/icons";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
@@ -12,9 +12,12 @@ import type { MemberPage } from "@/modules/pages/domain/page.types";
 export function MemberPageList({
   pages,
   link,
+  replace = false,
 }: {
   pages: MemberPage[];
   link: (page: MemberPage) => string;
+  /** Le lien remplace l'entrée de l'historique (étape d'un parcours). */
+  replace?: boolean;
 }) {
   const t = useTranslations("pages.roles");
   return (
@@ -23,6 +26,7 @@ export function MemberPageList({
         <li key={page.id}>
           <Link
             href={link(page)}
+            replace={replace}
             className="flex items-center gap-3 px-4 py-3 hover:bg-muted"
           >
             <ProfileAvatar name={page.name} photo={page.photoUrl} size="md" />
@@ -32,7 +36,7 @@ export function MemberPageList({
                 @{page.slug} · {t(page.role)}
               </span>
             </span>
-            <ChevronRightIcon className="size-5 text-muted-foreground" />
+            <CaretRightIcon className="size-5 text-muted-foreground" />
           </Link>
         </li>
       ))}

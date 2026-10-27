@@ -5,6 +5,15 @@ import messages from "@/shared/i18n/messages/fr.json";
 import type { EventView } from "@/modules/events/domain/event-view.types";
 import { EventCard } from "@/modules/events/presentation/components/EventCard";
 
+const push = vi.fn();
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push }),
+  usePathname: () => "/",
+}));
+vi.mock("@/modules/events/application/interest.actions", () => ({
+  setInterestAction: vi.fn(),
+}));
+
 const event: EventView = {
   id: "gala26xx",
   organizerPageId: "bde",
@@ -49,7 +58,13 @@ describe("CarteEvenement (US-01)", () => {
     })) {
       expect(link).toHaveAttribute("href", "/e/gala26xx");
     }
-    expect(screen.queryByRole("button", { name: "Partager" })).toBeNull();
+  });
+
+  it("propose Partager sur la ligne de la tuile, comme un réseau social", () => {
+    renderCard({ ...event, status: "published", cancellation: null });
+    expect(
+      screen.getByRole("button", { name: "Partager" }),
+    ).toBeInTheDocument();
   });
 
   it("signale l'annulation par un texte, pas seulement une couleur (US-15)", () => {
@@ -132,5 +147,13 @@ describe("Carte du fil : ouverture", () => {
     const followed = clickTitle(onOpen);
     expect(onOpen).not.toHaveBeenCalled();
     expect(followed).toBe(true);
+  });
+
+  it("affiche le nombre d'intéressés et envoie vers la connexion sans compte", () => {
+    renderCard({ ...event, status: "published", interestCount: 42 });
+    const flame = screen.getByRole("button", { name: "Intéressé (42)" });
+    expect(flame).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(flame);
+    expect(push).toHaveBeenCalledWith("/login?returnTo=%2F");
   });
 });

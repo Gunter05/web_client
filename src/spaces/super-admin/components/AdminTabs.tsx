@@ -1,19 +1,28 @@
 "use client";
 
 import { cn } from "@/shared/lib/utils";
-import { CalendarDaysIcon, FlagIcon, InboxIcon, UsersIcon } from "lucide-react";
+import {
+  CalendarDotsIcon,
+  FlagIcon,
+  MegaphoneIcon,
+  PulseIcon,
+  TrayIcon,
+  UsersIcon,
+} from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const TABS = [
-  { href: "/admin/page-requests", key: "pageRequests", icon: InboxIcon },
+  { href: "/admin/page-requests", key: "pageRequests", icon: TrayIcon },
   { href: "/admin/accounts", key: "accounts", icon: UsersIcon },
   { href: "/admin/pages", key: "pages", icon: FlagIcon },
-  { href: "/admin/events", key: "events", icon: CalendarDaysIcon },
+  { href: "/admin/events", key: "events", icon: CalendarDotsIcon },
+  { href: "/admin/campaigns", key: "campaigns", icon: MegaphoneIcon },
+  { href: "/admin/activity", key: "activity", icon: PulseIcon },
 ] as const;
 
-/** Les quatre onglets de l'espace Administration (US-07). */
+/** Les onglets de l'espace Administration (US-07) et l'activité des visiteurs. */
 export function AdminTabs({
   pendingPageRequests,
 }: {

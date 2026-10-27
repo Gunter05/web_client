@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 import { z } from "zod";
 import {
   CATEGORIES,
@@ -113,7 +113,8 @@ export async function createEventAction(
   );
   if (!result.ok) return result.state;
   revalidatePath("/", "layout");
-  redirect(`/e/${result.value.id}?msg=published`);
+  // Remplace le formulaire dans l'historique : le retour ne le rouvre pas
+  redirect(`/e/${result.value.id}?msg=published`, RedirectType.replace);
 }
 
 export async function updateEventAction(
@@ -169,10 +170,22 @@ const filtersSchema = z.object({
 });
 
 /** Chargement progressif du fil, 20 par 20 (US-16). */
-export async function loadEventsAction(filters: UrlFilters, offset: number) {
+export async function loadEventsAction(
+  filters: UrlFilters,
+  offset: number,
+  asOf?: string,
+) {
   const f = filtersSchema.safeParse(filters);
   const d = z.number().int().min(0).max(100_000).safeParse(offset);
-  if (!f.success || !d.success) return { events: [], nextOffset: null };
-  const { events, nextOffset } = await listEventsFromUrl(f.data, d.data);
+  // Facultatif : une API antérieure à l'ADR 0020 ne le renvoie pas
+  const a = z.iso.datetime({ offset: true }).optional().safeParse(asOf);
+  if (!f.success || !d.success || !a.success) {
+    return { events: [], nextOffset: null };
+  }
+  const { events, nextOffset } = await listEventsFromUrl(
+    f.data,
+    d.data,
+    a.data,
+  );
   return { events, nextOffset };
 }

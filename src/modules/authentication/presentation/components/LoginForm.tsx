@@ -1,12 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { FormField } from "@/shared/components/FormField";
+import { RouteModalLink } from "@/shared/components/RouteModal";
+import { useFieldsFilled } from "@/shared/hooks/useFieldsFilled";
 import { useFormAction } from "@/shared/hooks/useFormAction";
 import { useErrorMessages } from "@/shared/i18n/errors";
 import type { FormAction, FormState } from "@/shared/lib/form";
 import { Button } from "@/shared/ui/button";
+import { PasswordInput } from "@/modules/authentication/presentation/components/PasswordInput";
 import { Input } from "@/shared/ui/input";
 
 export function LoginForm({
@@ -24,32 +26,50 @@ export function LoginForm({
     enCours,
     action: send,
   } = useFormAction<FormState>(action, {});
+  const { filled, onInput } = useFieldsFilled();
   return (
-    <form action={send} onSubmit={onSubmit} className="grid gap-4" noValidate>
+    <form
+      action={send}
+      onSubmit={onSubmit}
+      onInput={onInput}
+      className="grid gap-4"
+      noValidate
+    >
       <input type="hidden" name="returnTo" value={returnTo} />
       <FormField id="email" label={t("email")}>
-        <Input id="email" name="email" type="email" autoComplete="email" />
+        <Input
+          placeholder={t("email")}
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="email"
+        />
       </FormField>
       <FormField id="password" label={t("password")}>
-        <Input
+        <PasswordInput
+          placeholder={t("password")}
           id="password"
           name="password"
-          type="password"
           autoComplete="current-password"
         />
       </FormField>
-      <Link
+      <RouteModalLink
         href="/forgot-password"
         className="-mt-2 justify-self-end text-sm text-muted-foreground hover:text-foreground"
       >
         {t("forgotPassword")}
-      </Link>
+      </RouteModalLink>
       {state.error && (
         <p role="alert" className="text-sm text-destructive">
           {errors(state.error)}
         </p>
       )}
-      <Button type="submit" size="lg" disabled={enCours} className="w-full">
+      <Button
+        type="submit"
+        size="lg"
+        disabled={enCours || !filled}
+        className="w-full"
+      >
         {t("login")}
       </Button>
     </form>

@@ -23,7 +23,8 @@
     "photoFormats": "JPEG, PNG ou WebP. Les grandes photos sont réduites automatiquement.",
     "optional": "facultatif",
     "characters": "{n}/{max}",
-    "photoUploading": "Envoi de la photo…"
+    "photoUploading": "Envoi de la photo…",
+    "seeMore": "voir plus"
   },
   "errors": {
     "required": "Ce champ est obligatoire",
@@ -74,7 +75,19 @@
     "photoSourceTooLarge": "Cette image est trop lourde (plus de 30 Mo) : choisissez une photo plus légère.",
     "photoUnreadable": "Cet appareil n'arrive pas à lire cette image (format HEIC d'iPhone ou fichier abîmé ?). Essayez une autre photo ou une capture d'écran.",
     "photoContentRejected": "Le serveur a refusé ce fichier : son contenu n'est pas une vraie image JPEG, PNG ou WebP, même si son nom se termine par .png ou .jpg. Essayez une autre photo.",
-    "photoStorageRefused": "Le stockage des photos a refusé l'envoi. Réessayez dans un instant ; si cela continue, prévenez un administrateur."
+    "photoStorageRefused": "Le stockage des photos a refusé l'envoi. Réessayez dans un instant ; si cela continue, prévenez un administrateur.",
+    "pinLimitReached": "Deux événements sont déjà épinglés : retirez-en un d'abord.",
+    "eventNotInterestable": "Un événement passé ou annulé ne peut plus être suivi.",
+    "eventNotPinnable": "Un événement passé ou annulé ne peut pas être épinglé.",
+    "invalidPinDuration": "La durée d'épinglage doit être comprise entre 1 et 30 jours.",
+    "invalidColor": "Couleur invalide (#RRGGBB)",
+    "invalidUrl": "Lien https invalide",
+    "outOfRange": "Valeur hors limites",
+    "sponsorNotFound": "Diffuseur introuvable",
+    "targetNotFound": "Cible introuvable",
+    "invalidImage": "Image refusée : envoie-la à nouveau",
+    "campaignNotFound": "Campagne introuvable",
+    "tooLong": "Texte trop long"
   },
   "nav": {
     "home": "Accueil",
@@ -120,7 +133,6 @@
     "saveNewPassword": "Enregistrer le mot de passe",
     "askNewLink": "Demander un nouveau lien",
     "passwordResetDone": "Mot de passe changé : connectez-vous",
-    "passwordHelp": "{min} caractères minimum",
     "verifyEmailTitle": "Confirmer votre adresse",
     "verifyEmailSubtitle": "Un clic suffit pour confirmer que cette adresse est bien la vôtre.",
     "confirmEmail": "Confirmer mon adresse",
@@ -137,7 +149,9 @@
       "unknown": "Appareil inconnu"
     },
     "or": "ou",
-    "continueWithGoogle": "Continuer avec Google"
+    "continueWithGoogle": "Continuer avec Google",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe"
   },
   "pages": {
     "types": {
@@ -259,7 +273,6 @@
     "from": "Du",
     "to": "Au",
     "views": "{n, plural, =0 {0 vue} one {# vue} other {# vues}}",
-    "viewsHelp": "Visible uniquement par les membres de la page",
     "myEvents": "Mes événements",
     "myEventsEmpty": "Votre page n'a encore publié aucun événement.",
     "columnName": "Nom",
@@ -278,11 +291,32 @@
       "next": "Événement suivant",
       "organizedBy": "Organisé par {name}",
       "about": "À propos de l'événement",
-      "presentedBy": "Présenté par",
       "openMaps": "Maps",
-      "actions": "Partager et gérer"
+      "moreActions": "Plus d'actions",
+      "by": "par"
     },
-    "later": "Plus tard"
+    "form": {
+      "namePlaceholder": "Nom de l'événement",
+      "start": "Début",
+      "end": "Fin",
+      "locationPlaceholder": "Ajouter le lieu de l'événement",
+      "descriptionPlaceholder": "Ajouter une description",
+      "next": "Continuer",
+      "back": "Retour",
+      "changePage": "Changer",
+      "pickDate": "Choisir une date",
+      "optionalHint": "L'affiche et la description sont facultatives.",
+      "addPoster": "Ajouter une affiche",
+      "posterHint": "Format conseillé 4:5 · glissez-déposez ou cliquez",
+      "changePhoto": "Changer l'affiche",
+      "stepOf": "Étape {step} sur {total}",
+      "leaveTitle": "Abandonner l'événement ?",
+      "leaveDescription": "Ce que vous avez saisi sera perdu.",
+      "leaveConfirm": "Abandonner",
+      "leaveCancel": "Continuer la saisie",
+      "previewUnavailable": "Aperçu indisponible pour ce format. Préférez une photo JPEG, PNG ou WebP."
+    },
+    "interest": "Intéressé"
   },
   "categories": {
     "match": "Match / compétition",
@@ -360,7 +394,9 @@
       "pageRequests": "Demandes de page",
       "accounts": "Comptes",
       "pages": "Pages",
-      "events": "Événements"
+      "events": "Événements",
+      "activity": "Activité",
+      "campaigns": "Campagnes"
     },
     "pageRequests": {
       "empty": "Aucune demande en attente",
@@ -407,10 +443,131 @@
     "events": {
       "empty": "Aucun événement publié pour le moment",
       "search": "Nom de l'événement",
-      "createdOn": "Créé le"
+      "createdOn": "Créé le",
+      "pin": "Épingler",
+      "unpin": "Retirer",
+      "pinFor": "Épingler pour",
+      "days": "{n, plural, one {# jour} other {# jours}}",
+      "pinnedUntil": "En tête jusqu'au {date}",
+      "pinned": "Événement épinglé en tête du fil",
+      "unpinned": "Épinglage retiré",
+      "feedColumn": "En tête du fil",
+      "help": "Un événement épinglé passe en tête du fil, sans mention visible. 2 au plus en même temps.",
+      "delete": "Supprimer",
+      "deleteTitle": "Supprimer « {name} » ?",
+      "deleteDescription": "L'événement, ses vues, ses statistiques et sa photo sont supprimés définitivement. Cette action est irréversible.",
+      "deleteConfirm": "Supprimer définitivement",
+      "deleted": "Événement supprimé"
     },
     "noResults": "Aucun résultat pour cette recherche",
-    "viewSite": "Voir le site public"
+    "viewSite": "Voir le site public",
+    "activity": {
+      "intro": "Visiteurs anonymes, sans compte : un visiteur compte une fois par jour, quel que soit le nombre de pages vues.",
+      "today": "Aujourd'hui",
+      "week": "7 derniers jours",
+      "month": "30 derniers jours",
+      "visitors": "{n, plural, one {visiteur} other {visiteurs}}",
+      "installedApp": "dont {n} avec l'application installée",
+      "installs": "Installations de l'application",
+      "installsDetail": "{week} sur 7 jours · {month} sur 30 jours",
+      "installsHelp": "Signalées par Chrome et Android seulement : le chiffre réel est plus élevé. Le nombre de personnes qui utilisent l'application installée (ci-dessus) est plus fiable.",
+      "timezone": "Jours comptés en heure UTC."
+    },
+    "campaigns": {
+      "help": "Mises en avant hors du fil : carte en tête du fil et bannière du bas sur téléphone. Une campagne créée reste en brouillon jusqu'à son activation.",
+      "new": "Nouvelle campagne",
+      "edit": "Modifier la campagne",
+      "empty": "Aucune campagne pour le moment",
+      "columnTitle": "Campagne",
+      "columnSponsor": "Diffuseur",
+      "columnPeriod": "Période",
+      "columnStatus": "État",
+      "columnPlacements": "Emplacements",
+      "state": {
+        "DRAFT": "Brouillon",
+        "PAUSED": "En pause",
+        "scheduled": "Programmée",
+        "running": "En cours",
+        "ended": "Terminée"
+      },
+      "activate": "Activer",
+      "pause": "Mettre en pause",
+      "toDraft": "Repasser en brouillon",
+      "activated": "Campagne activée",
+      "paused": "Campagne en pause",
+      "drafted": "Campagne en brouillon",
+      "saved": "Campagne enregistrée",
+      "kind": "Type",
+      "kinds": {
+        "SPONSORED": "Sponsorisée",
+        "ANNOUNCEMENT": "Annonce"
+      },
+      "sponsor": "Diffuseur",
+      "sponsorTypes": {
+        "PAGE": "Une page",
+        "ACCOUNT": "Un compte"
+      },
+      "choose": "Choisir…",
+      "title": "Titre",
+      "body": "Texte",
+      "bodyHelp": "Facultatif, 1 000 caractères au plus. La carte en montre deux lignes, puis « voir plus ».",
+      "ctaLabel": "Libellé du bouton",
+      "accentColor": "Couleur",
+      "poster": "Affiche (carte en tête du fil)",
+      "banner": "Visuel détouré de la bannière du bas",
+      "bannerHelp": "Facultatif. Image sans fond (PNG), posée à gauche ; elle peut dépasser un peu au-dessus de la bannière.",
+      "choosePhoto": "Choisir une image",
+      "removePhoto": "Retirer",
+      "uploading": "Envoi…",
+      "target": "Au clic, ouvrir",
+      "targetTypes": {
+        "EVENT": "Un événement",
+        "PAGE": "Une page",
+        "URL": "Un lien"
+      },
+      "targetUrl": "Lien (https)",
+      "placements": "Emplacements",
+      "placementNames": {
+        "FEED_TOP": "Carte en tête du fil",
+        "FLOATING_BOTTOM": "Bannière du bas"
+      },
+      "startsAt": "Début",
+      "endsAt": "Fin",
+      "priority": "Priorité",
+      "priorityHelp": "De 0 à 100 : la plus haute l'emporte sur un même emplacement.",
+      "dismissible": "Le visiteur peut fermer la bannière du bas",
+      "save": "Enregistrer",
+      "create": "Créer le brouillon",
+      "stats": "Portée",
+      "impressions": "Affichages",
+      "clicks": "Clics",
+      "dismissals": "Fermetures",
+      "noStats": "Pas encore de mesure.",
+      "back": "Toutes les campagnes",
+      "uniqueDetailsClicks": "Clics uniques sur « Détails »",
+      "uniqueCardClicks": "Clics uniques sur la carte",
+      "delete": "Supprimer",
+      "deleteTitle": "Supprimer « {name} » ?",
+      "deleteDescription": "La campagne, ses statistiques, ses clics et ses images sont supprimés définitivement. Cette action est irréversible.",
+      "deleteConfirm": "Supprimer définitivement",
+      "deleted": "Campagne supprimée",
+      "fixErrors": "La campagne n'a pas été enregistrée. À corriger : {fields}.",
+      "fieldNames": {
+        "kind": "Type",
+        "sponsor": "Diffuseur",
+        "title": "Titre",
+        "body": "Texte",
+        "ctaLabel": "Libellé du bouton",
+        "accentColor": "Couleur",
+        "posterUrl": "Affiche",
+        "bannerImageUrl": "Visuel de la bannière",
+        "target": "Cible",
+        "placements": "Emplacements",
+        "startsAt": "Début",
+        "endsAt": "Fin",
+        "priority": "Priorité"
+      }
+    }
   },
   "metadata": {
     "description": "Tous les événements de l'école : matchs, soirées, conférences. Sans compte."
@@ -426,7 +583,10 @@
   "more": {
     "settings": "Paramètres",
     "account": "Compte",
-    "other": "Autres"
+    "other": "Autres",
+    "notifications": "Notifications",
+    "devices": "Appareils connectés",
+    "menu": "Menu"
   },
   "theme": {
     "label": "Thème",
@@ -434,5 +594,17 @@
     "system": "Comme l'appareil",
     "dark": "Sombre",
     "light": "Clair"
+  },
+  "profile": {
+    "changePhoto": "Changer la photo"
+  },
+  "campaigns": {
+    "sponsored": "Sponsorisé",
+    "close": "Masquer cette campagne",
+    "announcementShort": "Annonce",
+    "learnMore": "En savoir plus",
+    "details": "Détails",
+    "notFound": "Cette annonce n'est plus disponible",
+    "backToList": "Voir les événements"
   }
 }

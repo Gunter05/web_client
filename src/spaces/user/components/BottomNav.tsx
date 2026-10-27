@@ -1,4 +1,4 @@
-import { UserIcon } from "lucide-react";
+import { UserIcon } from "@/shared/components/icons";
 import { NavLink } from "@/spaces/user/components/NavLink";
 import { getNavigation } from "@/spaces/user/components/navigation";
 
@@ -16,6 +16,7 @@ export async function BottomNav() {
       <NavLink
         href={account ? "/profile" : "/register"}
         icon={<UserIcon />}
+        activeIcon={<UserIcon weight="fill" />}
         label={account ? t("nav.profile") : t("nav.register")}
         variant="bottom"
       />

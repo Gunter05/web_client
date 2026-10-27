@@ -10,8 +10,12 @@ import type { PageSummary } from "@/modules/events/domain/event-view.types";
 import { getAllPages } from "@/modules/pages/server";
 
 /** Liste filtrée par l'adresse (US-17) ; les pages y sont désignées par leur slug. */
-export function listEventsFromUrl(filters: UrlFilters, offset = 0) {
-  return listEvents(filters, offset);
+export function listEventsFromUrl(
+  filters: UrlFilters,
+  offset = 0,
+  asOf?: string,
+) {
+  return listEvents(filters, offset, undefined, asOf);
 }
 
 /** Choix du filtre Page et carrousel de l'accueil. */

@@ -7,13 +7,18 @@ import {
 } from "./src/shared/config/schema";
 
 const serverEnv = validate(serverSchema, process.env);
-validate(clientSchema, process.env);
+const clientEnv = validate(clientSchema, process.env);
 
 // Stockage des photos : le navigateur y envoie les photos (connect-src) et y
 // lit les images vers lesquelles l'API redirige (img-src), ADR 0014 du backend.
 const storageOrigins = serverEnv.MEDIAS_STORAGE_ORIGINS.split(/[\s,]+/)
   .filter(Boolean)
   .join(" ");
+// Les photos sont lues directement dans le bucket quand son adresse publique
+// est connue (NEXT_PUBLIC_MEDIAS_PUBLIC_URL) : son origine est autorisée aussi.
+const publicMediasOrigin = clientEnv.NEXT_PUBLIC_MEDIAS_PUBLIC_URL
+  ? new URL(clientEnv.NEXT_PUBLIC_MEDIAS_PUBLIC_URL).origin
+  : "";
 
 // Mode « observation » : le navigateur signale les violations sans rien bloquer.
 // Une CSP stricte à nonce rendrait toutes les pages dynamiques (voir ADR 0008).
@@ -22,7 +27,7 @@ const contentSecurityPolicy = [
   // SDK Firebase chargé par le service worker des notifications push (ADR 0017)
   "script-src 'self' 'unsafe-inline' https://www.gstatic.com",
   "style-src 'self' 'unsafe-inline'",
-  `img-src 'self' data: blob: https://images.unsplash.com ${storageOrigins}`.trim(),
+  `img-src 'self' data: blob: https://images.unsplash.com ${storageOrigins} ${publicMediasOrigin}`.trim(),
   "font-src 'self'",
   // Firebase Installations et Cloud Messaging : enregistrement des push (ADR 0017)
   `connect-src 'self' https://*.googleapis.com ${storageOrigins}`.trim(),
@@ -46,6 +51,12 @@ const enTetesDeSecurite = [
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  // Listes publiques (fil, pages, campagnes), les mêmes pour tous les
+  // visiteurs : gardées 30 s, servies au plus 2 min pendant leur
+  // renouvellement (ADR 0004). Moins de 5 min : jamais figées au build.
+  cacheLife: {
+    publicList: { stale: 30, revalidate: 30, expire: 120 },
+  },
   poweredByHeader: false,
   // Le sélecteur de profil occupe le coin bas gauche (US-37).
   devIndicators: { position: "bottom-right" },

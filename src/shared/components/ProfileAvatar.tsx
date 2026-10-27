@@ -1,4 +1,5 @@
 import { cn } from "@/shared/lib/utils";
+import { mediaSrc } from "@/shared/lib/media-url";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 
 /** Avatar rond : photo, ou initiales sur fond gris à défaut. */
@@ -27,7 +28,9 @@ export function ProfileAvatar({
     .join("");
   return (
     <Avatar className={cn(sizes[size], className)}>
-      {photo && <AvatarImage src={photo} alt="" className="object-cover" />}
+      {photo && (
+        <AvatarImage src={mediaSrc(photo)} alt="" className="object-cover" />
+      )}
       <AvatarFallback className="bg-muted font-semibold text-foreground">
         {initials}
       </AvatarFallback>

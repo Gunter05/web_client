@@ -28,3 +28,11 @@ export const updateEvent = (pageId: string, id: string, d: EventPayload) =>
   eventsApi.update(pageId, id, d);
 export const cancelEvent = (pageId: string, id: string, reason: string) =>
   eventsApi.cancel(pageId, id, reason);
+
+// ——— Intérêt d'un compte connecté (ADR 0022 du backend) ———
+export const setInterest = eventsApi.setInterest;
+
+// ——— Épinglage éditorial (admins, ADR 0020 du backend) ———
+export const pinEvent = eventsApi.pin;
+export const unpinEvent = eventsApi.unpin;
+export const deleteEvent = eventsApi.remove;

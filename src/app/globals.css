@@ -38,6 +38,8 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-ink: var(--ink);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -53,19 +55,23 @@
 
 :root {
   /*
-   * Rouge du logo (public/brand), pour l'onglet actif de la navigation :
-   * #e60000 plutôt que #ef0000 (4,49:1) pour un contraste ≥ 4,5:1 sur blanc
-   * (WCAG 1.4.3).
+   * Rouge du logo (public/brand), pour l'onglet actif de la navigation
+   * et les actions principales (--primary) :
+   * #d63c3c, rouge adouci : contraste de 4,59:1 avec le blanc, en texte rouge
+   * sur fond blanc comme en texte blanc sur bouton rouge (WCAG 1.4.3, ≥ 4,5:1).
    */
-  --brand: #e60000;
+  --brand: #d63c3c;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  /* Action principale : le rouge du logo. Le noir reste disponible (ink). */
+  --primary: var(--brand);
+  --primary-foreground: oklch(1 0 0);
+  --ink: oklch(0.205 0 0);
+  --ink-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -93,16 +99,19 @@
 }
 
 .dark {
-  /* Rouge de marque éclairci : contraste ≥ 4,5:1 sur les fonds sombres. */
-  --brand: #ff3b3b;
-  --background: oklch(0.145 0 0);
+  /* Rouge de marque éclairci : contraste de 5,04:1 sur les fonds sombres. */
+  --brand: #ee3c3c;
+  --background: oklch(18.338% 0.00163 16.6);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  /* #d63c3c et non le rouge éclairci : texte blanc lisible (4,59:1). */
+  --primary: #d63c3c;
+  --primary-foreground: oklch(1 0 0);
+  --ink: oklch(0.922 0 0);
+  --ink-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -133,7 +142,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-base text-foreground;
   }
   /*
    * Jamais de défilement horizontal : sur téléphone, il agrandit la zone
@@ -185,4 +194,134 @@
   --color-avertissement-fond: var(--avertissement-fond);
   --color-danger-fond: var(--danger-fond);
   --color-danger: var(--danger);
+}
+
+/*
+ * Fond derrière les modals et les sheets : une légère teinte noire, sans flou.
+ * Hors @layer pour l'emporter sur les classes des composants shadcn/ui, laissés intacts.
+ */
+[data-slot="dialog-overlay"],
+[data-slot="alert-dialog-overlay"],
+[data-slot="sheet-overlay"] {
+  background-color: rgb(0 0 0 / 0.4);
+  backdrop-filter: none;
+  /* Même rythme que l'entrée du modal (300 ms) */
+  animation-duration: 300ms;
+}
+
+/* Relais entre deux modals de route : le fond reste en place, sans refaire son fondu */
+body:has([data-slot="dialog-content"][data-relay])
+  [data-slot="dialog-overlay"] {
+  animation: none;
+}
+
+/*
+ * Micro-animations : courtes (≤ 320 ms), douces, toujours derrière `motion-safe:`
+ * (rien ne bouge si le système demande moins d'animations). Un seul mouvement
+ * par apparition : un modal qui entre n'anime pas aussi son contenu.
+ * - animate-rise : entrée d'un élément (fondu + légère montée)
+ * - animate-shake : erreur (léger tremblement horizontal)
+ */
+@theme {
+  --ease-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-rise: rise 320ms var(--ease-soft) both;
+  --animate-shake: shake 320ms ease-in-out;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+  @keyframes shake {
+    25% {
+      transform: translateX(-4px);
+    }
+    50% {
+      transform: translateX(4px);
+    }
+    75% {
+      transform: translateX(-2px);
+    }
+  }
+}
+
+/*
+ * Bordures fines (0,5 px) pour tous les composants : traits de contour
+ * (`border`, `border-t`…), séparateurs (`divide-y`) et contours en anneau des
+ * fenêtres (`ring-1`). Tailwind les écrit à 1 px ; cette surcharge, hors
+ * @layer, l'emporte sans toucher aux composants shadcn/ui. Les anneaux de
+ * focus (`ring-3`) gardent leur épaisseur : ils doivent rester bien visibles.
+ */
+:root {
+  --hairline: 0.5px;
+}
+.border {
+  border-width: var(--hairline);
+}
+.border-t {
+  border-top-width: var(--hairline);
+}
+.border-b {
+  border-bottom-width: var(--hairline);
+}
+.border-l {
+  border-left-width: var(--hairline);
+}
+.border-r {
+  border-right-width: var(--hairline);
+}
+.border-x {
+  border-inline-width: var(--hairline);
+}
+.border-y {
+  border-block-width: var(--hairline);
+}
+.divide-y > :not(:last-child) {
+  border-top-width: calc(var(--hairline) * var(--tw-divide-y-reverse));
+  border-bottom-width: calc(var(--hairline) * (1 - var(--tw-divide-y-reverse)));
+}
+.ring-1 {
+  --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0
+    calc(var(--hairline) + var(--tw-ring-offset-width))
+    var(--tw-ring-color, currentcolor);
+}
+@media (width >= 40rem) {
+  .sm\:ring-1 {
+    --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0
+      calc(var(--hairline) + var(--tw-ring-offset-width))
+      var(--tw-ring-color, currentcolor);
+  }
+}
+
+/*
+ * Échelle des textes réduite d'environ 1 px par palier, pour une interface
+ * plus fine. Seules les tailles de texte changent, pas les espacements.
+ */
+@theme {
+  --text-xs: 0.6875rem; /* 11 px */
+  --text-sm: 0.8125rem; /* 13 px */
+  --text-base: 0.9375rem; /* 15 px */
+  --text-lg: 1.0625rem; /* 17 px */
+  --text-xl: 1.1875rem; /* 19 px */
+  --text-2xl: 1.375rem; /* 22 px */
+  --text-3xl: 1.75rem; /* 28 px */
+  --text-4xl: 2.125rem; /* 34 px */
+}
+
+/*
+ * Barres de défilement fines dans toute l'application, discrètes et aux
+ * couleurs du thème (Firefox et Chrome ; Safari les masque déjà au repos).
+ * Dans la couche « base » : une classe locale (barre masquée) l'emporte.
+ */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(
+        in oklab,
+        var(--muted-foreground) 35%,
+        transparent
+      )
+      transparent;
+  }
 }

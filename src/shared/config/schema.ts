@@ -25,6 +25,14 @@ export const serverSchema = z.object({
    */
   GOOGLE_CLIENT_ID: z.string().default(""),
   GOOGLE_CLIENT_SECRET: z.string().default(""),
+  /**
+   * Scénario de campagnes de démonstration (bds, mix, partner, announcement)
+   * tant que l'API ne sert pas /campaigns/active. Vide : campagnes de l'API.
+   */
+  CAMPAIGNS_DEMO: z.preprocess(
+    (v) => (v === "" ? undefined : v),
+    z.enum(["bds", "mix", "partner", "announcement"]).optional(),
+  ),
 });
 
 export const clientSchema = z.object({
@@ -32,6 +40,13 @@ export const clientSchema = z.object({
     .enum(["development", "production", "test"])
     .default("development"),
   NEXT_PUBLIC_SITE_URL: z.url(),
+  /**
+   * Adresse publique du bucket des photos, la même que MEDIAS_S3_URL_PUBLIQUE
+   * de l'API (ADR 0014 du backend). Le navigateur y lit les photos
+   * directement, sans passer par le site ni par l'API. Vide : les photos
+   * passent par l'API, qui redirige vers le stockage.
+   */
+  NEXT_PUBLIC_MEDIAS_PUBLIC_URL: z.union([z.literal(""), z.url()]).default(""),
   /**
    * Projet Firebase (notifications push, ADR 0017). Valeurs publiques, données
    * par la console Firebase (configuration de l'application Web, clé VAPID des

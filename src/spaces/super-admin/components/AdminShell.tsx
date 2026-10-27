@@ -1,4 +1,8 @@
-import { LogOutIcon, ShieldIcon, ShieldOffIcon } from "lucide-react";
+import {
+  ShieldIcon,
+  ShieldSlashIcon,
+  SignOutIcon,
+} from "@/shared/components/icons";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
@@ -15,7 +19,6 @@ import { Button, buttonVariants } from "@/shared/ui/button";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { logoutAction } from "@/modules/authentication/application/authentication.actions";
 import {
-  countNotificationsAction,
   listNotificationsAction,
   markNotificationsReadAction,
   registerPushDeviceAction,
@@ -48,7 +51,7 @@ async function AdminGuard({ children }: { children: ReactNode }) {
   const t = await getTranslations();
   return (
     <div className="flex flex-col items-center gap-4 py-20 text-center">
-      <ShieldOffIcon className="size-12 text-destructive" />
+      <ShieldSlashIcon className="size-12 text-destructive" />
       <h1 className="text-2xl font-bold">{t("admin.accessDenied")}</h1>
       <p className="text-muted-foreground">{t("admin.accessDeniedDetail")}</p>
       <Link href="/" className={buttonVariants({ variant: "outline" })}>
@@ -68,7 +71,7 @@ async function AdminHeader() {
           href="/admin/page-requests"
           className="flex items-center gap-2 font-semibold"
         >
-          <span className="grid size-8 place-items-center rounded-lg bg-primary text-primary-foreground">
+          <span className="grid size-8 place-items-center rounded-lg bg-ink text-ink-foreground">
             <ShieldIcon className="size-4" />
           </span>
           <span className="hidden sm:inline">
@@ -95,7 +98,6 @@ async function AdminHeader() {
               <NotificationBell
                 initialUnread={await countUnread()}
                 actions={{
-                  count: countNotificationsAction,
                   list: listNotificationsAction,
                   markRead: markNotificationsReadAction,
                 }}
@@ -112,7 +114,7 @@ async function AdminHeader() {
                   type="submit"
                   aria-label={t("nav.logout")}
                 >
-                  <LogOutIcon />
+                  <SignOutIcon />
                 </Button>
               </form>
             </>

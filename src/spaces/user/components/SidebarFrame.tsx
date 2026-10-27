@@ -1,6 +1,6 @@
 "use client";
 
-import { PanelLeftIcon } from "lucide-react";
+import { SidebarSimpleIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import {
   type ReactNode,
@@ -115,7 +115,7 @@ export function SidebarFrame({
                   "absolute top-1 left-1.5 opacity-0 group-focus-within/header:opacity-100 group-hover/header:opacity-100",
               )}
             >
-              <PanelLeftIcon className="size-5" />
+              <SidebarSimpleIcon className="size-5" />
             </button>
           </div>
           {sidebar}

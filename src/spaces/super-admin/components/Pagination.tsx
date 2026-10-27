@@ -1,4 +1,4 @@
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { CaretLeftIcon, CaretRightIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { cn } from "@/shared/lib/utils";
@@ -30,7 +30,7 @@ export function Pagination({
         className={button(page <= 1)}
         aria-disabled={page <= 1}
       >
-        <ChevronLeftIcon /> {t("previous")}
+        <CaretLeftIcon /> {t("previous")}
       </Link>
       <span className="text-muted-foreground">
         {t("pageOf", { page, total: totalPages })}
@@ -40,7 +40,7 @@ export function Pagination({
         className={button(page >= totalPages)}
         aria-disabled={page >= totalPages}
       >
-        {t("next")} <ChevronRightIcon />
+        {t("next")} <CaretRightIcon />
       </Link>
     </nav>
   );

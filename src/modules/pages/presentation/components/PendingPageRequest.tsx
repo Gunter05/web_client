@@ -1,6 +1,6 @@
 "use client";
 
-import { ClockIcon } from "lucide-react";
+import { ClockIcon } from "@/shared/components/icons";
 import { useFormatter, useTranslations } from "next-intl";
 import { useTransition } from "react";
 import { useMounted } from "@/shared/hooks/useMounted";

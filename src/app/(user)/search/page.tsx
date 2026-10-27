@@ -1,4 +1,4 @@
-import { SearchXIcon } from "lucide-react";
+import { MagnifyingGlassMinusIcon } from "@/shared/components/icons";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
@@ -54,7 +54,7 @@ async function AdminSearch({ searchParams }: PageProps<"/search">) {
         />
       ) : (
         <div className="flex flex-col items-center gap-3 py-20 text-center text-muted-foreground">
-          <SearchXIcon className="size-10" />
+          <MagnifyingGlassMinusIcon className="size-10" />
           <p>{t("noResults")}</p>
         </div>
       )}

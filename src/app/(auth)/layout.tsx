@@ -6,10 +6,11 @@ export default function Layout({ children }: LayoutProps<"/">) {
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="flex h-14 items-center justify-between px-4">
-        <Logo />
+        {/* Logo seul, sans le nom de l'application */}
+        <Logo compact />
         <LanguageSwitcher />
       </header>
-      <main className="flex-1">{children}</main>
+      <main className="flex flex-1 flex-col">{children}</main>
     </div>
   );
 }

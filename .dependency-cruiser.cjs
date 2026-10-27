@@ -150,7 +150,9 @@ module.exports = {
       comment:
         "Les routes utilisateur et d'authentification n'importent rien du Super-Admin.",
       severity: "error",
-      from: { path: "^src/(app/\\((user|auth)\\)|spaces/user)/" },
+      from: {
+        path: "^src/(app/(\\((user|auth)\\)|@auth)|spaces/(user|auth))/",
+      },
       to: {
         path: "^src/(app/\\(super-admin\\)|spaces/super-admin|modules/admin)/",
       },

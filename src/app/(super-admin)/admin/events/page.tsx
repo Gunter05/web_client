@@ -13,7 +13,13 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { ShortDate } from "@/spaces/super-admin";
 import { getCurrentAdmin } from "@/modules/admin/server";
-import { readSearchParams } from "@/modules/admin";
+import { PIN_DAYS, readSearchParams } from "@/modules/admin";
+import {
+  deleteEventAction,
+  pinEventAction,
+  unpinEventAction,
+} from "@/modules/admin/application/admin.actions";
+import { DeleteEventControl, PinControl } from "@/spaces/super-admin";
 import { Suspense } from "react";
 import { AdminSkeleton } from "@/spaces/super-admin";
 
@@ -25,6 +31,7 @@ async function AdminEventList({ searchParams }: PageProps<"/admin/events">) {
   return (
     <section className="grid gap-4">
       <h1 className="text-xl font-semibold">{t("admin.tabs.events")}</h1>
+      <p className="text-sm text-muted-foreground">{t("admin.events.help")}</p>
       <AdminSearch value={q} placeholder={t("admin.events.search")} />
       {results.total === 0 ? (
         <EmptyState
@@ -45,6 +52,10 @@ async function AdminEventList({ searchParams }: PageProps<"/admin/events">) {
                 <TableHead>{t("events.columnStatus")}</TableHead>
                 <TableHead className="hidden lg:table-cell">
                   {t("admin.events.createdOn")}
+                </TableHead>
+                <TableHead>{t("admin.events.feedColumn")}</TableHead>
+                <TableHead>
+                  <span className="sr-only">{t("admin.events.delete")}</span>
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -77,6 +88,23 @@ async function AdminEventList({ searchParams }: PageProps<"/admin/events">) {
                   </TableCell>
                   <TableCell className="hidden lg:table-cell">
                     <ShortDate iso={e.createdAt} />
+                  </TableCell>
+                  <TableCell>
+                    {/* Événement passé : l'API refuse avec un message clair */}
+                    {e.status !== "cancelled" && (
+                      <PinControl
+                        pinnedUntil={e.pinnedUntil}
+                        days={PIN_DAYS}
+                        pin={pinEventAction.bind(null, e.id)}
+                        unpin={unpinEventAction.bind(null, e.id)}
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DeleteEventControl
+                      name={e.name}
+                      remove={deleteEventAction.bind(null, e.id)}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

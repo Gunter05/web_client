@@ -1,4 +1,4 @@
-import { EyeIcon } from "lucide-react";
+import { EyeIcon } from "@/shared/components/icons";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { EventDate, type EventView } from "@/modules/events";

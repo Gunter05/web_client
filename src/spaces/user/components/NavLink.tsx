@@ -11,11 +11,14 @@ import { useSidebarPanel } from "@/spaces/user/components/sidebar-panel";
 export function NavLink({
   href,
   icon,
+  activeIcon,
   label,
   variant,
 }: {
   href: string;
   icon: ReactNode;
+  /** Icône pleine de l'onglet actif, comme sur les réseaux sociaux. */
+  activeIcon?: ReactNode;
   label: string;
   variant: "sidebar" | "bottom";
 }) {
@@ -24,9 +27,13 @@ export function NavLink({
   const onPage = href === "/" ? path === "/" : path.startsWith(href);
   // Un tiroir ouvert (notifications, « Plus ») devient l'onglet actif.
   const active = onPage && !(variant === "sidebar" && panel);
+  const shownIcon = active && activeIcon ? activeIcon : icon;
   if (variant === "bottom") {
+    // Sur téléphone, connexion, inscription et création s'ouvrent en page
+    // entière : un lien classique n'est pas intercepté en modal (@auth, @modal).
+    const Anchor = opensAsPage(href) ? "a" : Link;
     return (
-      <Link
+      <Anchor
         href={href}
         aria-label={label}
         aria-current={active ? "page" : undefined}
@@ -35,8 +42,8 @@ export function NavLink({
           active ? "text-brand" : "text-foreground/80",
         )}
       >
-        {icon}
-      </Link>
+        {shownIcon}
+      </Anchor>
     );
   }
   return (
@@ -49,8 +56,16 @@ export function NavLink({
         active && "font-semibold text-brand",
       )}
     >
-      {icon}
+      {shownIcon}
       <span className={SIDEBAR_LABEL}>{label}</span>
     </Link>
   );
+}
+
+/**
+ * Écran ouvert en modal sur ordinateur et en page sur téléphone
+ * (/login, /register, /events/new…), adresse et paramètres compris.
+ */
+function opensAsPage(href: string) {
+  return /^\/(login|register|forgot-password|events\/new)(\?|$)/.test(href);
 }

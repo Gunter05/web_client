@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Suspense } from "react";
 import { NotificationBell } from "@/modules/notifications";
 import { LanguageSwitcher } from "@/shared/components/LanguageSwitcher";
@@ -7,39 +6,38 @@ import { ThemeSwitcher } from "@/shared/components/ThemeSwitcher";
 import { Logo } from "@/shared/components/layout/Logo";
 import { buttonVariants } from "@/shared/ui/button";
 import { Skeleton } from "@/shared/ui/skeleton";
-import { AccountMenu } from "@/spaces/user/components/AccountMenu";
+import { AutoHideHeader } from "@/spaces/user/components/AutoHideHeader";
 import {
   getNavigation,
   notificationActions,
 } from "@/spaces/user/components/navigation";
 
 async function MobileHeaderActions() {
-  const { t, account, unread, accountMenu } = await getNavigation();
+  const { t, account, unread } = await getNavigation();
+  // L'avatar est dans la barre du bas (Profil) : pas de doublon ici
   return account ? (
-    <>
-      <NotificationBell initialUnread={unread} actions={notificationActions} />
-      <AccountMenu name={account.name} photo={account.photoUrl}>
-        {accountMenu}
-      </AccountMenu>
-    </>
+    <NotificationBell initialUnread={unread} actions={notificationActions} />
   ) : (
     <>
       <ThemeSwitcher />
       <LanguageSwitcher change={changeLanguageAction} />
-      <Link href="/login" className={buttonVariants({ size: "sm" })}>
+      {/* Lien classique : sur téléphone, la connexion s'ouvre en page entière,
+          pas en modal (src/app/@auth) */}
+      <a href="/login" className={buttonVariants({ size: "sm" })}>
         {t("nav.login")}
-      </Link>
+      </a>
     </>
   );
 }
 
 /**
- * En-tête sur téléphone : logo (sans le nom, faute de place), puis notifications et menu du compte (ou
- * thème, langue et connexion pour un visiteur).
+ * En-tête sur téléphone, sur l'accueil seulement : logo (sans le nom, faute
+ * de place), puis notifications (ou thème, langue et connexion pour un
+ * visiteur). Sans bordure ; il s'efface au défilement vers le bas.
  */
 export function MobileHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur md:hidden">
+    <AutoHideHeader>
       <div className="flex h-14 items-center gap-2 px-3 sm:px-4">
         {/* Logo seul : le nom de l'application ferait déborder l'en-tête. */}
         <Logo compact />
@@ -49,6 +47,6 @@ export function MobileHeader() {
           </Suspense>
         </div>
       </div>
-    </header>
+    </AutoHideHeader>
   );
 }
