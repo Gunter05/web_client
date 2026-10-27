@@ -11,6 +11,8 @@ import {
   useCampaignDismissal,
 } from "@/modules/campaigns/presentation/components/useCampaignDismissal";
 import type { TrackCampaign } from "@/modules/campaigns/presentation/components/track";
+import { trackImpressionOncePerDay } from "@/modules/campaigns/presentation/components/track-impression";
+import { mediaSrc } from "@/shared/lib/media-src";
 
 /** Délai avant l'apparition : on laisse d'abord voir la page. */
 const APPEAR_AFTER_MS = 1500;
@@ -41,12 +43,12 @@ export function FloatingCampaignBanner({
     return () => clearTimeout(timer);
   }, []);
 
-  // Une impression par affichage de page, même si la carte du fil la masque un temps.
+  // Une impression par jour, même si la carte du fil la masque un temps.
   const seen = useRef(false);
   useEffect(() => {
     if (!shown || seen.current) return;
     seen.current = true;
-    void track?.(campaign.id, "FLOATING_BOTTOM", "IMPRESSION");
+    trackImpressionOncePerDay(track, campaign.id, "FLOATING_BOTTOM");
   }, [shown, campaign.id, track]);
 
   if (!shown) return null;
@@ -90,7 +92,7 @@ export function FloatingCampaignBanner({
             // bannière), quelle que soit l'image envoyée.
             // eslint-disable-next-line @next/next/no-img-element -- visuel détouré, fond transparent
             <img
-              src={campaign.bannerImageUrl}
+              src={mediaSrc(campaign.bannerImageUrl)}
               alt=""
               className="pointer-events-none absolute bottom-0 left-2 max-h-[5.5rem] max-w-24 object-contain object-bottom drop-shadow-md"
             />

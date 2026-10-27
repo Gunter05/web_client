@@ -47,5 +47,6 @@ export { EventForm } from "@/modules/events/presentation/components/EventForm";
 export { EventGrid } from "@/modules/events/presentation/components/EventGrid";
 export {
   eventImage,
+  feedImageRatio,
   PUBLIC_IMAGE_HOST,
 } from "@/modules/events/domain/event-image";

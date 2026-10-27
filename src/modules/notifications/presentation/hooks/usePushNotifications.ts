@@ -1,20 +1,13 @@
 "use client";
 
-import {
-  onMessage,
-  onRegistered,
-  onUnregistered,
-  register,
-  unregister,
-} from "firebase/messaging";
 import { useLocale } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import {
-  firebaseMessaging,
-  pushAvailable,
-  VAPID_KEY,
-} from "@/modules/notifications/presentation/push/firebase-messaging";
+import { pushPossible } from "@/modules/notifications/presentation/push/push-config";
+
+/** SDK Firebase, chargé seulement quand les push servent (permission accordée). */
+const loadSdk = () =>
+  import("@/modules/notifications/presentation/push/firebase-messaging");
 
 export type PushActions = {
   register: (fid: string, language: string) => Promise<boolean>;
@@ -35,13 +28,17 @@ export type PushState = "loading" | "unavailable" | "blocked" | "off" | "on";
  * d'installation Firebase (FID) : le SDK appelle `onRegistered` à chaque
  * enregistrement et quand le FID change, ce qui tient l'API à jour sans
  * rafraîchissement périodique. Site ouvert, un push s'affiche en toast.
+ * Le SDK n'est téléchargé que si la permission est accordée ou demandée.
  */
 export function usePushNotifications(actions: PushActions) {
   const language = useLocale();
   const [state, setState] = useState<PushState>("loading");
 
   const connect = useCallback(async () => {
-    const { messaging, serviceWorkerRegistration } = await firebaseMessaging();
+    const sdk = await loadSdk();
+    const { messaging, serviceWorkerRegistration } =
+      await sdk.firebaseMessaging();
+    const { onMessage, onRegistered, onUnregistered, register } = sdk;
     onRegistered(messaging, (fid) => {
       void actions.register(fid, language).then((ok) => {
         if (ok) setState("on");
@@ -57,7 +54,7 @@ export function usePushNotifications(actions: PushActions) {
       }
     });
     await register(messaging, {
-      vapidKey: VAPID_KEY,
+      vapidKey: sdk.VAPID_KEY,
       serviceWorkerRegistration,
     });
     return messaging;
@@ -67,14 +64,17 @@ export function usePushNotifications(actions: PushActions) {
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      if (!(await pushAvailable())) {
+      if (!pushPossible()) {
         if (!cancelled) setState("unavailable");
         return;
       }
       const permission = Notification.permission;
-      if (cancelled) return;
       if (permission === "denied") return setState("blocked");
       if (permission !== "granted") return setState("off");
+      // Permission accordée : le SDK sert, on le charge.
+      const supported = await (await loadSdk()).pushAvailable();
+      if (cancelled) return;
+      if (!supported) return setState("unavailable");
       await connect().catch(() => setState("off"));
     })();
     return () => {
@@ -84,6 +84,9 @@ export function usePushNotifications(actions: PushActions) {
 
   /** Demande la permission (au clic uniquement), puis enregistre l'appareil. */
   async function enable() {
+    if (!(await (await loadSdk()).pushAvailable())) {
+      return setState("unavailable");
+    }
     const permission = await Notification.requestPermission();
     if (permission === "denied") return setState("blocked");
     if (permission !== "granted") return;
@@ -94,8 +97,9 @@ export function usePushNotifications(actions: PushActions) {
   /** Cet appareil ne reçoit plus de push (déclenche `onUnregistered`). */
   async function disable() {
     setState("loading");
-    const { messaging } = await firebaseMessaging();
-    await unregister(messaging).catch(() => setState("on"));
+    const sdk = await loadSdk();
+    const { messaging } = await sdk.firebaseMessaging();
+    await sdk.unregister(messaging).catch(() => setState("on"));
   }
 
   return { state, enable, disable };

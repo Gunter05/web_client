@@ -29,6 +29,13 @@ export type CampaignSponsor =
     }
   | { type: "ACCOUNT"; id: string; name: string; photoUrl: string | null };
 
+/** Dimensions de l'affiche et aperçu flou (ThumbHash), donnés par l'API. */
+export type PosterLayout = {
+  width: number;
+  height: number;
+  placeholder: string | null;
+};
+
 export interface Campaign {
   id: string;
   kind: CampaignKind;
@@ -37,6 +44,8 @@ export interface Campaign {
   body: string | null;
   /** Affiche de la carte en tête du fil. */
   posterUrl: string | null;
+  /** Absent si l'affiche manque ou si ses dimensions sont inconnues. */
+  posterLayout?: PosterLayout | null;
   /**
    * Visuel détouré (fond transparent) de la bannière du bas : posé à gauche,
    * il déborde par le haut, dans des bornes fixes.
@@ -118,3 +127,23 @@ export const CAMPAIGN_INTERACTIONS = [
   "DISMISS",
 ] as const;
 export type CampaignInteraction = (typeof CAMPAIGN_INTERACTIONS)[number];
+
+/**
+ * Impressions déjà envoyées aujourd'hui (jour UTC, comme les visites) : une
+ * seule par personne, campagne et emplacement et par jour, soit le nombre de
+ * personnes qui l'ont vue dans la journée, et non le nombre d'affichages.
+ */
+export type SeenImpressions = { day: string; keys: string[] };
+
+export function impressionToSend(
+  seen: SeenImpressions | null,
+  now: Date,
+  campaignId: string,
+  placement: CampaignPlacement,
+): SeenImpressions | null {
+  const day = now.toISOString().slice(0, 10);
+  const key = `${campaignId}:${placement}`;
+  // Un autre jour : la liste repart de zéro.
+  const keys = seen?.day === day ? seen.keys : [];
+  return keys.includes(key) ? null : { day, keys: [...keys, key] };
+}
