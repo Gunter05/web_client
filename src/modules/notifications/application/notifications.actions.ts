@@ -5,18 +5,12 @@ import { z } from "zod";
 import { INSTALLATION_ID } from "@/modules/notifications/domain/push";
 import {
   markAllRead,
-  countUnread,
   getRecentNotifications,
   registerPushDevice,
   unregisterPushDevice,
 } from "@/modules/notifications/server";
 import { readToken } from "@/shared/api/token";
 import { LOCALES } from "@/shared/i18n/locales";
-
-export async function countNotificationsAction(): Promise<number> {
-  if (!(await readToken())) return 0;
-  return countUnread();
-}
 
 export async function listNotificationsAction(): Promise<Notification[]> {
   if (!(await readToken())) return [];
