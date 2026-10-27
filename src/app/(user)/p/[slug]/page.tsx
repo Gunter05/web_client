@@ -8,6 +8,7 @@ import { PageProfileHeader } from "@/modules/pages";
 import { getMyPage, getPageBySlug } from "@/modules/pages/server";
 import { buttonVariants } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
+import { BackBar } from "@/shared/components/layout/BackBar";
 import { Suspense } from "react";
 import { ContentSkeleton } from "@/shared/components/layout/ContentSkeleton";
 
@@ -42,6 +43,7 @@ async function PublicPage({ params }: PageProps<"/p/[slug]">) {
   const secondary = buttonVariants({ variant: "secondary", size: "sm" });
   return (
     <div className="mx-auto max-w-4xl sm:px-6 md:pt-6">
+      <BackBar title={page.name} />
       <PageProfileHeader
         page={page}
         eventCount={events.length}

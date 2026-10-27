@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { CampaignCard } from "@/modules/campaigns";
 import { getCampaign } from "@/modules/campaigns/server";
+import { BackBar } from "@/shared/components/layout/BackBar";
 import { ContentSkeleton } from "@/shared/components/layout/ContentSkeleton";
 import { buttonVariants } from "@/shared/ui/button";
 
@@ -50,7 +51,9 @@ async function CampaignPage({ params }: PageProps<"/c/[id]">) {
     );
   }
   return (
-    <div className="mx-auto grid max-w-[470px] gap-4 pt-4 sm:px-4 md:pt-8">
+    <div className="mx-auto grid max-w-[470px] gap-4 sm:px-4 md:pt-8">
+      {/* Arrivé par un lien partagé, ce retour mène au fil */}
+      <BackBar title={campaign.title} />
       <CampaignCard campaign={campaign} />
     </div>
   );

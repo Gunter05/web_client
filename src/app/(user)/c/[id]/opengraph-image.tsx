@@ -21,7 +21,29 @@ async function poster(address: string | null): Promise<Buffer | null> {
 }
 
 /**
- * Image d'aperçu WhatsApp d'une campagne partagée : son affiche, recadrée en
+ * L'image entière, sans rognage, centrée dans le cadre 1200 × 630 ; le reste
+ * du cadre est rempli par la même image agrandie et floutée.
+ */
+async function framed(source: Buffer, background: string): Promise<Buffer> {
+  const flat = await sharp(source)
+    .flatten({ background }) // le JPEG n'a pas de transparence
+    .toBuffer();
+  const [backdrop, picture] = await Promise.all([
+    sharp(flat)
+      .resize(size.width, size.height, { fit: "cover" })
+      .blur(30)
+      .modulate({ brightness: 0.8 })
+      .toBuffer(),
+    sharp(flat).resize(size.width, size.height, { fit: "inside" }).toBuffer(),
+  ]);
+  return sharp(backdrop)
+    .composite([{ input: picture, gravity: "centre" }])
+    .jpeg({ quality: 80, mozjpeg: true })
+    .toBuffer();
+}
+
+/**
+ * Image d'aperçu WhatsApp d'une campagne partagée : son affiche, entière dans un cadre
  * 1200 × 630 et convertie en JPEG (WhatsApp n'affiche ni SVG ni WebP). Sans
  * affiche lisible, l'image par défaut.
  */
@@ -34,17 +56,13 @@ export default async function Image({
   const source =
     (await poster(campaign?.posterUrl ?? null)) ??
     Buffer.from(demoImage("defaut"));
-  const jpeg = await sharp(source)
-    .resize(size.width, size.height, { fit: "cover", position: "attention" })
-    .flatten({ background: campaign?.accentColor ?? "#ffffff" })
-    .jpeg({ quality: 80, mozjpeg: true })
-    .toBuffer()
-    .catch(() =>
+  const jpeg = await framed(source, campaign?.accentColor ?? "#ffffff").catch(
+    () =>
       sharp(Buffer.from(demoImage("defaut")))
         .resize(size.width, size.height, { fit: "cover" })
         .jpeg({ quality: 80 })
         .toBuffer(),
-    );
+  );
   return new Response(new Uint8Array(jpeg), {
     headers: {
       "Content-Type": contentType,
