@@ -15,6 +15,7 @@ import {
 } from "@/modules/campaigns/domain/campaign";
 import { CampaignLink } from "@/modules/campaigns/presentation/components/CampaignLink";
 import type { TrackCampaign } from "@/modules/campaigns/presentation/components/track";
+import { trackImpressionOncePerDay } from "@/modules/campaigns/presentation/components/track-impression";
 
 /**
  * Campagne en tête du fil (FEED_TOP), dans la grammaire d'une carte
@@ -39,7 +40,7 @@ export function CampaignCard({
   const onClick = () => void track?.(campaign.id, "FEED_TOP", "CLICK");
 
   useEffect(() => {
-    void track?.(campaign.id, "FEED_TOP", "IMPRESSION");
+    trackImpressionOncePerDay(track, campaign.id, "FEED_TOP");
   }, [campaign.id, track]);
 
   return (
@@ -92,20 +93,24 @@ export function CampaignCard({
       >
         {campaign.posterUrl && (
           <span
-            className="block"
+            className="block aspect-[4/5] max-h-[70svh] w-full"
             style={{
               background: `color-mix(in srgb, ${accent} 14%, transparent)`,
             }}
           >
-            {/* Affiche dans ses proportions, jamais plus haute que 70 % de l'écran, comme un événement.
-                Toujours en tête de page : c'est la plus grande image visible (LCP), chargée en priorité. */}
+            {/* Cadre au format d'une affiche d'événement (4:5), jamais plus haut que 70 % de
+                l'écran : sa place est réservée avant le chargement, la page ne saute pas (CLS).
+                L'affiche y est entière, centrée sur le fond teinté. Toujours en tête de page :
+                c'est la plus grande image visible (LCP), chargée en priorité. */}
             {/* eslint-disable-next-line @next/next/no-img-element -- affiche de campagne, sans recadrage */}
             <img
               src={mediaSrc(campaign.posterUrl)}
               alt=""
+              width={1080}
+              height={1350}
               fetchPriority="high"
               decoding="async"
-              className="max-h-[70svh] w-full object-cover"
+              className="size-full object-contain"
             />
           </span>
         )}
