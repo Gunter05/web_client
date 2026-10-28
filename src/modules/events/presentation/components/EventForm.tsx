@@ -34,7 +34,7 @@ import { Skeleton } from "@/shared/ui/skeleton";
 import { usePhotoUpload } from "@/modules/medias";
 import { CATEGORIES, type Event } from "@/modules/events/domain/event";
 import { DateTimeField } from "@/modules/events/presentation/components/DateTimeField";
-import { mediaSrc } from "@/shared/lib/media-url";
+import { mediaSrc } from "@/shared/lib/media-src";
 
 type OrganizerPage = { id: string; name: string; photoUrl: string | null };
 type CreateAction = (

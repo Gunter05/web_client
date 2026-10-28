@@ -11,14 +11,14 @@ const clientEnv = validate(clientSchema, process.env);
 
 // Stockage des photos : le navigateur y envoie les photos (connect-src) et y
 // lit les images vers lesquelles l'API redirige (img-src), ADR 0014 du backend.
+// Stockage public des photos (R2), lu directement par le navigateur.
+const mediaOrigin = clientEnv.NEXT_PUBLIC_MEDIA_URL
+  ? new URL(clientEnv.NEXT_PUBLIC_MEDIA_URL).origin
+  : "";
+
 const storageOrigins = serverEnv.MEDIAS_STORAGE_ORIGINS.split(/[\s,]+/)
   .filter(Boolean)
   .join(" ");
-// Les photos sont lues directement dans le bucket quand son adresse publique
-// est connue (NEXT_PUBLIC_MEDIAS_PUBLIC_URL) : son origine est autorisée aussi.
-const publicMediasOrigin = clientEnv.NEXT_PUBLIC_MEDIAS_PUBLIC_URL
-  ? new URL(clientEnv.NEXT_PUBLIC_MEDIAS_PUBLIC_URL).origin
-  : "";
 
 // Mode « observation » : le navigateur signale les violations sans rien bloquer.
 // Une CSP stricte à nonce rendrait toutes les pages dynamiques (voir ADR 0008).
@@ -27,7 +27,7 @@ const contentSecurityPolicy = [
   // SDK Firebase chargé par le service worker des notifications push (ADR 0017)
   "script-src 'self' 'unsafe-inline' https://www.gstatic.com",
   "style-src 'self' 'unsafe-inline'",
-  `img-src 'self' data: blob: https://images.unsplash.com ${storageOrigins} ${publicMediasOrigin}`.trim(),
+  `img-src 'self' data: blob: https://images.unsplash.com ${mediaOrigin} ${storageOrigins}`.trim(),
   "font-src 'self'",
   // Firebase Installations et Cloud Messaging : enregistrement des push (ADR 0017)
   `connect-src 'self' https://*.googleapis.com ${storageOrigins}`.trim(),
@@ -68,7 +68,8 @@ const nextConfig: NextConfig = {
     // Aucun domaine externe autorisé tant qu'on n'en a pas besoin.
     remotePatterns: [],
   },
-  // Les photos sont servies par l'API : même origine pour le navigateur.
+  // Sans NEXT_PUBLIC_MEDIA_URL, les photos passent par le site vers l'API
+  // (chaque image compte alors comme une requête Vercel).
   async rewrites() {
     return [
       {

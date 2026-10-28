@@ -14,7 +14,7 @@ import type { FormAction, FormState } from "@/shared/lib/form";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
-import { mediaSrc } from "@/shared/lib/media-url";
+import { mediaSrc } from "@/shared/lib/media-src";
 
 type Option = { id: string; name: string };
 

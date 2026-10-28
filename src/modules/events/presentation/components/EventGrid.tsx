@@ -8,17 +8,26 @@ import {
 } from "@/modules/events/domain/event-image";
 import { ProgressiveImage } from "@/shared/components/ProgressiveImage";
 
+/** Vignettes de la première rangée : 3 sur téléphone, 4 ou 5 sur ordinateur. */
+const FIRST_ROW = 4;
+
 /**
  * Grille de vignettes au format portrait 3:4 (comme la grille d'Instagram),
  * comme sur les réseaux sociaux : la photo n'est ni coupée ni déformée, elle
  * est centrée sur un fond noir qui comble l'espace restant.
+ *
+ * Avec `priority` (grille en haut de page), la première rangée se charge tout
+ * de suite et la première vignette en priorité (LCP). Les liens ne sont pas
+ * préchargés : une grille de 60 vignettes en ferait autant de requêtes.
  */
 export function EventGrid({
   events,
   className,
+  priority = false,
 }: {
   events: EventView[];
   className?: string;
+  priority?: boolean;
 }) {
   const t = useTranslations();
   return (
@@ -28,16 +37,19 @@ export function EventGrid({
         className,
       )}
     >
-      {events.map((e) => (
+      {events.map((e, i) => (
         <li key={e.id}>
           <Link
             href={`/e/${e.id}`}
+            prefetch={false}
             className="group relative block aspect-[3/4] overflow-hidden bg-black"
           >
             <ProgressiveImage
               src={eventImage(e)}
               fallbackSrc={eventImage({ ...e, photoUrl: null })}
               placeholder={eventImageLayout(e)?.placeholder}
+              priority={priority && i === 0}
+              eager={priority && i < FIRST_ROW}
               fill
               fit="contain"
               className="bg-black"

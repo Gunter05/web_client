@@ -6,15 +6,21 @@ import { useEffect } from "react";
 import { ExpandableText } from "@/shared/components/ExpandableText";
 import { CaretRightIcon, MegaphoneIcon } from "@/shared/components/icons";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
+import { ProgressiveImage } from "@/shared/components/ProgressiveImage";
 import { cn } from "@/shared/lib/utils";
-import { ShareIconButton } from "@/modules/events";
+import { feedImageRatio, ShareIconButton } from "@/modules/events";
 import {
   type Campaign,
+  type PosterLayout,
   sponsorHref,
 } from "@/modules/campaigns/domain/campaign";
 import { CampaignLink } from "@/modules/campaigns/presentation/components/CampaignLink";
 import type { TrackCampaign } from "@/modules/campaigns/presentation/components/track";
-import { mediaSrc } from "@/shared/lib/media-url";
+import { trackImpressionOncePerDay } from "@/modules/campaigns/presentation/components/track-impression";
+
+/** Dimensions inconnues (affiche ancienne) : format d'une affiche d'événement, 4:5. */
+const posterRatio = (layout: PosterLayout | null | undefined) =>
+  layout ? feedImageRatio(layout) : 4 / 5;
 
 /**
  * Campagne en tête du fil (FEED_TOP), dans la grammaire d'une carte
@@ -39,7 +45,7 @@ export function CampaignCard({
   const onClick = () => void track?.(campaign.id, "FEED_TOP", "CLICK");
 
   useEffect(() => {
-    void track?.(campaign.id, "FEED_TOP", "IMPRESSION");
+    trackImpressionOncePerDay(track, campaign.id, "FEED_TOP");
   }, [campaign.id, track]);
 
   return (
@@ -92,17 +98,23 @@ export function CampaignCard({
       >
         {campaign.posterUrl && (
           <span
-            className="block"
+            className="relative block max-h-[70svh] w-full"
             style={{
+              aspectRatio: posterRatio(campaign.posterLayout),
               background: `color-mix(in srgb, ${accent} 14%, transparent)`,
             }}
           >
-            {/* Affiche dans ses proportions, jamais plus haute que 70 % de l'écran, comme un événement */}
-            {/* eslint-disable-next-line @next/next/no-img-element -- affiche de campagne, sans recadrage */}
-            <img
-              src={mediaSrc(campaign.posterUrl)}
-              alt=""
-              className="max-h-[70svh] w-full object-cover"
+            {/* Cadre aux proportions de l'affiche, bornées comme une photo d'événement
+                et jamais plus haut que 70 % de l'écran : sa place est réservée avant le
+                chargement (CLS). L'affiche y est entière, sur le fond teinté. Toujours en
+                tête de page : c'est la plus grande image visible (LCP), en priorité. */}
+            <ProgressiveImage
+              src={campaign.posterUrl}
+              placeholder={campaign.posterLayout?.placeholder}
+              fill
+              fit="contain"
+              priority
+              className="bg-transparent"
             />
           </span>
         )}

@@ -28,6 +28,8 @@ async function Home({ searchParams }: PageProps<"/">) {
     getActiveCampaigns(),
   ]);
 
+  const topCampaign = isDefault(filters) ? campaigns.FEED_TOP : undefined;
+
   // Sur ordinateur, le fil est décalé vers la gauche du centre (10rem),
   // sans coller à la barre latérale.
   return (
@@ -37,11 +39,8 @@ async function Home({ searchParams }: PageProps<"/">) {
         <FilterBar filters={filters} pages={pages} />
       </div>
       {/* Mise en avant hors du fil, en tête et seulement sans filtre */}
-      {campaigns.FEED_TOP && isDefault(filters) && (
-        <CampaignCard
-          campaign={campaigns.FEED_TOP}
-          track={trackCampaignAction}
-        />
+      {topCampaign && (
+        <CampaignCard campaign={topCampaign} track={trackCampaignAction} />
       )}
       {events.length === 0 ? (
         <div className="flex flex-col items-center gap-3 px-4 py-20 text-center text-muted-foreground">
@@ -59,6 +58,7 @@ async function Home({ searchParams }: PageProps<"/">) {
           load={loadEventsAction}
           onView={trackEventViewAction}
           onShare={trackShareClickAction}
+          firstImagePriority={!topCampaign}
         />
       )}
     </div>

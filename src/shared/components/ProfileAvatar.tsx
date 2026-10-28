@@ -1,5 +1,5 @@
+import { mediaSrc } from "@/shared/lib/media-src";
 import { cn } from "@/shared/lib/utils";
-import { mediaSrc } from "@/shared/lib/media-url";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 
 /** Avatar rond : photo, ou initiales sur fond gris à défaut. */

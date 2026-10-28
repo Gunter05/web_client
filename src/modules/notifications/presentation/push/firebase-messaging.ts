@@ -2,20 +2,23 @@
 
 import { getApp, getApps, initializeApp } from "firebase/app";
 import { getMessaging, isSupported, type Messaging } from "firebase/messaging";
+import { SERVICE_WORKER_PATH } from "@/modules/notifications/domain/push";
 import {
-  firebaseWebConfig,
-  SERVICE_WORKER_PATH,
-} from "@/modules/notifications/domain/push";
-import { clientEnv } from "@/shared/config/env.client";
+  push,
+  pushPossible,
+} from "@/modules/notifications/presentation/push/push-config";
 
-const push = firebaseWebConfig({
-  apiKey: clientEnv.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: clientEnv.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: clientEnv.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  messagingSenderId: clientEnv.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: clientEnv.NEXT_PUBLIC_FIREBASE_APP_ID,
-  vapidKey: clientEnv.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
-});
+/**
+ * SDK Firebase (plusieurs centaines de Ko) : ce module n'est chargé qu'à la
+ * demande, par import dynamique, jamais au chargement des pages.
+ */
+export {
+  onMessage,
+  onRegistered,
+  onUnregistered,
+  register,
+  unregister,
+} from "firebase/messaging";
 
 export const VAPID_KEY = push?.vapidKey ?? "";
 
@@ -25,12 +28,7 @@ export const VAPID_KEY = push?.vapidKey ?? "";
  * d'accueil (Web Push n'y existe que pour les applications installées).
  */
 export async function pushAvailable(): Promise<boolean> {
-  return (
-    push !== null &&
-    "Notification" in window &&
-    "serviceWorker" in navigator &&
-    (await isSupported().catch(() => false))
-  );
+  return pushPossible() && (await isSupported().catch(() => false));
 }
 
 /** Messagerie Firebase et service worker qui affiche les push en arrière-plan. */

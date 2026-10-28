@@ -1,16 +1,23 @@
-import { clientSchema, validate } from "@/shared/config/schema";
+import type { z } from "zod";
+import type { clientSchema } from "@/shared/config/schema";
 
-export const clientEnv = validate(clientSchema, {
-  // Lecture littérale : Next.js remplace ces valeurs dans le code client.
-  NODE_ENV: process.env.NODE_ENV,
-  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-  NEXT_PUBLIC_MEDIAS_PUBLIC_URL: process.env.NEXT_PUBLIC_MEDIAS_PUBLIC_URL,
-  NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+/**
+ * Variables publiques, lues littéralement : Next.js les remplace dans le code
+ * du navigateur. Elles sont validées par Zod au build (next.config.ts) ; ici,
+ * sans Zod, pour ne pas l'envoyer au navigateur (plusieurs dizaines de Ko).
+ */
+export const clientEnv: z.infer<typeof clientSchema> = {
+  NODE_ENV: process.env.NODE_ENV ?? "development",
+  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL ?? "",
+  NEXT_PUBLIC_MEDIA_URL: process.env.NEXT_PUBLIC_MEDIA_URL ?? "",
+  NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? "",
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:
-    process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  NEXT_PUBLIC_FIREBASE_PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? "",
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID:
+    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ?? "",
   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID:
-    process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  NEXT_PUBLIC_FIREBASE_VAPID_KEY: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
-});
+    process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? "",
+  NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID ?? "",
+  NEXT_PUBLIC_FIREBASE_VAPID_KEY:
+    process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY ?? "",
+};

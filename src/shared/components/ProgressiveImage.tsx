@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { thumbHashToDataURL } from "thumbhash";
+import { mediaSrc } from "@/shared/lib/media-src";
 import { cn } from "@/shared/lib/utils";
-import { mediaSrc } from "@/shared/lib/media-url";
 
 /**
  * Image qui ne fait pas sauter la page : sa place est réservée d'avance
@@ -21,6 +21,7 @@ export function ProgressiveImage({
   height,
   placeholder,
   priority = false,
+  eager = false,
   fill = false,
   fit = "cover",
   className,
@@ -36,6 +37,8 @@ export function ProgressiveImage({
   /** Aperçu flou : ThumbHash en base64. */
   placeholder?: string | null;
   priority?: boolean;
+  /** Chargée tout de suite (visible à l'ouverture), sans passer devant l'image prioritaire. */
+  eager?: boolean;
   /** Remplit son conteneur (taille fixée par le parent) au lieu de la réserver. */
   fill?: boolean;
   fit?: "cover" | "contain";
@@ -45,8 +48,7 @@ export function ProgressiveImage({
   const image = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(priority);
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
-  const source = mediaSrc(src);
-  const shownSrc = failedSrc === source && fallbackSrc ? fallbackSrc : source;
+  const shownSrc = failedSrc === src && fallbackSrc ? fallbackSrc : src;
   const preview = useMemo(() => decode(placeholder), [placeholder]);
 
   // Une image déjà en cache a fini de charger avant l'hydratation : pas de fondu.
@@ -75,15 +77,15 @@ export function ProgressiveImage({
       {/* eslint-disable-next-line @next/next/no-img-element -- images servies par le stockage (ADR 0014) */}
       <img
         ref={image}
-        src={shownSrc}
+        src={mediaSrc(shownSrc)}
         alt={alt}
         width={width}
         height={height}
-        loading={priority ? "eager" : "lazy"}
+        loading={priority || eager ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : "auto"}
         decoding="async"
         onLoad={() => setLoaded(true)}
-        onError={() => fallbackSrc && setFailedSrc(source)}
+        onError={() => fallbackSrc && setFailedSrc(src)}
         className={cn(
           "block w-full transition-opacity duration-300 motion-reduce:transition-none",
           fill || (width && height) ? "h-full" : "h-auto",
