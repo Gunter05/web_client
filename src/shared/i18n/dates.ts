@@ -8,6 +8,14 @@ export type Labels = {
   tomorrow: (time: string) => string;
 };
 
+/**
+ * Fuseau de l'appareil (« Africa/Douala »). À passer à `useFormatter()` :
+ * next-intl lui donne sinon le fuseau du serveur (UTC sur Vercel).
+ */
+export function deviceTimeZone(): string {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
 const intlLocale = (locale: string) => (locale === "fr" ? "fr-FR" : "en-US");
 
 function localDay(date: Date, timeZone?: string): string {

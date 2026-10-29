@@ -10,6 +10,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { useMounted } from "@/shared/hooks/useMounted";
+import { deviceTimeZone } from "@/shared/i18n/dates";
 import { cn } from "@/shared/lib/utils";
 import type { EventView } from "@/modules/events/domain/event-view.types";
 import { ExpandableText } from "@/shared/components/ExpandableText";
@@ -91,8 +92,9 @@ export function EventPracticalInfo({ event }: { event: EventView }) {
   const locale = useLocale();
   const mounted = useMounted();
   const start = new Date(event.startsAt);
+  const timeZone = deviceTimeZone();
   const time = (d: Date) =>
-    format.dateTime(d, { hour: "2-digit", minute: "2-digit" });
+    format.dateTime(d, { hour: "2-digit", minute: "2-digit", timeZone });
   // Décalage horaire de l'appareil (« UTC+2 »), comme l'heure affichée.
   const zone = new Intl.DateTimeFormat(locale, { timeZoneName: "shortOffset" })
     .formatToParts(start)
@@ -107,6 +109,7 @@ export function EventPracticalInfo({ event }: { event: EventView }) {
                 weekday: "long",
                 day: "numeric",
                 month: "long",
+                timeZone,
               })
             : " "}
         </span>

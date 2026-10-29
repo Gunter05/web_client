@@ -4,6 +4,7 @@ import { ClockIcon } from "@/shared/components/icons";
 import { useFormatter, useTranslations } from "next-intl";
 import { useTransition } from "react";
 import { useMounted } from "@/shared/hooks/useMounted";
+import { deviceTimeZone } from "@/shared/i18n/dates";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,6 +44,7 @@ export function PendingPageRequest({
             ? format.dateTime(new Date(submittedAt), {
                 dateStyle: "long",
                 timeStyle: "short",
+                timeZone: deviceTimeZone(),
               })
             : "…",
         })}

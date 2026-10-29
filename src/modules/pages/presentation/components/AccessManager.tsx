@@ -7,6 +7,7 @@ import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { ProfileAvatar } from "@/shared/components/ProfileAvatar";
 import { useMounted } from "@/shared/hooks/useMounted";
+import { deviceTimeZone } from "@/shared/i18n/dates";
 import { useErrorMessages } from "@/shared/i18n/errors";
 import {
   AlertDialog,
@@ -157,6 +158,7 @@ export function AccessManager({
                       date: mounted
                         ? format.dateTime(new Date(m.addedAt), {
                             dateStyle: "medium",
+                            timeZone: deviceTimeZone(),
                           })
                         : "…",
                     })}
